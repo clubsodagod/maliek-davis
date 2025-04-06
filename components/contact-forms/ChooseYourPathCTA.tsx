@@ -41,7 +41,7 @@ const ChooseYourPathCTA = ({ }) => {
                 size={desktop ? "lg" : "xl"}
             />
 
-            <div className='max-w-full'>
+            <div className='max-w-full w-full h-full'>
                 <LeftFloatImgTextHero
                     imgPT='mt-[25px]'
                     heroText="Together we can mastermind innovation."

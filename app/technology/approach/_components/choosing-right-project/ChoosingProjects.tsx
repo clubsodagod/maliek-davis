@@ -34,7 +34,7 @@ const ChoosingProjects = () => {
                     size={desktop ? "lg" : "lg"}
                 />
 
-                <div className='max-w-full'>
+                <div className='max-w-full w-full h-full'>
                     <LeftFloatImgTextHero
                         imgPT='mt-[25px]'
                         heroText='I Choose Projects That Align With Set Principles.'

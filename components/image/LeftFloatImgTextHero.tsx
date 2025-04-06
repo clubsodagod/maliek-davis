@@ -33,7 +33,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
 
     return (
         <ComponentTransition>
-            <div className='relative -left-20'>
+            <div className='relative -left-20 z-10'>
                 <div className={` relative w-screen px-6 h-full 2xl:-top-12 overflow-x-clip ${rounded}`}>
                     {/* Float Image */}
                     <Box
@@ -52,7 +52,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                             sizes='100vw'
                             width={9}
                             height={16}
-                            className={`relative w-full h-full  ${rounded}`}
+                            className={`relative w-full h-full  ${rounded} z-10`}
                             style={{ objectFit: imageFit }}
                         />
                     </Box>
