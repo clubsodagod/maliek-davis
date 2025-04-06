@@ -47,7 +47,7 @@ const ChooseYourPathCTA = ({ }) => {
                     heroText="Together we can mastermind innovation."
                     objectFit='cover'
                     photo='https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742150340/fpgxqrksmtjyxmhwv8jr_byigi9.webp'
-                    pt='pt-[150px]'
+                    pt='pt-[100px]'
                     rounded='rounded-[90px]'
                     imgHeight='h-[250px] md:h-[400px] 2xl:h-[600px]'
                     imgWidth='w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]'
