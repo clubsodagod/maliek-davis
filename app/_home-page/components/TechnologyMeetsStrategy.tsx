@@ -3,13 +3,14 @@ import MainHeroHeader from '@/components/headers/MainHeroHeader'
 import { MotionDiv } from '@/components/motion/MotionDiv'
 import SectionWrapper from '@/components/wrappers/SectionWrapper'
 import { animateHeaderAnimation, initialHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations'
-import { coreValuesTechMeetStrategy, techMeetsStrategyTextBoxImg, techMeetStrategyImg } from '@/library/image.cdn'
+import { coreValuesTechMeetStrategy, techMeetsStrategyTextBoxImg, techMeetStrategyImg, textSVGProfessional } from '@/library/image.cdn'
 import { technologyMeetsStrategyCopy } from '@/library/technology.copy'
 import { Button, Typography } from '@mui/material'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { coreExpertiseCopy } from '../library/copy'
 import useMediaQuery from '@mui/material/useMediaQuery';
+import RightFloatImgTextHero from '@/components/image/RightFloatImgTextHero'
 
 
 
@@ -57,27 +58,18 @@ const TechnologyMeetsStrategy = () => {
 
 
                 {/* section copy */}
-                <MotionDiv
-                    style={{
-                        backgroundColor: '#60abe450',
-                        shapeOutside: `url(${techMeetsStrategyTextBoxImg})`,
-                    }}
-                    className='h-full relative left-[-100px] pl-[100px] landscape:md:left-0 landscape:md:p-6 landscape:xl:left-[33%]  backdrop-blur-4xl rounded-3xl  py-6 landscape:md:w-[50%] landscape:xl:w-[33%]'
-                >
-                    <Typography variant='body1'
-                        fontSize={{ xs: "1.2rem", sm: "1.45rem" }}
-                        className="text-pretty "
-                        component={'div'}
-                        style={{
-                            shapeOutside: `url(${techMeetsStrategyTextBoxImg})`,
-                            float: "left"
+                <div className='relative w-full '>
+                    <RightFloatImgTextHero
+                        imgPT='0'
+                        heroText={technologyMeetsStrategyCopy}
+                        photo={techMeetStrategyImg}
+                        pt='pt-[100px]'
+                        rounded='rounded-[90px]'
+                        imgWidth='w-[250px]'
+                        objectFit='cover' mainCtnRight={''} blkBoxLeft=''
+                    />
+                </div>
 
-                        }}
-                    >
-                        {technologyMeetsStrategyCopy}
-                    </Typography>
-
-                </MotionDiv>
 
                 {/* CTA Buttons */}
                 <BtnGroup />
@@ -121,7 +113,7 @@ const TechnologyMeetsStrategy = () => {
                         {
                             coreExpertiseCopy.map((e, i) => (
                                 <div
-                                className='overflow-x-visible'
+                                    className='overflow-x-visible'
                                     key={`${e.label} ${i}`}>
                                     <Typography
                                         variant='subtitle1'
@@ -179,24 +171,7 @@ const TechnologyMeetsStrategy = () => {
             className=''
         >
 
-            {
-                !coreExpertise &&
-                <Image
-                    priority
-                    alt="Technology Meets Strategy Hero Image of Maliek Davis looking to his left, your right."
-                    src={techMeetStrategyImg}
-                    width={9}
-                    height={16}
-                    sizes='100vw'
-                    className='h-full landscape:md:h-[90%] w-[100%] landscape:md:w-[50%] xl:w-[100%]    xl:object-contain object-cover landscape:md:object-contain'
-                    style={{
-                        height: `100dvh`,
-                        position: "absolute",
-                        // left: "50%",
-                        objectPosition: "15vw 0"
-                    }}
-                />
-            }
+
 
             <SectionWrapper
                 ref={sectionRef}
@@ -207,32 +182,22 @@ const TechnologyMeetsStrategy = () => {
                 transition={transitionHeaderAnimation}
                 exit={{ opacity: 0, scaleY: 0 }}
             >
-                {/* <BackgroundColorUnderlay
-                    bgcolor={grey[50]}
-                /> */}
+
+                <MainHeroHeader
+                    id={headerLabel}
+                    headerLabel={headerLabel}
+                    tagline={tagline}
+                    size={headerSize}
+                />
+
+
+                {!coreExpertise && <TechnologyMeetsStrategyMain />}
                 <div
-                    className='flex flex-col h-full grow justify-between overflow-y-visible relative'
+                    className='relative left-[-48px]'
                 >
-
-
-                    <MainHeroHeader
-                        id={headerLabel}
-                        headerLabel={headerLabel}
-                        tagline={tagline}
-                        size={headerSize}
-                    />
-
-                    {!coreExpertise && <TechnologyMeetsStrategyMain />}
-                    <div
-                        className='relative left-[-48px]'
-                    >
-                        {coreExpertise && <CoreExpertise />}
-                    </div>
-
-
-
-
+                    {coreExpertise && <CoreExpertise />}
                 </div>
+
             </SectionWrapper>
         </div>
 

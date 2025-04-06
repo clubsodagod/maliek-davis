@@ -100,7 +100,7 @@ const WhatsHappening = () => {
 
             </div>
                 <div
-                    className='sliding-card-ctn  w-screen bg-[#fafafa66]'
+                    className='sliding-card-ctn  w-screen '
                 >
                     {
                         announcements.map((a,i)=>{

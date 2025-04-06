@@ -6,7 +6,7 @@ import { Box, Typography } from '@mui/material';
 import { MotionDiv } from '../motion/MotionDiv';
 import Image from 'next/image';
 
-interface LeftFloatImgTextHeroProps {
+interface RightFloatImgTextHeroProps {
     photo: string;
     heroText: string;
     pt: string;
@@ -15,9 +15,11 @@ interface LeftFloatImgTextHeroProps {
     imgHeight?: string;
     imgWidth?: string;
     objectFit?: React.CSSProperties["objectFit"];
+    mainCtnRight?:string;
+    blkBoxLeft?:string;
 }
 
-const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
+const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
     photo,
     heroText,
     pt,
@@ -25,25 +27,27 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     imgPT,
     imgHeight,
     imgWidth,
-    objectFit
+    objectFit,
+    mainCtnRight,
+    blkBoxLeft
 }) => {
-    const imageHeight = imgHeight ? imgHeight : "h-[450px] md:h-[400px] 2xl:h-[600px]";
-    const imageWidth = imgWidth ? imgWidth : "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
-    const imageFit = objectFit ? objectFit :  "cover";
+    const imageHeight = imgHeight ?? "h-[450px] md:h-[400px] 2xl:h-[600px]";
+    const imageWidth = imgWidth ?? "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
+    const imageFit = objectFit ?? "cover";
 
     return (
         <ComponentTransition>
-            <div className='relative -left-20 z-10'>
-                <div className={` relative w-screen px-6 h-full 2xl:-top-12  ${rounded}`}>
-                    {/* Float Image */}
+            <div className={` relative ${mainCtnRight} z-10 `}>
+                <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded} `}>
+                    {/* Float Image on the Right */}
                     <Box
                         sx={{ bgcolor: "#000" }}
                         component={MotionDiv}
-                        className={`relative -left-6 ${imageWidth} ${imageHeight} rounded-4xl float-right right-[100px] mr-4 mb-4 ${imgPT} ${rounded}`}
+                        className={`relative -right-6 ${imageWidth} ${imageHeight} rounded-4xl float-left ${blkBoxLeft} ml-4 mb-4 ${imgPT} ${rounded}`}
                         style={{
                             shapeOutside: "content-box",
                             shapeMargin: "5px",
-                            float: "left"
+                            float: "right"
                         }}
                     >
                         <Image
@@ -52,20 +56,20 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                             sizes='100vw'
                             width={500}
                             height={500}
-                            className={`relative w-full h-full overflow-x-visible overflow-y-hidden  ${rounded} `}
+                            className={`relative w-full h-full overflow-x-visible overflow-y-hidden ${rounded}`}
                             style={{ objectFit: imageFit }}
                         />
                     </Box>
                 </div>
 
                 {/* Wrapped Text Content */}
-                <div className={`relative ${pt} w-[105vw]`}>
+                <div className={`relative ${pt} w-full`}>
                     <Typography
                         variant='subtitle1'
                         component='span'
                         fontWeight='100'
-                        className={`break-words relative `}
-                        fontSize={"1.5rem"}
+                        className={`break-words relative`}
+                        // fontSize={"1.5rem"}
                     >
                         {heroText}
                     </Typography>
@@ -75,4 +79,4 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     );
 };
 
-export default LeftFloatImgTextHero;
+export default RightFloatImgTextHero;

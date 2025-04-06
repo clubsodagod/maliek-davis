@@ -1,58 +1,35 @@
 import MainHeroHeader from '@/components/headers/MainHeroHeader'
+import LeftFloatImgTextHero from '@/components/image/LeftFloatImgTextHero'
 import SectionWrapper from '@/components/wrappers/SectionWrapper'
 import { brandName } from '@/library/brand.const'
 import { programmerImg } from '@/library/image.cdn'
 import { Button } from '@mui/material'
-import Image from 'next/image'
 import React from 'react'
 
 const MainHomeHero = () => {
     return (
             <SectionWrapper
             >
-                <div
-                    className='grow'
-                />
-
-                <div
-                    className='flex flex-col gap-3 min-h-full pb-12 md:items-center xl:justify-center'
-                >
-                    <div
-                        className="w-full xl:w-1/2 h-full absolute  left-0 top-0 xl:left-[25%] overflow-hidden flex flex-col justify-end "
-                    >
-                        <Image
-                            alt="Main hero Image of Maliek Davis"
-                            src={programmerImg}
-                            width={9}
-                            height={16}
-                            sizes='100vw'
-                            className=''
-                            style={{
-                                objectFit: 'cover',
-                                objectPosition: 'center',
-                                width: '100%',
-                                height: '80%',
-                            }}
-                        />
-                    </div>
-                    <div
-                        className="gradient-transparency-overlay"
-                    />
-                    <div
-                        className='w-full grow'
-                    />
-                    <div className="z-1">
                         <MainHeroHeader
                             headerLabel={brandName}
-                            tagline={'Engineering the Future: Technology, Finance, and Innovation Unleashed'}
+                            tagline={''}
+                            size='xl'
                         />
-                    </div>
-
+                <div className='max-w-full w-full h-full'>
+                    <LeftFloatImgTextHero
+                        imgPT='0'
+                        heroText='Engineering the Future: Technology, Finance, and Innovation Unleashed'
+                        photo={programmerImg}
+                        pt='pt-[100px]'
+                        rounded='rounded-[90px]'
+                        imgWidth='w-[250px]'
+                        objectFit='cover'
+                    />
                     <div
-                        className='section-btn-ctn flex gap-3 mt-auto'
+                        className='section-btn-ctn flex gap-3 pt-6 min-w-full'
                     >
-                        <Button variant='contained' color='primary' href={'/technology/portfolio'}>
-                            Explore Work
+                        <Button variant='contained' color='primary' href={'/about'}>
+                            About Me
                         </Button>
                         <Button variant='outlined' href={'/contact'}>
                             Let&apos;s Connect

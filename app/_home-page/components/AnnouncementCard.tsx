@@ -16,16 +16,21 @@ interface Announcement {
 const AnnouncementCard: React.FC<{
     announcement: Announcement;
     open: boolean;
-    index:number;
+    index: number;
 }> = ({ announcement, open }) => {
     return (
         <ComponentTransition id={`${announcement.name}-transition-card`}>
             <MotionDiv
-                className="announcement-card overflow-hidden bg-[#fafafa] shadow-md rounded-lg p-4"
+                className="announcement-card overflow-hidden  rounded-t-4xl p-4"
                 initial={{ opacity: 1, y: 0 }} // Starts slightly above
                 animate={{ opacity: open ? 1 : 1, y: open ? 20 : 20, scaleX: open ? 1.05 : 1 }} // Moves down when open
                 exit={{ opacity: 0, y: 0 }} // Moves up when closing
                 transition={{ duration: 0.3, ease: "anticipate" }}
+                style={{
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    boxShadow: "1px -6px 8px  #17171747",
+                }}
             >
                 {/* Title */}
                 <Typography variant="subtitle1" fontWeight={"bold"}>
