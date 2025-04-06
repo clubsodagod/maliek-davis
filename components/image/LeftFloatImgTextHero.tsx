@@ -27,9 +27,9 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     imgWidth,
     objectFit
 }) => {
-    const imageHeight = imgHeight ?? "h-[450px] md:h-[400px] 2xl:h-[600px]";
-    const imageWidth = imgWidth ?? "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
-    const imageFit = objectFit ?? "cover";
+    const imageHeight = imgHeight ? imgHeight : "h-[450px] md:h-[400px] 2xl:h-[600px]";
+    const imageWidth = imgWidth ? imgWidth : "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
+    const imageFit = objectFit ? objectFit :  "cover";
 
     return (
         <ComponentTransition>
