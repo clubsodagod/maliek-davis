@@ -34,7 +34,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     return (
         <ComponentTransition>
             <div className='relative -left-20 z-10'>
-                <div className={` relative w-screen px-6 h-full 2xl:-top-12 overflow-x-clip ${rounded}`}>
+                <div className={` relative w-screen px-6 h-full 2xl:-top-12  ${rounded}`}>
                     {/* Float Image */}
                     <Box
                         sx={{ bgcolor: "#000" }}
