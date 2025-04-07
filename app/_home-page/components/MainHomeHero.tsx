@@ -10,11 +10,10 @@ const MainHomeHero = () => {
     return (
             <SectionWrapper
             >
-                        <MainHeroHeader
-                            headerLabel={brandName}
-                            tagline={''}
-                            size='xl'
-                        />
+            <MainHeroHeader
+                headerLabel={brandName}
+                tagline={''}
+            />
                 <div className='max-w-full w-full h-full'>
                     <LeftFloatImgTextHero
                         imgPT='0'

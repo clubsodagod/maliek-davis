@@ -56,7 +56,7 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
                             sizes='100vw'
                             width={500}
                             height={500}
-                            className={`relative w-full h-full overflow-x-visible overflow-y-hidden ${rounded}`}
+                            className={`relative w-full h-full  ${rounded}`}
                             style={{ objectFit: imageFit }}
                         />
                     </Box>
