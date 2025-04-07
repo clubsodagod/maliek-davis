@@ -44,7 +44,7 @@ body {
   /* Adjust for subtlety */
   mix-blend-mode: overlay;
   /* Helps blend with the background */
-  z-index: 45;
+  z-index: -45;
 }
 
 .gradient-blob {

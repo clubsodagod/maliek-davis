@@ -50,6 +50,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                             alt='technology-solutions-cta-image'
                             src={photo}
                             sizes='100vw'
+                            fill
                             width={500}
                             height={500}
                             className={`relative w-full h-full overflow-x-visible overflow-y-hidden  ${rounded} `}
