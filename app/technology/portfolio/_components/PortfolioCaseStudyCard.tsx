@@ -11,12 +11,14 @@ interface PortfolioCaseStudyCardProps {
     caseStudy: CaseStudyDocumentType;
     index: number;
     currentScreen: 'mobile' | 'tablet' | 'desktop';
+    setDevice: (device: 'mobile' | 'tablet' | 'desktop') => void;
 }
 
 const PortfolioCaseStudyCard: React.FC<PortfolioCaseStudyCardProps> = ({
     caseStudy,
     index,
-    currentScreen
+    currentScreen, 
+    setDevice
 }) => {
     const [expanded, setExpanded] = React.useState<boolean>(false);
 
@@ -36,6 +38,7 @@ const PortfolioCaseStudyCard: React.FC<PortfolioCaseStudyCardProps> = ({
                     <div
                         key={`${option.label}-${i}`}
                         className="flex-1/3 flex flex-col justify-center items-center gap-2"
+                        onClick={()=>{setDevice(option.label.toLowerCase() as 'mobile' | 'tablet' | 'desktop')}}
                     >
                         <Image
                             src={option.photo}

@@ -14,6 +14,7 @@ import React, { JSX, useEffect, useState } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { useFrame, useLoader } from '@react-three/fiber'
+import { programmerImg } from '@/library/image.cdn'
 
 type ActionName = 'Animation'
 
@@ -43,24 +44,24 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-// Define the MacBookThreeProps interface
+// Define the MacBookThreeProps type
 interface MacBookThreeProps {
   link?: string;
   props?: JSX.IntrinsicElements['group'];
 }
 
-export default function MacBook(props: MacBookThreeProps) {
+export default function MacBook({ link, props }: MacBookThreeProps) {
 
   const group = React.useRef<THREE.Group>(null)
   const { nodes, materials, animations } = useGLTF('/3d-objects/macbook/macbook-transformed.glb') as unknown as GLTFResult
   const { actions } = useAnimations(animations, group)
   const [currentInView, setCurrentInView] = useState(null);
   const [startAnimation, setStartAnimation] = useState<boolean>(true);
-  const [image, setImage] = useState<string>(props.link ? props.link : '/images/maliek-davis_com.png')
-  const temporaryImageTexture = useLoader(THREE.TextureLoader, image);
-  const [imageTexture, setImageTexture] = useState<THREE.Texture>(temporaryImageTexture)
 
-  // const imageTexture = useLoader(THREE.TextureLoader, image );
+
+  const [image, setImage] = useState<string>(link || programmerImg)
+  const tempTexture = useLoader(THREE.TextureLoader, image)
+  const [imageTexture, setImageTexture] = useState<THREE.Texture | null>(null)
 
 
   useFrame(() => {
@@ -69,28 +70,26 @@ export default function MacBook(props: MacBookThreeProps) {
       actions.Animation.play()
 
     }
-    if (props.link && image !== props.link) {
-
-      setImage(props.link);
-      setImageTexture(temporaryImageTexture)
-
-    }
   });
 
 
+
   useEffect(() => {
+    const textureLoader = new THREE.TextureLoader()
 
-    if (props.link && image != props.link) {
-      console.log(image, imageTexture);
-      
-      setImage(props.link);
-      setImageTexture(temporaryImageTexture)
+    const url = link || programmerImg
+    textureLoader.load(url, (loadedTexture) => {
+      loadedTexture.center.set(0.5, 0.5)
+      loadedTexture.rotation = Math.PI * 2
+      loadedTexture.flipY = false
+      loadedTexture.needsUpdate = true
 
-    }
-  }, [image, imageTexture, props.link, temporaryImageTexture])
+      setImageTexture(loadedTexture)
+    })
+  }, [link])
 
   return (
-    <group ref={group} {...props.props} dispose={null}>
+    <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">
         <group name="GLTF_SceneRootNode">
           <group name="Bevels_2" position={[0, 0.008, -0.104]} scale={0.275}>
@@ -104,7 +103,9 @@ export default function MacBook(props: MacBookThreeProps) {
             <mesh castShadow name="Object_7" geometry={nodes.Object_7.geometry}  >
 
               {/* Apply the texture to the material */}
-              <meshStandardMaterial map={imageTexture} />
+              <mesh castShadow name="Object_7" geometry={nodes.Object_7.geometry}>
+                {imageTexture && <meshStandardMaterial map={imageTexture} />}
+              </mesh>
             </mesh>
           </group>
           <group name="Circle001_12" position={[0.203, 0.008, -0.104]} rotation={[0.011, -0.75, 1.274]} />
