@@ -718,22 +718,22 @@ export const sourceEvaluationMethods: SourceEvaluate[] = [
     {
         title: "Proprietary Deal Flow",
         description: "Strong network of brokers, lenders, & motivated sellers",
-        photo: "/images/source-eval/deal-flow.jpg", // Replace with real image path
+        photo: "https://images.pexels.com/photos/1181346/pexels-photo-1181346.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", // Replace with real image path
     },
     {
         title: "Comprehensive Market Research",
         description: "Rental demand, cap rates, and economic growth indicators",
-        photo: "/images/source-eval/market-research.jpg",
+        photo: "https://images.pexels.com/photos/669621/pexels-photo-669621.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
     {
         title: "Due Diligence & Financial Analysis",
         description: "Property inspections, financial modeling & risk assessment",
-        photo: "/images/source-eval/due-diligence.jpg",
+        photo: "https://images.pexels.com/photos/6863184/pexels-photo-6863184.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
     {
         title: "Creative Financing & Structuring",
         description: "Private equity, seller financing, & joint ventures",
-        photo: "/images/source-eval/financing.jpg",
+        photo: "https://images.pexels.com/photos/6802048/pexels-photo-6802048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
 ];
 
