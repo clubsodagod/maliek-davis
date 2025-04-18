@@ -14,7 +14,7 @@ type Props = {
 const TechPhilosophyCard = ({ item, isActive }: Props) => {
     return (
         <motion.div
-            className="w-full h-full px-6 flex flex-col lg:flex-row items-center justify-center gap-10"
+            className="w-full h-full px-6 flex flex-col 2xl:flex-row items-center justify-center gap-10"
             initial={{ opacity: 0 }}
             animate={{
                 opacity: isActive ? 1 : 0,

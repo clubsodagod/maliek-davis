@@ -10,7 +10,7 @@ export interface CaseStudyDocumentType {
     featuredImg: MediaSet;
     featuredVideo: MediaSet;
     photos: string[];
-    logo: string; // ✅ Added this line
+    logo: string;
     summary: string;
     objectives: string[];
     challenges: string[];
@@ -20,7 +20,9 @@ export interface CaseStudyDocumentType {
         valueGenerated: number;
         technicalImpact: string;
     };
+    address?: string; // Optional field only relevant for Property type
 }
+
 
 
 

@@ -1,18 +1,14 @@
 "use client"
 
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
-import BlogPreviewWrapper from '@/components/wrappers/BlogPreviewWrapper';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
 import React from 'react'
-import BlogPreviewCard from './BlogPreviewCard';
 import { MotionDiv } from '@/components/motion/MotionDiv';
 import { IBlogPostClient, NormalizedCategory } from '@/library/types/blog.types';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import BlogRelatedPostCard from './BlogRelatedPostCard';
-import BlogCategoryCard from './BlogCategoryCard';
 
 export const mockBlogPosts: IBlogPostClient[] = [
     {
@@ -281,18 +277,32 @@ export const mockCategories: NormalizedCategory[] = [
     }
 ];
 
+interface BlogPreviewProps {
+    headerLabel: string;
+    headerSize?: "xs" | "sm" | "md" | "lg" | "xl";
+    tagline?: string;
+    id: string;
+}
 
-const BlogPreview = ({ }) => {
+const RealEstateBlogPreview: React.FC<BlogPreviewProps> = ({
+    headerLabel,  tagline, id
+}) => {
 
     const sectionRef = React.useRef(null);
 
-    const mobile = useMediaQuery(`(max-width:767px)`);
+    const mobile = useMediaQuery(`(max-width:768px)`);
+    const tablet = useMediaQuery(`(min-width:769px)`);
+    const tabletXL = useMediaQuery(`(min-width:900px)`);
+    const desktop = useMediaQuery(`(min-width:1100px)`);
+    
+    const size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "xl" : tabletXL ? "xl" : tablet ? "lg" : mobile ? "xl" : undefined;
+
 
     return (
 
         <SectionWrapper
             ref={sectionRef}
-            id='home-blog-preview-section'
+            id={`${id}-section`}
             whileInView={{ opacity: 1 }}
             initial={initialHeaderAnimation}
             animate={animateHeaderAnimation}
@@ -304,88 +314,15 @@ const BlogPreview = ({ }) => {
             >
                 <MainHeroHeader
                     id={"blog-preview-header"}
-                    headerLabel={`Deep Dives into Technology, Finance & the Future`}
-                    tagline={"Fresh. Informative. Relevant."}
-                    size={mobile ? "md" : "xl"}
+                    headerLabel={headerLabel}
+                    tagline={tagline||""}
+                    size={size}
                 />
 
                 <MotionDiv
-                    className='flex gap-12'
+                    className='flex flex-col gap-12'
                 >
-                    <BlogPreviewWrapper
-                        className='relative left-[12vw] md:left-[-3vw]  xl:left-[-3vw] rounded-4xl bg-gray-950 py-6 px-6 w-screen md:w-[75vw] md:landscape:w-[50vw] '
-                    >
-                        <BlogPreviewCard
-                            post={mockBlogPosts[0]}
-                        />
-                    </BlogPreviewWrapper>
 
-                    <MotionDiv
-                        className='hidden md:landscape:flex md:landscape:flex-col relative xl:left-[-3vw] w-full'
-                    >
-                        <div className='w-full h-fit'>
-                            <Typography variant='h3' >
-                                Featured Posts
-                            </Typography>
-                            <div
-                                className='w-full min-h-[27vh]'
-                            >
-
-                                <MotionDiv
-                                    className='h-[24vh] w-[48vw]  absolute flex gap-6 overflow-x-auto pr-20'
-                                >
-                                    {
-                                        mockBlogPosts.map((p, i) => {
-                                            if (i === 0) return
-                                            return (
-                                                <div
-                                                    key={p.id}
-                                                        className="overflow-x-visible"
-                                                    >
-                                                    <BlogRelatedPostCard
-                                                    post={p}
-                                                />
-                                                </div>
-                                                
-                                            )
-                                        })
-                                    }
-
-
-                                </MotionDiv>
-                            </div>
-                        </div>
-
-                        <div
-                            className='w-full mt-auto'
-                        >
-                            <Typography variant='h3' >
-                                Categories
-                            </Typography>
-                            <div
-                                className='w-full min-h-[20vh]'
-                            >
-
-                                <MotionDiv
-                                    className='h-max  absolute flex gap-6 overflow-x-auto w-[48vw] pr-20 '
-                                >
-                                    {
-                                        mockCategories.map((c) => {
-                                            return (
-                                                <BlogCategoryCard
-                                                key={c.id}
-                                                    category={c}
-                                                />
-                                            )
-                                        })
-                                    }
-
-
-                                </MotionDiv>
-                            </div>
-                        </div>
-
-                    </MotionDiv>
                 </MotionDiv>
 
                 <MotionDiv
@@ -414,4 +351,4 @@ const BlogPreview = ({ }) => {
 
 
 
-export default BlogPreview;
+export default RealEstateBlogPreview;

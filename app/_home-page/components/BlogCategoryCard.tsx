@@ -33,7 +33,7 @@ const BlogCategoryCard: React.FC<BlogCategoryCardProps> = ({
 
     return (
         <MotionDiv
-            className={` w-[300px] h-full flex rounded-4xl justify-center items-center`}
+            className={` min-w-[275px] h-full flex rounded-4xl justify-center items-center`}
             style={{
                 backdropFilter: "blur(25px)",
                 backgroundColor: "#fafafa45"

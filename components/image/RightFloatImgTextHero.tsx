@@ -8,15 +8,15 @@ import Image from 'next/image';
 
 interface RightFloatImgTextHeroProps {
     photo: string;
-    heroText: string;
+    heroText: React.ReactNode;
     pt: string;
     rounded: string;
     imgPT: string;
     imgHeight?: string;
     imgWidth?: string;
     objectFit?: React.CSSProperties["objectFit"];
-    mainCtnRight?:string;
-    blkBoxLeft?:string;
+    mainCtnRight?: string;
+    blkBoxLeft?: string;
 }
 
 const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
@@ -56,23 +56,35 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
                             sizes='100vw'
                             width={500}
                             height={500}
-                            className={`relative w-full h-full  ${rounded}`}
+                            className={`relative w-full h-full  ${rounded} object-[50%_0]`}
                             style={{ objectFit: imageFit }}
                         />
                     </Box>
                 </div>
 
                 {/* Wrapped Text Content */}
-                <div className={`relative ${pt} w-full`}>
-                    <Typography
-                        variant='subtitle1'
-                        component='span'
-                        fontWeight='100'
-                        className={`break-words relative`}
-                        // fontSize={"1.5rem"}
+                <div className={`relative ${pt} `}>
+                    {typeof heroText === 'string' ? (
+                        <Typography
+                            variant='subtitle1'
+                            component='div'
+                            fontWeight={100}
+                            className="break-words relative"
+                        >
+                            {heroText}
+                        </Typography>
+                    ) : (
+                        heroText
+                    )}
+
+                    {/* <div
+                        className="hidden lg:landscape:block"
                     >
-                        {heroText}
-                    </Typography>
+                        {
+                            OtherComponent
+                        }
+                    </div> */}
+
                 </div>
             </div>
         </ComponentTransition>

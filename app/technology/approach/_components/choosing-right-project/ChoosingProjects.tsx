@@ -1,6 +1,6 @@
 "use client"
 import React, { useRef } from 'react'
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, useMediaQuery, Typography } from '@mui/material';
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
@@ -37,7 +37,13 @@ const ChoosingProjects = () => {
                 <div className='max-w-full w-full h-full'>
                     <LeftFloatImgTextHero
                         imgPT='mt-[25px]'
-                        heroText='I Choose Projects That Align With Set Principles.'
+                        heroText={
+                            <>
+                                <Typography variant="h2" fontSize={{xs:"1.75rem", sm:"3rem", md:"4rem", "3xl":"1rem"}} className='break-words pr-3'>
+                                    I Choose Projects that Align With set Principles
+                                </Typography>
+                            </>
+                        }
                         photo='https://res.cloudinary.com/dyfhsjtwo/image/upload/v1743816312/choosing-project_thj3pm.webp'
                         pt='pt-[150px]'
                         rounded='rounded-[90px]'

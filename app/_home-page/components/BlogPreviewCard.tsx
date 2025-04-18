@@ -24,10 +24,10 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
     return (
         <ComponentTransition>
             <MotionDiv
-                className='w-full h-full flex flex-col gap-6 relative'
+                className='w-full  h-full flex flex-col gap-6 relative'
             >
                 <div
-                className='w-[110vw] xl:w-full'
+                className='w-[110vw] md:w-full  xl:w-full'
                 >
                     <Image
                         alt={`something`}
@@ -36,14 +36,13 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
                         width={9}
                         height={16}
                         style={{
-                            width: "100%",
                             objectFit:"cover"
                         }}
-                        className='rounded-4xl h-[40dvh] xl:h-[60dvh]  '
+                        className='rounded-4xl h-[40vh] md:landscape:h-[50vh] xl:h-[60dvh] w-full '
                     />
                 </div>
 
-                <div className='absolute top-0 text-white h-[40dvh] xl:h-[60dvh] flex flex-col justify-end  py-6 px-6 pl-6 '>
+                <div className='absolute top-0 text-white h-[40vh] md:landscape:h-[50vh] xl:h-[60dvh] flex flex-col justify-end  py-6 px-6 pl-6 '>
                     <MotionDiv>
                         <Typography variant='h6' fontWeight={"bold"}>
                             {post.title}

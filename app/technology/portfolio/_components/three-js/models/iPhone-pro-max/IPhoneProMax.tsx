@@ -4,7 +4,6 @@ import * as THREE from 'three'
 import React, { useRef, useMemo, JSX } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
-import { useLoader } from '@react-three/fiber'
 import { programmerImg } from '@/library/image.cdn'
 
 type GLTFResult = GLTF & {

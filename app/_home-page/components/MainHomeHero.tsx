@@ -1,42 +1,59 @@
+"use client"
 import MainHeroHeader from '@/components/headers/MainHeroHeader'
 import LeftFloatImgTextHero from '@/components/image/LeftFloatImgTextHero'
 import SectionWrapper from '@/components/wrappers/SectionWrapper'
 import { brandName } from '@/library/brand.const'
 import { programmerImg } from '@/library/image.cdn'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import React from 'react'
+import HomeCards from './HomeCards'
 
 const MainHomeHero = () => {
     return (
-            <SectionWrapper
-            >
+        <SectionWrapper
+        >
+            <div
+                className='hidden md:block w-full h-[25px] md:landscape:hidden'
+            />
             <MainHeroHeader
                 headerLabel={brandName}
                 tagline={''}
+                center='md:text-center'
             />
-                <div className='max-w-full w-full h-full'>
-                    <LeftFloatImgTextHero
-                        imgPT='0'
-                        heroText='Engineering the Future: Technology, Finance, and Innovation Unleashed'
-                        photo={programmerImg}
-                        pt='pt-[100px]'
-                        rounded='rounded-[90px]'
-                        imgWidth='w-[250px]'
-                        objectFit='cover'
-                    />
-                    <div
-                        className='section-btn-ctn flex gap-3 pt-6 min-w-full'
-                    >
-                        <Button variant='contained' color='primary' href={'/about'}>
-                            About Me
-                        </Button>
-                        <Button variant='outlined' href={'/contact'}>
-                            Let&apos;s Connect
-                        </Button>
-                    </div>
+            <div className='max-w-full w-full h-full md:mt-12'>
+                <LeftFloatImgTextHero
+                    imgPT='0'
+                    heroText={
+                        <>
+                            <Typography variant="h2" fontSize={{xs:"1.75rem", sm:"3rem", md:"4rem", "3xl":"1rem"}} className='break-words pr-3'>
+                                Engineering the Future: Technology, Finance, and Innovation Unleashed
+                            </Typography>
+                        </>
+                    }
+                    photo={programmerImg}
+                    pt='pt-[50px] md:pt-[100px] 2xl:pt-0 3xl:pt-[500px] '
+                    rounded='rounded-[90px]'
+                    imgWidth='w-[225px] md:w-[500px] md:landscape:w-[500px] lg:w-[600px] xl:landscape:w-[675px] 2xl:landscape:w-[900px] '
+                    imgHeight="h-[450px] md:h-[600px] lg:h-[700px] 2xl:h-[600px] "
+                    objectFit='cover'
+                    OtherComponent={<HomeCards />}
+                />
+                <div
+                    className='section-btn-ctn flex gap-3 pt-6 min-w-full md:w-fit'
+                >
+                    <Button variant='contained' color='primary' href={'/about'}>
+                        About Me
+                    </Button>
+                    <Button variant='outlined' href={'/contact'}>
+                        Let&apos;s Connect
+                    </Button>
                 </div>
+            </div>
 
-            </SectionWrapper>
+            <div
+                className="hidden md:block md:w-full md:h-full grow"
+            />
+        </SectionWrapper>
 
 
     )

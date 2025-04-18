@@ -30,9 +30,12 @@ const HolisticTechnology = ({ }) => {
                 size={desktop ? "lg" : "md"}
             />
 
-            <div className='overflow-x-clip w-fit'>
-                <TechPhilosophyScroller />
+            <div className='w-full flex justify-center items-center'>
+                <div className='overflow-x-clip w-fit'>
+                    <TechPhilosophyScroller />
+                </div>
             </div>
+
         </SectionWrapper>
     )
 }

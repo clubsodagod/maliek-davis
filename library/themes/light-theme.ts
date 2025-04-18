@@ -1,5 +1,5 @@
 "use client";
-import { ThemeOptions, createTheme } from '@mui/material/styles';
+import { ThemeOptions, createTheme, alpha, getContrastRatio } from '@mui/material/styles';
 import { Asap, Genos } from 'next/font/google';
 
 const genos = Genos({
@@ -15,15 +15,27 @@ const asap = Asap({
 });
 
 
+const primaryBase = '#60abe4'; // soft sky blue
+const secondaryBase = '#8f11cc'; // bold violet
+
+const primaryMain = alpha(primaryBase, 0.7);
+const secondaryMain = alpha(secondaryBase, 0.7);
+
 // This is a light theme for Material-UI, using the Genos font and custom color palette
 export const lightTheme: ThemeOptions = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#60abe4',
+            main: primaryMain,
+            light: alpha(primaryBase, 0.5),
+            dark: alpha(primaryBase, 0.9),
+            contrastText: getContrastRatio(primaryMain, '#fff') > 4.5 ? '#fff' : '#111',
         },
         secondary: {
-            main: '#8f11cc',
+            main: secondaryMain,
+            light: alpha(secondaryBase, 0.5),
+            dark: alpha(secondaryBase, 0.9),
+            contrastText: getContrastRatio(secondaryMain, '#fff') > 4.5 ? '#fff' : '#111',
         },
     },
     typography: {
@@ -31,7 +43,7 @@ export const lightTheme: ThemeOptions = createTheme({
         h1: {
             fontFamily: genos.style.fontFamily,
             fontWeight: 700,
-            lineHeight:0.75
+            lineHeight: 0.75
         },
         h2: {
             fontFamily: genos.style.fontFamily,
@@ -45,7 +57,7 @@ export const lightTheme: ThemeOptions = createTheme({
             fontFamily: genos.style.fontFamily,
             fontWeight: 700,
         },
-        h5:{
+        h5: {
             fontFamily: genos.style.fontFamily,
             fontWeight: 700,
         },
@@ -57,7 +69,7 @@ export const lightTheme: ThemeOptions = createTheme({
             fontFamily: asap.style.fontFamily,
             fontWeight: 400,
         },
-        body2:{
+        body2: {
             fontFamily: asap.style.fontFamily,
             fontWeight: 400,
         },
@@ -73,7 +85,7 @@ export const lightTheme: ThemeOptions = createTheme({
             fontFamily: asap.style.fontFamily,
             fontWeight: 400,
         },
-        caption:{
+        caption: {
             fontFamily: asap.style.fontFamily,
             fontWeight: 400,
         },
@@ -101,12 +113,12 @@ export const lightTheme: ThemeOptions = createTheme({
             }
         },
         MuiButton: {
-            defaultProps:{
-                size:'large'
+            defaultProps: {
+                size: 'large'
             },
             styleOverrides: {
                 contained: {
-                    background:'linear-gradient(to right, #60abe4, #8f11cc)',
+                    background: 'linear-gradient(to right, #60abe4, #8f11cc)',
                     color: "#fafafa",
                 },
                 root: {

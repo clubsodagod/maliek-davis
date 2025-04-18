@@ -59,6 +59,7 @@ const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
                 animate={{ opacity: 1, y: 0 }} // Fade in and move down smoothly
                 exit={{ opacity: 0, y: 20 }} // Moves down when changing
                 transition={{ duration: 0.3, ease: "easeInOut" }} // Smooth effect
+                className="break-words text-pretty"
             >
                 {headerLabel}
             </Typography>

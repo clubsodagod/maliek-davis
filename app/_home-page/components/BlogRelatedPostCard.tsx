@@ -54,7 +54,7 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPostClient }> = ({
 
     return (
         <MotionDiv
-            className={` w-[300px] h-full flex rounded-4xl`}
+            className={` min-w-[300px] h-full flex rounded-4xl`}
             style={{
                 backdropFilter: "blur(25px)",
                 backgroundColor: "#fafafa45"

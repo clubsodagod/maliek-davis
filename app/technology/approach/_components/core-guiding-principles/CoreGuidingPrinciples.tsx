@@ -89,7 +89,7 @@ const CoreGuidingPrinciples = () => {
                         />
                     </div>
 
-                    <div className='w-screen h-full relative -left-6 '>
+                    <div className='w-screen h-full relative -left-6'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
                             <path
                                 fill="#000"
@@ -99,7 +99,7 @@ const CoreGuidingPrinciples = () => {
                     </div>
                 </Box>
 
-                <Box component={"div"} ref={boxRef} className={`w-screen relative grow -left-6 bg-black -top-12 pb-6 ${corePrinciplesOpen ? "min-h-screen" : ""}`}>
+                <Box component={"div"} ref={boxRef} className={`flex flex-col w-screen relative grow -left-6 bg-black -top-12 pb-6  ${corePrinciplesOpen ? "min-h-screen" : "min-h-full"}`}>
                     {!corePrinciplesOpen
                         ? <PrinciplesMarquee />
                         : <CorePrinciplesSlider forwardedRef={firstSnapRef as React.RefObject<HTMLDivElement>} />
@@ -115,8 +115,9 @@ const CoreGuidingPrinciples = () => {
                             {corePrinciplesOpen ? "Close" : "Learn More"}
                         </Button>
                     </div>
+
                     <div
-                        className='relative w-screen -bottom-12 h-[15vh] z-0 bg-black '
+                        className='relative min-w-screen -bottom-12 md:min-h-[30vh] grow  z-[100] bg-black '
                     />
                 </Box>
             </SectionWrapper>

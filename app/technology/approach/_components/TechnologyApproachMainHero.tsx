@@ -5,17 +5,20 @@ import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
 import React from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Image from 'next/image';
-import { Box, Button, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { MotionDiv } from '@/components/motion/MotionDiv';
 import { programmerImgFaded } from '@/library/image.cdn';
 import Link from 'next/link';
+import LeftFloatImgTextHero from '@/components/image/LeftFloatImgTextHero';
+// import HomeCards from '@/app/_home-page/components/HomeCards';
 
 const TechnologyApproachMainHero = () => {
 
     const sectionRef = React.useRef(null);
 
-    const desktop = useMediaQuery(`(min-width:1100px)`);
+    const tablet = useMediaQuery(breakpoints.md);
+    const desktop = useMediaQuery(breakpoints['2xl']);
+
 
     return (
         <SectionWrapper
@@ -31,13 +34,29 @@ const TechnologyApproachMainHero = () => {
             <MainHeroHeader
                 headerLabel={"Technology as a Catalyst for Growth, Balance, and Innovation"}
                 tagline={""}
-                size={desktop ? "lg" : "md"}
+                size={desktop ? "xl" : tablet ? "xl" : "md"}
             />
 
-            <div className='max-w-full'>
-
-                <div className='relative w-full px-6 h-full 2xl:-top-12 '>
-                    {/* Float Image With Shape */}
+            <div className='max-w-full w-full h-full md:mt-12'>
+                <LeftFloatImgTextHero
+                    imgPT='0'
+                    heroText={
+                        <>
+                            <Typography variant="h5" className='break-words pr-3'>
+                                I leverage structured principles, proven design patterns, and a strategic approach to build scalable, efficient, and meaningful technology solutions—driving both business success and personal enpowerment.
+                            </Typography>
+                        </>
+                    }
+                    photo={programmerImgFaded}
+                    pt='pt-[50px] md:pt-[150px] 2xl:pt-0 3xl:pt-[500px] '
+                    rounded='rounded-[90px]'
+                    imgWidth='w-[225px] md:w-[500px] md:landscape:w-[700px] lg:w-[600px] xl:landscape:w-[675px] 2xl:landscape:w-[900px] '
+                    imgHeight="h-[450px] md:h-[600px] md:landscape:h-[450px] lg:h-[700px] 2xl:h-[600px] "
+                    objectFit='cover'
+                // OtherComponent={<HomeCards />}
+                />
+                {/* <div className='relative w-full px-6 h-full 2xl:-top-12 '>
+                    
 
                     <div className=''>
                         <Box
@@ -80,21 +99,9 @@ const TechnologyApproachMainHero = () => {
                         </Box>
                     </div>
 
-                </div>
+                </div> */}
 
-                {/* Wrapped Text Content */}
-                <div
-                    className='relative pt-60'
-                >
-                    <Typography
-                        variant='subtitle1'
-                        component='span'
-                        fontWeight='600'
-                        className=''
-                    >
-                        I leverage structured principles, proven design patterns, and a strategic approach to build scalable, efficient, and meaningful technology solutions—driving both business success and personal enpowerment.
-                    </Typography>
-                </div>
+
 
 
 
@@ -125,3 +132,11 @@ const TechnologyApproachMainHero = () => {
 }
 
 export default TechnologyApproachMainHero
+
+export const breakpoints = {
+    sm: '(min-width: 640px)',   // 40rem
+    md: '(min-width: 768px)',   // 48rem
+    lg: '(min-width: 1024px)',  // 64rem
+    xl: '(min-width: 1280px)',  // 80rem
+    '2xl': '(min-width: 1536px)', // 96rem
+};

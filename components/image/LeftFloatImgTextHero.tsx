@@ -8,13 +8,14 @@ import Image from 'next/image';
 
 interface LeftFloatImgTextHeroProps {
     photo: string;
-    heroText: string;
+    heroText: React.ReactNode;
     pt: string;
     rounded: string;
     imgPT: string;
     imgHeight?: string;
     imgWidth?: string;
     objectFit?: React.CSSProperties["objectFit"];
+    OtherComponent?: React.ReactNode;
 }
 
 const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
@@ -25,16 +26,17 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     imgPT,
     imgHeight,
     imgWidth,
-    objectFit
+    objectFit,
+    OtherComponent
 }) => {
-    const imageHeight = imgHeight ? imgHeight : "h-[450px] md:h-[400px] 2xl:h-[600px]";
-    const imageWidth = imgWidth ? imgWidth : "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
-    const imageFit = objectFit ? objectFit :  "cover";
+    const imageHeight = imgHeight ?? "h-[450px] md:h-[400px] 2xl:h-[600px]";
+    const imageWidth = imgWidth ?? "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
+    const imageFit = objectFit ?? "cover";
 
     return (
         <ComponentTransition>
             <div className='relative -left-20 z-10'>
-                <div className={` relative w-screen px-6 h-full 2xl:-top-12  ${rounded}`}>
+                <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded}`}>
                     {/* Float Image */}
                     <Box
                         sx={{ bgcolor: "#000" }}
@@ -52,24 +54,37 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                             sizes='100vw'
                             width={500}
                             height={500}
-                            className={`relative w-full h-full overflow-x-visible overflow-y-hidden  ${rounded} `}
+                            className={`relative w-full h-full overflow-x-visible overflow-y-hidden ${rounded} object-[50%_0]`}
                             style={{ objectFit: imageFit }}
                         />
                     </Box>
                 </div>
-
                 {/* Wrapped Text Content */}
                 <div className={`relative ${pt} w-[105vw]`}>
-                    <Typography
-                        variant='subtitle1'
-                        component='span'
-                        fontWeight='100'
-                        className={`break-words relative `}
-                        fontSize={"1.5rem"}
+                    {typeof heroText === 'string' ? (
+                        <Typography
+                            variant='subtitle1'
+                            component='div'
+                            fontWeight={100}
+                            className="break-words relative"
+                        >
+                            {heroText}
+                        </Typography>
+                    ) : (
+                        heroText
+                    )}
+
+                    <div
+                        className="hidden lg:landscape:block"
                     >
-                        {heroText}
-                    </Typography>
+                        {
+                            OtherComponent
+                        }
+                    </div>
+
                 </div>
+
+
             </div>
         </ComponentTransition>
     );
