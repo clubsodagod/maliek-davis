@@ -84,9 +84,10 @@ const BackgroundUnderlay: React.FC<{ visible: boolean }> = ({ visible }) => {
                 return (
                     <div
                         key={idx}
-                        className="overflow-hidden whitespace-nowrap w-full relative flex items-center"
+                        className="overflow-hidden w-full relative flex items-center"
                         style={{
-                            height: screenHeight / 7,
+                            minHeight: screenHeight / 7,
+                            maxHeight: screenHeight / 7,
                         }}
                     >
                         <MotionDiv
@@ -101,6 +102,7 @@ const BackgroundUnderlay: React.FC<{ visible: boolean }> = ({ visible }) => {
                                     sx={{
                                         px: 4,
                                         fontSize: `${screenHeight / 20}px`,
+                                        lineHeight: 1,
                                         letterSpacing: '0.05em',
                                         display: 'inline-block',
                                         whiteSpace: 'nowrap',
@@ -113,6 +115,7 @@ const BackgroundUnderlay: React.FC<{ visible: boolean }> = ({ visible }) => {
                         </MotionDiv>
                     </div>
                 );
+
             })}
         </div>
     );

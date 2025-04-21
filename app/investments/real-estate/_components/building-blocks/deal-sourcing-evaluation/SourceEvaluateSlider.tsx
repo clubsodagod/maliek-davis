@@ -3,12 +3,14 @@
 import React, { useEffect } from "react";
 import { sourceEvaluationMethods } from "@/app/investments/_library/copy";
 import SourceEvaluateMethodCard from "./SourceEvaluateMethodCard";
+import { Button } from "@mui/material";
 
 type CorePrinciplesSliderProps = {
     forwardedRef: React.RefObject<HTMLDivElement>;
+    handleClose:(state:boolean)=>void;
 };
 
-const SourceEvaluateSlider = ({ forwardedRef }: CorePrinciplesSliderProps) => {
+const SourceEvaluateSlider = ({ forwardedRef, handleClose }: CorePrinciplesSliderProps) => {
 
     const boxRef = React.useRef<HTMLDivElement>(null);
 
@@ -22,14 +24,17 @@ const SourceEvaluateSlider = ({ forwardedRef }: CorePrinciplesSliderProps) => {
     return (
         <div
             ref={boxRef}
-            className="h-screen w-full overflow-y-scroll snap-y snap-mandatory bg-black text-white"
+            className="h-screen flex flex-col  bg-black text-white"
             style={{ scrollBehavior: "smooth" }}
         >
-            {sourceEvaluationMethods.map((method, index) => (
+            <div
+            className="overflow-y-scroll snap-y snap-mandatory w-full"
+            >
+                            {sourceEvaluationMethods.map((method, index) => (
                 <div
                     key={index}
                     ref={index === 0 ? forwardedRef : null}
-                    className="snap-start h-screen w-full flex items-center justify-center"
+                    className="snap-start h-full w-full flex flex-col items-center justify-center"
                 >
                     <SourceEvaluateMethodCard
                         method={method}
@@ -39,6 +44,17 @@ const SourceEvaluateSlider = ({ forwardedRef }: CorePrinciplesSliderProps) => {
                     />
                 </div>
             ))}
+            </div>
+
+                    <div
+                        className="w-full flex  justify-center"
+                    >
+                        <Button variant="contained"
+                            onClick={()=>handleClose(false)}
+                        >
+                            Close
+                        </Button>
+                    </div>
         </div>
     );
 };

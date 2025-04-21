@@ -18,8 +18,8 @@ const asap = Asap({
 const primaryBase = '#60abe4'; // soft sky blue
 const secondaryBase = '#8f11cc'; // bold violet
 
-const primaryMain = alpha(primaryBase, 0.7);
-const secondaryMain = alpha(secondaryBase, 0.7);
+const primaryMain = alpha(primaryBase, 1);
+const secondaryMain = alpha(secondaryBase, 1);
 
 // This is a light theme for Material-UI, using the Genos font and custom color palette
 export const lightTheme: ThemeOptions = createTheme({

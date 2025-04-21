@@ -2,17 +2,17 @@
 
 import { Typography } from '@mui/material'
 import React from 'react'
-import PageTransition from '../layout/PageTransition';
-import { MotionDivProps } from '@/library/types/motion.types';
-import { MotionDiv } from '../motion/MotionDiv';
+import PageTransition from '../layout/PageTransition'
+import { MotionDivProps } from '@/library/types/motion.types'
+import { MotionDiv } from '../motion/MotionDiv'
 
 interface MainHeroHeaderProps extends MotionDivProps {
-    headerLabel: string;
-    tagline: string;
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-    center?: string;
-    taglineClassName?: string;
-    headerLabelClassName?: string;
+    headerLabel: string
+    tagline: string | React.ReactNode
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+    center?: string
+    taglineClassName?: string
+    headerLabelClassName?: string
 }
 
 const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
@@ -21,61 +21,71 @@ const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
     size,
     center,
     taglineClassName,
+    headerLabelClassName,
     ...props
 }) => {
-
     const variant = () => {
         switch (size) {
             case 'xs':
-                return 'h6';
+                return 'h6'
             case 'sm':
-                return 'h5';
+                return 'h5'
             case 'md':
-                return 'h4';
+                return 'h4'
             case 'lg':
-                return 'h3';
+                return 'h3'
             case 'xl':
-                return 'h2';
+                return 'h2'
             default:
-                return 'h1';
+                return 'h1'
         }
-    };
+    }
 
-    const id = props.id ? props.id : '';
-
-    const textCenter = center;
+    const id = props.id || ''
+    const textCenter = center
 
     return (
-        <PageTransition
-            id={id}
-            className={`h-fit ${textCenter}`}
-        >
+        <PageTransition id={id} className={`h-fit ${textCenter}`}>
             <Typography
                 variant={variant()}
-                color='primary'
+                color="primary"
                 component={MotionDiv}
-                key={headerLabel} // Triggers animation when headerLabel changes
-                initial={{ opacity: 0, y: -20 }} // Start off-screen
-                animate={{ opacity: 1, y: 0 }} // Fade in and move down smoothly
-                exit={{ opacity: 0, y: 20 }} // Moves down when changing
-                transition={{ duration: 0.3, ease: "easeInOut" }} // Smooth effect
-                className="break-words text-pretty"
+                key={headerLabel}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className={`break-words text-pretty ${headerLabelClassName || ''}`}
             >
                 {headerLabel}
             </Typography>
-            <Typography
-                className={`${taglineClassName}`}
-                variant='subtitle1'
-                component={MotionDiv}
-                fontWeight={"bold"}
-                key={tagline} // Triggers animation when headerLabel changes
-                initial={{ opacity: 0, y: -20 }} // Start off-screen
-                animate={{ opacity: 1, y: 0 }} // Fade in and move down smoothly
-                exit={{ opacity: 0, y: 20 }} // Moves down when changing
-                transition={{ duration: 0.3, ease: "easeInOut" }} // Smooth effect
-            >
-                {tagline}
-            </Typography>
+
+            {typeof tagline === 'string' ? (
+                <Typography
+                    className={`${taglineClassName}`}
+                    variant="subtitle1"
+                    component={MotionDiv}
+                    fontWeight="bold"
+                    key={tagline}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                    {tagline}
+                </Typography>
+            ) : (
+                <MotionDiv
+                    key="tagline-node"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className={`${taglineClassName}`}
+                >
+                    {tagline}
+                </MotionDiv>
+            )}
         </PageTransition>
     )
 }
