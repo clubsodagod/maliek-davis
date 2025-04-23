@@ -38,7 +38,7 @@ const WorkWithMeOptionsCard:React.FC<WorkWithMeOptionsCardProps> = ({
                 <div className="w-screen flex gap-3 2xl:gap-20 overflow-x-auto absolute -left-6 2xl:justify-center">
                     {
                         partnerWithMeCopy.map((s, i) => (
-                            <div key={`${s.label} ${i}`} className='flex flex-col items-center justify-center'
+                            <div key={`${s.label} ${i}`} className='cursor-pointer flex flex-col items-center justify-center'
                                 onClick={() => { setFormType(i); handleClickOpen() }}
                             >
                                 <div className="flex flex-col items-center justify-center gap-2 w-[200px] ">

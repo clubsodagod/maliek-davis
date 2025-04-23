@@ -36,7 +36,7 @@ const FtPostCard: React.FC<PostCardProps> = ({ post, cardWrapper, cardImage }) =
             >
                 <MotionDiv className="flex flex-col gap-3">
                     {/* Image Block */}
-                    <MotionDiv className="w-full aspect-video overflow-hidden rounded-lg relative group">
+                    <MotionDiv className="w-full 2xl:w-fit aspect-video overflow-hidden rounded-lg relative group">
                         {isLoading ? (
                             <Skeleton variant="rectangular" width="100%" height="100%" />
                         ) : (
@@ -44,9 +44,9 @@ const FtPostCard: React.FC<PostCardProps> = ({ post, cardWrapper, cardImage }) =
                                 <Image
                                     alt={post.title}
                                     src={post.featuredImg}
-                                    className={cardImage.className}
+                                    className={`${cardImage.className}`}
                                     sizes="100vw"
-                                    fill
+                                    width={1000} height={1000}
                                     style={{ objectFit: 'cover' }}
                                 />
 

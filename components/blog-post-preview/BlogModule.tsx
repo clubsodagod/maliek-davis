@@ -63,48 +63,88 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                     size={size}
                 />
 
-                <MotionDiv
-                    className='flex flex-col gap-6 mt-12'
+                <div
+                    className='flex gap-6'
                 >
+                    <MotionDiv
+                        className='flex flex-col gap-6 mt-12 2xl:w-2/3'
+                    >
 
-                    <Typography variant="h4">
-                        Featured
-                    </Typography>
-                    <FtPostCard
-                        post={ftPosts ? ftPosts[0] : null}
-                        cardImage={{
-                            className: "",
-                        }}
-                        cardWrapper={{
-                            className: "w-full h-[400px]"
-                        }}
-                        w={9} h={16}
-                    />
-                </MotionDiv>
+                        <Typography variant="h4">
+                            Featured
+                        </Typography>
+                        <FtPostCard
+                            post={ftPosts ? ftPosts[0] : null}
+                            cardImage={{
+                                className: "2xl:w-full ",
+                            }}
+                            cardWrapper={{
+                                className: "w-full h-[400px] 2xl:h-full "
+                            }}
+                            w={9} h={16}
+                        />
+                    </MotionDiv>
+
+
+
+                    <MotionDiv className="hidden 2xl:flex flex-col gap-6 mt-12 min-w-1/3">
+                        <Typography variant="h4">Recent</Typography>
+
+                        <Grid2 container spacing={4} 
+                            flexDirection={"column"}
+                            className="w-full min-w-full"
+                        >
+                            {allPostsMockRealEstate?.map((post, index) => {
+                                if (index >= 3 || index === 0) return
+                                return (
+                                    <Grid2
+                                        size={{ xs: 6, md: 4, xl: 12 }}
+                                        key={post.id}
+                                        className={`min-w-full`}
+                                    >
+                                        <SmallPostCard
+                                            post={post}
+                                            cardImage={{
+                                                className: "h-[300px] w-full",
+                                            }}
+                                            cardWrapper={{
+                                                className: "w-full h-[300px]",
+                                            }}
+                                            w={9} h={16}
+                                        />
+                                    </Grid2>
+                                )
+                            })}
+                        </Grid2>
+                    </MotionDiv>
+                </div>
+
+
                 <MotionDiv className="flex flex-col gap-6 mt-12">
                     <Typography variant="h4">Recent</Typography>
 
                     <Grid2 container spacing={4}>
                         {allPostsMockRealEstate?.map((post, index) => {
-                            if(index>2 || index ===0)return
+                            if (index < 3 || index > 5 ) return
                             return (
-                            <Grid2
-                                size={{xs:6,md:4,xl:3}}
-                                key={post.id}
-                                className={``}
-                            >
-                                <SmallPostCard
-                                    post={post}
-                                    cardImage={{
-                                        className: "h-[300px] w-full",
-                                    }}
-                                    cardWrapper={{
-                                        className: "w-full h-[300px]",
-                                    }}
-                                    w={9} h={16}
-                                />
-                            </Grid2>
-                        )})}
+                                <Grid2
+                                    size={{ xs: 6, md: 4, xl: 3 }}
+                                    key={post.id}
+                                    className={``}
+                                >
+                                    <SmallPostCard
+                                        post={post}
+                                        cardImage={{
+                                            className: "h-[300px] w-full",
+                                        }}
+                                        cardWrapper={{
+                                            className: "w-full h-[300px]",
+                                        }}
+                                        w={9} h={16}
+                                    />
+                                </Grid2>
+                            )
+                        })}
                     </Grid2>
                 </MotionDiv>
 

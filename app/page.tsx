@@ -3,7 +3,7 @@ import MainHomeHero from './_home-page/components/MainHomeHero'
 import TechnologyMeetsStrategy from './_home-page/components/TechnologyMeetsStrategy'
 import WhatsHappening from './_home-page/components/WhatsHappening';
 import BlogPreview from './_home-page/components/BlogPreview';
-import BuildSomethingExtraordinary from './_home-page/components/BuildSomethingExtraordinary';
+import ChooseYourPathCTA from '@/components/contact-forms/ChooseYourPathCTA';
 
 const HomePage = () => {
   return (
@@ -13,7 +13,7 @@ const HomePage = () => {
       <TechnologyMeetsStrategy />
       <WhatsHappening />
       <BlogPreview />
-      <BuildSomethingExtraordinary />
+      <ChooseYourPathCTA />
     </>
 
 

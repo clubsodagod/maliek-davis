@@ -24,7 +24,7 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
         >
             <PageTransition
                     {...props}
-                className={`min-h-screen w-full  flex flex-col gap-12 px-6 pt-[12vh] md:pt-[75px] ${pb?pb:'pb-[6vh]'} relative  overflow-y-visible justify-between overflow-x-clip`}
+                className={`min-h-screen w-full  flex flex-col gap-12 px-6 2xl:px-40 pt-[12vh] md:pt-[75px] ${pb?pb:'pb-[6vh]'} relative  overflow-y-visible justify-between overflow-x-clip`}
             >
                     {children}
             </PageTransition>

@@ -100,9 +100,9 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                     paper: {
                         component: 'form',
                         sx: {
-                            backgroundColor: "transparent",
                             padding: 3,
                             borderRadius: "24px",
+                            bgcolor:"#fafafaaa"
                         },
                         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                             event.preventDefault();
@@ -138,11 +138,10 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                     <Typography variant="h6">{solutionsCTAForms[formType]?.title}</Typography>
                     {
                         solutionsCTAForms[formType]?.additionalSections[formSection].fields.map((field, i) => (
-                            <>
 
                                 <TextField
                                     variant="filled"
-                                    key={`${field.name} ${i}`}
+                                    key={`${field.name} ${i} ${field.type}`}
                                     name={field.name}
                                     label={field.label}
                                     type={field.type === "textarea" ? "text" : field.type}
@@ -163,7 +162,6 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                                             </MenuItem>
                                         ))}
                                 </TextField>
-                            </>
                         ))
 
                     }
