@@ -20,7 +20,7 @@ const InvestmentsMainModule = ({ }) => {
             <SectionWrapper>
 
                 <InvestorSilhouette />
-                <div className='absolute top-0 w-full h-full flex flex-col justify-between pt-[12vh]  px-6 pb-[6vh] md:pb-[12vh]'>
+                <div className='absolute top-0 w-full h-full flex flex-col justify-between pt-[12vh] left-0  px-6 pb-[6vh] md:pb-[12vh]'>
                     <MainHeroHeader
 
                         headerLabel={'Investments: Building, Scaling and Sustaining Wealth'} tagline={''}
