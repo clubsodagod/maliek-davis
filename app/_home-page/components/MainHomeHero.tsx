@@ -9,6 +9,7 @@ import React from 'react'
 import HomeCards from './HomeCards'
 
 const MainHomeHero = () => {
+
     return (
         <SectionWrapper
         >

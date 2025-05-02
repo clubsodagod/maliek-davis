@@ -208,8 +208,7 @@ export const mockBlogPosts: IBlogPostClient[] = [
     }
 ];
 
-
-const now = new Date();
+let now: string|Date = new Date().toISOString();
 
 export const mockCategories: NormalizedCategory[] = [
     {
@@ -219,7 +218,7 @@ export const mockCategories: NormalizedCategory[] = [
         tagline: 'Revolutionizing Real Estate with Technology',
         description: 'Explore innovations in real estate powered by AI, blockchain, IoT, and automation. PropTech transforms how we buy, sell, and manage property.',
 
-        photo: '/images/categories/proptech.jpg',
+        photo: 'https://images.pexels.com/photos/6446681/pexels-photo-6446681.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         video: '/videos/categories/proptech-intro.mp4',
         createdAt: now,
         updatedAt: now,
@@ -232,7 +231,7 @@ export const mockCategories: NormalizedCategory[] = [
         tagline: 'Future Living Starts at Home',
         description: 'Dive into home automation, smart energy systems, and connected living environments. Smart homes make life easier, greener, and safer.',
 
-        photo: '/images/categories/smart-homes.jpg',
+        photo: 'https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         video: '/videos/categories/smart-homes.mp4',
         createdAt: now,
         updatedAt: now,
@@ -245,7 +244,7 @@ export const mockCategories: NormalizedCategory[] = [
         tagline: 'Predict. Optimize. Profit.',
         description: 'From automated valuations to predictive maintenance and tenant behavior analytics, AI is changing how real estate decisions are made.',
 
-        photo: '/images/categories/ai-real-estate.jpg',
+        photo: 'https://images.pexels.com/photos/1072851/pexels-photo-1072851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         createdAt: now,
         updatedAt: now,
         subcategoryIds: []
@@ -257,7 +256,7 @@ export const mockCategories: NormalizedCategory[] = [
         tagline: 'Grow Smarter, Live Freer',
         description: 'Learn powerful strategies for long-term wealth creation, from real estate to tech investments. Build a life of financial freedom and impact.',
 
-        photo: '/images/categories/wealth-building.jpg',
+        photo: 'https://images.pexels.com/photos/259027/pexels-photo-259027.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         video: '/videos/categories/wealth-building.mp4',
         createdAt: now,
         updatedAt: now,
@@ -270,12 +269,14 @@ export const mockCategories: NormalizedCategory[] = [
         tagline: 'Think Outside the Stock',
         description: 'Explore REITs, crowdfunding, crypto, and other alternative investment vehicles for portfolio diversification and alpha generation.',
 
-        photo: '/images/categories/alternative-investments.jpg',
+        photo: 'https://images.pexels.com/photos/47047/gold-ingots-golden-treasure-47047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         createdAt: now,
         updatedAt: now,
         subcategoryIds: []
     }
 ];
+now = new Date();
+
 
 interface BlogPreviewProps {
     headerLabel: string;

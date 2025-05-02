@@ -72,9 +72,9 @@ const SmallPostCard: React.FC<PostCardProps> = ({
                                                 color="inherit"
                                                 className="mb-4"
                                             >
-                                                {post.meta.description}
+                                                {post.metaDescription}
                                             </Typography>
-                                            <Link href={`/blog/${post.slug}`} passHref>
+                                            <Link href={`/blog/posts/${post.slug}`} passHref>
                                                 <Button
                                                     variant="text"
                                                     color="inherit"

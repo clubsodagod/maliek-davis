@@ -13,6 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import FtPostCard from './FtPostCard';
 import { allPostsMockRealEstate, ftPostsMockRealEstate } from '@/app/investments/_library/copy';
 import SmallPostCard from './SmallPostCard';
+import { IBlogPost } from '@/database/models/blog-posts.model';
 
 
 
@@ -24,10 +25,11 @@ interface BlogPreviewProps {
     headerSize?: "xs" | "sm" | "md" | "lg" | "xl";
     tagline?: string;
     id: string;
+    posts?: IBlogPost[]|undefined;
 }
 
 const BlogModule: React.FC<BlogPreviewProps> = ({
-    headerLabel, headerSize, tagline, id
+    headerLabel, headerSize, tagline, id, posts:postsProps
 }) => {
 
     const sectionRef = React.useRef(null);
@@ -39,8 +41,8 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
 
     const size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "xl" : tabletXL ? "xl" : tablet ? "lg" : mobile ? "xl" : undefined;
 
-    const [posts, setPosts] = useState<IBlogPostClient[] | null>(allPostsMockRealEstate);
-    const [ftPosts, setFtPosts] = useState<IBlogPostClient[] | null>(ftPostsMockRealEstate);
+    const [posts, setPosts] = useState<IBlogPost[] | undefined>(postsProps);
+    const [ftPosts, setFtPosts] = useState<IBlogPost[] | undefined>(postsProps);
     const [ftPost, setFtPost] = useState<number>(0);
     return (
 
@@ -74,7 +76,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                             Featured
                         </Typography>
                         <FtPostCard
-                            post={ftPosts ? ftPosts[0] : null}
+                            post={ftPosts ? ftPosts[ftPost] : null}
                             cardImage={{
                                 className: "2xl:w-full ",
                             }}
@@ -94,7 +96,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                             flexDirection={"column"}
                             className="w-full min-w-full"
                         >
-                            {allPostsMockRealEstate?.map((post, index) => {
+                            {ftPosts?.map((post, index) => {
                                 if (index >= 3 || index === 0) return
                                 return (
                                     <Grid2
@@ -124,7 +126,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                     <Typography variant="h4">Recent</Typography>
 
                     <Grid2 container spacing={4}>
-                        {allPostsMockRealEstate?.map((post, index) => {
+                        {posts?.map((post, index) => {
                             if (index < 3 || index > 5 ) return
                             return (
                                 <Grid2

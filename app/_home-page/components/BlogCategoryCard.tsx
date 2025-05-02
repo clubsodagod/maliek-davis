@@ -1,14 +1,14 @@
 "use client"
 
 import { MotionDiv } from '@/components/motion/MotionDiv';
-import { NormalizedCategory } from '@/library/types/blog.types'
 import { Typography } from '@mui/material';
 import React from 'react'
 import { useRouter } from 'next/navigation';
+import { ICategory } from '@/database/models/category.model';
 
 
 interface BlogCategoryCardProps {
-    category:NormalizedCategory;
+    category:ICategory;
 }
 
 const BlogCategoryCard: React.FC<BlogCategoryCardProps> = ({
@@ -33,7 +33,7 @@ const BlogCategoryCard: React.FC<BlogCategoryCardProps> = ({
 
     return (
         <MotionDiv
-            className={` min-w-[275px] h-full flex rounded-4xl justify-center items-center`}
+            className={` min-w-[275px] min-h-[150px] h-full flex rounded-4xl justify-center items-center`}
             style={{
                 backdropFilter: "blur(25px)",
                 backgroundColor: "#fafafa45"

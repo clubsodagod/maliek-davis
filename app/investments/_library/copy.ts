@@ -181,6 +181,7 @@ export const mockCaseStudies: CaseStudyDocumentType[] = [
 
 let now: Date | string = new Date();
 
+now = now.toISOString();
 export const mockInvestmentCategories: NormalizedCategory[] = [
     // ... your existing categories
     {
@@ -296,7 +297,6 @@ export const mockInvestmentCategories: NormalizedCategory[] = [
     }
 ];
 
-now = now.toISOString();
 
 export const ftPostsMockRealEstate: IBlogPostClient[] = [
     {
@@ -305,7 +305,7 @@ export const ftPostsMockRealEstate: IBlogPostClient[] = [
         slug: "ai-property-management",
         featuredImg: "https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "Full blog post content goes here...",
-        author: { id: "a1", name: "Maliek Davis", avatar: "/avatars/maliek.jpg" },
+        author: { id: "a1", name: "Maliek Davis", avatar: "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10000", name: "Property Tech", slug: "property_tech" },
         createdAt: now,
         updatedAt: now,
@@ -335,7 +335,7 @@ export const ftPostsMockRealEstate: IBlogPostClient[] = [
         slug: "top-investment-strategies-2025",
         featuredImg: "https://images.pexels.com/photos/12955837/pexels-photo-12955837.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "Content about investment strategies...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar: "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10003", name: "Wealth Building Strategies", slug: "wealth-building" },
         createdAt: now,
         updatedAt: now,
@@ -365,7 +365,7 @@ export const ftPostsMockRealEstate: IBlogPostClient[] = [
         slug: "fractional-real-estate",
         featuredImg: "https://images.pexels.com/photos/7578892/pexels-photo-7578892.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "What is fractional ownership and why it matters...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar: "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10005", name: "Fractional Real Estate", slug: "fractional-real-estate" },
         createdAt: now,
         updatedAt: now,
@@ -399,7 +399,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "analyze-rental-property",
         featuredImg: "https://images.pexels.com/photos/8962687/pexels-photo-8962687.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "Learn how to analyze rental properties for long-term cash flow.",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10008", name: "Rental Property Cash Flow", slug: "rental-cashflow" },
         createdAt: now,
         updatedAt: now,
@@ -443,7 +443,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "syndication-guide",
         featuredImg: "https://images.pexels.com/photos/10486073/pexels-photo-10486073.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10006", name: "Real Estate Syndication", slug: "real-estate-syndication" },
         createdAt: now,
         updatedAt: now,
@@ -465,7 +465,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "smart-homes-value",
         featuredImg: "https://images.pexels.com/photos/5587962/pexels-photo-5587962.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10001", name: "Smart Homes", slug: "smart-homes" },
         createdAt: now,
         updatedAt: now,
@@ -487,7 +487,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "wealth-plan-real-estate",
         featuredImg: "https://images.pexels.com/photos/15409440/pexels-photo-15409440/free-photo-of-exterior-of-residential-homes.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10003", name: "Wealth Building Strategies", slug: "wealth-building" },
         createdAt: now,
         updatedAt: now,
@@ -509,7 +509,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "ai-deal-analysis",
         featuredImg: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10002", name: "AI in Real Estate", slug: "ai-real-estate" },
         createdAt: now,
         updatedAt: now,
@@ -553,7 +553,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "credit-in-real-estate",
         featuredImg: "https://images.pexels.com/photos/5524165/pexels-photo-5524165.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10013", name: "Credit & Lending", slug: "credit-and-lending" },
         createdAt: now,
         updatedAt: now,
@@ -575,7 +575,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "tax-advantages-real-estate",
         featuredImg: "https://images.pexels.com/photos/8583893/pexels-photo-8583893.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10009", name: "Tax Strategies for Investors", slug: "tax-strategies" },
         createdAt: now,
         updatedAt: now,
@@ -597,7 +597,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "location-matters",
         featuredImg: "https://images.pexels.com/photos/5071141/pexels-photo-5071141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10000", name: "Property Tech", slug: "property_tech" },
         createdAt: now,
         updatedAt: now,
@@ -619,7 +619,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "passive-income-real-estate",
         featuredImg: "https://images.pexels.com/photos/28272345/pexels-photo-28272345/free-photo-of-a-home-with-brick-walkway-and-red-brick-driveway.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10003", name: "Wealth Building Strategies", slug: "wealth-building" },
         createdAt: now,
         updatedAt: now,
@@ -641,7 +641,7 @@ export const allPostsMockRealEstate: IBlogPostClient[] = [
         slug: "future-of-real-estate",
         featuredImg: "https://images.pexels.com/photos/8894802/pexels-photo-8894802.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         content: "...",
-        author: { id: "a1", name: "Maliek Davis" },
+        author: { id: "a1", name: "Maliek Davis", avatar:"https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/ipobrq2pzy4fvgqynuc6_ohavpv.webp" },
         category: { id: "10011", name: "Tech-Enabled Investing", slug: "tech-investing" },
         createdAt: now,
         updatedAt: now,
@@ -737,3 +737,70 @@ export const sourceEvaluationMethods: SourceEvaluate[] = [
     },
 ];
 
+
+
+export const mockCategories: NormalizedCategory[] = [
+    {
+        id: "10000",
+        name: 'Property Tech',
+        slug: 'property_tech',
+        tagline: 'Revolutionizing Real Estate with Technology',
+        description: 'Explore innovations in real estate powered by AI, blockchain, IoT, and automation. PropTech transforms how we buy, sell, and manage property.',
+
+        photo: 'https://images.pexels.com/photos/6446681/pexels-photo-6446681.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        video: '/videos/categories/proptech-intro.mp4',
+        createdAt: now,
+        updatedAt: now,
+        subcategoryIds: []
+    },
+    {
+        id: "10001",
+        name: 'Smart Homes',
+        slug: 'smart-homes',
+        tagline: 'Future Living Starts at Home',
+        description: 'Dive into home automation, smart energy systems, and connected living environments. Smart homes make life easier, greener, and safer.',
+
+        photo: 'https://images.pexels.com/photos/1571459/pexels-photo-1571459.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        video: '/videos/categories/smart-homes.mp4',
+        createdAt: now,
+        updatedAt: now,
+        subcategoryIds: []
+    },
+    {
+        id: "10002",
+        name: 'AI in Real Estate',
+        slug: 'ai-real-estate',
+        tagline: 'Predict. Optimize. Profit.',
+        description: 'From automated valuations to predictive maintenance and tenant behavior analytics, AI is changing how real estate decisions are made.',
+
+        photo: 'https://images.pexels.com/photos/1072851/pexels-photo-1072851.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        createdAt: now,
+        updatedAt: now,
+        subcategoryIds: []
+    },
+    {
+        id: "10003",
+        name: 'Wealth Building Strategies',
+        slug: 'wealth-building',
+        tagline: 'Grow Smarter, Live Freer',
+        description: 'Learn powerful strategies for long-term wealth creation, from real estate to tech investments. Build a life of financial freedom and impact.',
+
+        photo: 'https://images.pexels.com/photos/259027/pexels-photo-259027.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        video: '/videos/categories/wealth-building.mp4',
+        createdAt: now,
+        updatedAt: now,
+        subcategoryIds: []
+    },
+    {
+        id: "10004",
+        name: 'Alternative Investments',
+        slug: 'alternative-investments',
+        tagline: 'Think Outside the Stock',
+        description: 'Explore REITs, crowdfunding, crypto, and other alternative investment vehicles for portfolio diversification and alpha generation.',
+
+        photo: 'https://images.pexels.com/photos/47047/gold-ingots-golden-treasure-47047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        createdAt: now,
+        updatedAt: now,
+        subcategoryIds: []
+    }
+];

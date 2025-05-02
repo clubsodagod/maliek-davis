@@ -58,6 +58,6 @@ export interface NormalizedCategory {
     subcategoryIds: string[]; // normalized reference to subcategories
     photo: string;
     video?: string;
-    createdAt: Date; // ISO string for serialization
-    updatedAt: Date;
+    createdAt: string; // ISO string for serialization
+    updatedAt: string;
 }

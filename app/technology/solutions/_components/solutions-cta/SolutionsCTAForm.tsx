@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,6 +14,8 @@ import { MotionDiv } from '@/components/motion/MotionDiv';
 import { solutionsCTAForms } from '../../_library/form.const';
 import { Typography, MenuItem } from '@mui/material';
 import { IFormField } from '@/library/types/cta-form.types';
+import { submitCTAForm } from '@/utility/fetchers/contact.fetchers';
+import { IContactFormClient } from '@/database/models/cta-forms.model';
 
 
 interface SolutionsCTAFormProps extends MotionDivProps {
@@ -89,6 +93,10 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
     const requiredFields = currentFields.filter(field => field.required);
     const isSectionComplete = requiredFields.every(field => completedFields.has(field.name));
 
+    async function handleSubmit(){
+        throw new Error("not implemented")
+    }
+
     return (
         <MotionDiv
             {...props}
@@ -105,11 +113,12 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                             bgcolor:"#fafafaaa"
                         },
                         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+                            
                             event.preventDefault();
                             const formData = new FormData(event.currentTarget);
-                            const formJson = Object.fromEntries((formData as any).entries());
-                            const email = formJson.email;
-                            console.log(email);
+                            submitCTAForm({
+                                ...(formValues as unknown as IContactFormClient)
+                            })
                             handleClose();
                         },
                     },
@@ -182,15 +191,22 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                     }
                     <Button
                         disabled={!isSectionComplete}
+                        type={
+                            formSection === solutionsCTAForms[formType]?.additionalSections.length - 1 ? "submit" : "button"
+                        }
                         onClick={()=>{
                             if (formSection < solutionsCTAForms[formType]?.additionalSections.length - 1) {
                                 setFormSection(formSection + 1);
+                            } else if (formSection === solutionsCTAForms[formType]?.additionalSections.length - 1) {
+                                return
                             } else {
                                 return
                             }
                         }}
                     >
-                        Next
+                        {
+                            formSection === solutionsCTAForms[formType]?.additionalSections.length - 1 ? "Submit" : "Next"
+                        }
                     </Button>
                 </DialogActions>
             </Dialog>

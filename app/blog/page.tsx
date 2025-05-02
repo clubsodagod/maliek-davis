@@ -1,11 +1,16 @@
 import React from 'react'
 import BlogPageMainModule from './_components/BlogPageMainModule'
-import { allPostsMockRealEstate } from '../investments/_library/copy'
+import { IBlogPost } from '@/database/models/blog-posts.model';
+import { ICategory } from '@/database/models/category.model';
+import { getAllBlogPostCategories, paginatedBlogFetcher } from '@/utility/fetchers/blog.fetcher';
 
-const BlogPage = () => {
+export default async function BlogPage () {
+
+    const categories = await getAllBlogPostCategories() as unknown as ICategory[];
+
+    const posts = await paginatedBlogFetcher(0, 0) as unknown as IBlogPost[];
+
     return (
-        <BlogPageMainModule posts={allPostsMockRealEstate}/>
+        <BlogPageMainModule posts={posts} categories={categories} />
     )
 }
-
-export default BlogPage

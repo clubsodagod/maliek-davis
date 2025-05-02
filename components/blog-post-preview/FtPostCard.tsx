@@ -4,19 +4,18 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Typography, Skeleton, Button } from '@mui/material';
 import { motion } from 'framer-motion';
-
-import { IBlogPostClient } from '@/library/types/blog.types';
 import ComponentTransition from '../layout/ComponentTransition';
 import { MotionDiv } from '../motion/MotionDiv';
 import { MotionDivProps } from '@/library/types/motion.types';
 import Link from 'next/link';
+import { IBlogPost } from '@/database/models/blog-posts.model';
 
 interface ImgProps extends MotionDivProps {
     img?: HTMLImageElement;
 }
 
 export interface PostCardProps {
-    post: IBlogPostClient | null;
+    post: IBlogPost | null;
     cardWrapper: MotionDivProps;
     cardImage: ImgProps;
     w:number;
@@ -83,9 +82,9 @@ const FtPostCard: React.FC<PostCardProps> = ({ post, cardWrapper, cardImage }) =
                                                 color="inherit"
                                                 className="mb-4"
                                             >
-                                                {post.meta.description}
+                                                {post.metaDescription}
                                             </Typography>
-                                            <Link href={`/blog/${post.slug}`} passHref>
+                                            <Link href={`/blog/posts/${post.slug}`} passHref>
                                                 <Button
                                                     variant="text"
                                                     color="inherit"

@@ -2,19 +2,19 @@
 
 import ComponentTransition from '@/components/layout/ComponentTransition';
 import { MotionDiv } from '@/components/motion/MotionDiv';
-import { IBlogPostClient } from '@/library/types/blog.types';
 import { Typography } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { IBlogPost } from '@/database/models/blog-posts.model';
 // import useMediaQuery from '@mui/material/useMediaQuery';
 
 // Extend dayjs with the relativeTime plugin
 dayjs.extend(relativeTime);
 
 
-const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
+const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
     post,
 }) => {
 
@@ -31,7 +31,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
                 >
                     <Image
                         alt={`something`}
-                        src={post.featuredImg}
+                        src={post?.featuredImg||""}
                         sizes='100vw'
                         width={9}
                         height={16}
@@ -45,13 +45,13 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
                 <div className='absolute top-0 text-white h-[40vh] md:landscape:h-[50vh] xl:h-[60dvh] flex flex-col justify-end  py-6 px-6 pl-6 '>
                     <MotionDiv>
                         <Typography variant='h6' fontWeight={"bold"}>
-                            {post.title}
+                            {post?.title}
                         </Typography>
                     </MotionDiv>
 
                     <MotionDiv>
                         <Typography variant='body1'>
-                            {post.meta.description}
+                            {post?.metaDescription}
                         </Typography>
                     </MotionDiv>
 
@@ -61,7 +61,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
 
                         <Image
                             alt={`something`}
-                            src={post.featuredImg}
+                            src={post?.featuredImg||""}
                             sizes='100vw'
                             width={9}
                             height={16}
@@ -76,11 +76,11 @@ const BlogPreviewCard: React.FC<{ post: IBlogPostClient }> = ({
                         >
 
                             <Typography variant='body1'>
-                                {post.author.name}
+                                {post?.author.toString()}
                             </Typography>
 
                             <Typography variant='body1'>
-                                {dayjs(post.createdAt).fromNow()}
+                                {dayjs(post?.createdAt).fromNow()}
                             </Typography>
 
                         </MotionDiv>
