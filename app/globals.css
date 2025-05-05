@@ -3,6 +3,8 @@
 :root {
   --background: #fafafa;
   --foreground: #171717;
+  --textfield-border-color: #171717;
+  --label-color: #171717;
 }
 
 @theme inline {
@@ -17,6 +19,8 @@
   :root {
     --background: #232323;
     --foreground: #fafafa;
+    --textfield-border-color: #fafafa; /* light border in dark mode */
+    --label-color: #fafafa;
   }
 }
 

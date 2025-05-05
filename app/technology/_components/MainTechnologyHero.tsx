@@ -112,6 +112,7 @@ const MainTechnologyHero = ({ }) => {
 
                         </MotionDiv>
                         <Button variant='contained'
+                        href='/contact'
                             className=''
                         >
                             Schedule Your Strategy Call

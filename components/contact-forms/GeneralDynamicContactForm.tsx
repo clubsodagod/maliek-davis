@@ -1,6 +1,8 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-// import { register } from "module";
-
+import { Button, Typography } from "@mui/material";
+import { useForm } from "react-hook-form";
+import FormInput from "./FormInput";
+import FormSelect from "./FormSelect";
+import { submitInquiryForm } from "@/utility/fetchers/contact.fetchers";
 
 type InquiryType = "technology" | "investment" | "employment" | "home-seller";
 
@@ -41,192 +43,149 @@ interface HomeSellerInquiry extends BaseInquiry {
     urgency: "immediate" | "within 3 months" | "within 6 months" | "flexible";
 }
 
-export type ContactInquiry = TechnologyInquiry | InvestmentInquiry | EmploymentInquiry | HomeSellerInquiry;
+export type ContactInquiry =
+    | TechnologyInquiry
+    | InvestmentInquiry
+    | EmploymentInquiry
+    | HomeSellerInquiry;
+
+const inquiryTypeOptions = [
+    { label: "Technology", value: "technology" },
+    { label: "Investment", value: "investment" },
+    { label: "Employment", value: "employment" },
+    { label: "Home Owner", value: "home-seller" },
+];
 
 export default function GeneralDynamicContact() {
+    const {
+        control,
+        handleSubmit,
+        reset,
+        watch,
+    } = useForm<ContactInquiry>();
 
+    const inquiryType = watch("inquiryType");
 
+    const onSubmit = async (data: ContactInquiry) => {
+                try {
+                    await submitInquiryForm(data as unknown as ContactInquiry);
+                } catch (error) {
+                    console.error("Form submission failed:", error);
+                }
+        console.log("Submitted:", data);
+        reset();
+    };
 
     return (
-        <div className="w-full md:w-1/2 xl:w-1/3 mx-auto xl:mx-0 rounded-lg xl:ml-[48px] flex flex-col justify-center gap-6">
-            <Typography variant="h5" className="text-xl font-bold mb-4">Contact Me</Typography>
-                <form  className="space-y-4">
+        <div className="w-full md:w-1/2 xl:w-1/3 mx-auto xl:mx-0 rounded-4xl xl:ml-[48px] flex flex-col justify-center gap-6">
+            <Typography variant="h5" className="text-xl font-bold mb-4 md:text-center">Contact Me</Typography>
 
-                    {/* Inquiry Type */}
-                    <div className="w-full">
-                        <FormControl variant="filled" className="w-full">
-                            <InputLabel variant="standard" htmlFor="inquiry-type">
-                                Inquiry Type
-                            </InputLabel>
-                            <Select
-                            className="w-full"
-                                defaultValue={30}
-                                inputProps={{
-                                    name: 'inquiryType',
-                                    id: 'inquiry-type',
-                                }}
-                            >
-                                <MenuItem value={"technology"}>Technology</MenuItem>
-                                <MenuItem value={"investment"}>Investment</MenuItem>
-                                <MenuItem value={"employment"}>Employment</MenuItem>
-                                <MenuItem value={"home-seller"}>Home Owner</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
+            <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+                <FormSelect name="inquiryType" label="Inquiry Type" options={inquiryTypeOptions} control={control}  />
+                <FormInput name="name" label="Name" control={control} />
+                <FormInput name="email" label="Email" control={control} />
+                <FormInput name="message" label="Message" control={control} multiline rows={3} />
 
-                    {/* Company */}
-                    <div>
-                        <TextField
-                        fullWidth
-                        variant="filled"
-                            name="company"
-                            label="Company"
+                {inquiryType === "technology" && (
+                    <>
+                        <FormSelect
+                            name="techCategory"
+                            label="Tech Category"
+                            control={control}
+                            options={[
+                                { label: "Web Development", value: "web development" },
+                                { label: "AI/ML", value: "AI/ML" },
+                                { label: "Software Consulting", value: "software consulting" },
+                                { label: "Other", value: "other" },
+                            ]}
                         />
-                    </div>
+                        <FormInput name="projectBudget" label="Project Budget ($)" type="number" control={control} />
+                        <FormInput name="deadline" label="Deadline" type="date" control={control} />
+                    </>
+                )}
 
-                    {/* Name */}
-                    <div>
-                        <TextField
-                        fullWidth
-                        variant="filled"
-                            name="name"
-                            label="Name"
+                {inquiryType === "investment" && (
+                    <>
+                        <FormSelect
+                            name="investmentType"
+                            label="Investment Type"
+                            control={control}
+                            options={[
+                                { label: "Real Estate", value: "real estate" },
+                                { label: "Startups", value: "startups" },
+                                { label: "Stocks", value: "stocks" },
+                                { label: "Crypto", value: "crypto" },
+                            ]}
                         />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                        <TextField
-                        fullWidth
-                        variant="filled"
-                            name="email"
-                            label="Email"
+                        <FormInput name="investmentAmount" label="Investment Amount ($)" type="number" control={control} />
+                        <FormSelect
+                            name="riskPreference"
+                            label="Risk Preference"
+                            control={control}
+                            options={[
+                                { label: "Low", value: "low" },
+                                { label: "Medium", value: "medium" },
+                                { label: "High", value: "high" },
+                            ]}
                         />
-                    </div>
+                    </>
+                )}
 
-                    {/* Message */}
-                    <div>
-                        <TextField
-                        fullWidth
-                        variant="filled"
-                            name="message"
-                            label="message"
-                            multiline
-                            rows={3}
+                {inquiryType === "employment" && (
+                    <>
+                        <FormInput name="companyName" label="Company Name" control={control} />
+                        <FormInput name="jobTitle" label="Job Title" control={control} />
+                        <FormSelect
+                            name="jobType"
+                            label="Job Type"
+                            control={control}
+                            options={[
+                                { label: "Full-time", value: "full-time" },
+                                { label: "Part-time", value: "part-time" },
+                                { label: "Contract", value: "contract" },
+                                { label: "Freelance", value: "freelance" },
+                            ]}
                         />
-                    </div>
+                    </>
+                )}
 
+                {inquiryType === "home-seller" && (
+                    <>
+                        <FormInput name="propertyAddress" label="Property Address" control={control} />
+                        <FormSelect
+                            name="propertyType"
+                            label="Property Type"
+                            control={control}
+                            options={[
+                                { label: "Single Family", value: "single-family" },
+                                { label: "Multi Family", value: "multi-family" },
+                                { label: "Condo", value: "condo" },
+                                { label: "Land", value: "land" },
+                            ]}
+                        />
+                        <FormInput name="askingPrice" label="Asking Price ($)" type="number" control={control} />
+                        <FormSelect
+                            name="urgency"
+                            label="Urgency"
+                            control={control}
+                            options={[
+                                { label: "Immediate", value: "immediate" },
+                                { label: "Within 3 Months", value: "within 3 months" },
+                                { label: "Within 6 Months", value: "within 6 months" },
+                                { label: "Flexible", value: "flexible" },
+                            ]}
+                        />
+                    </>
+                )}
 
-
-
-                    {/* Dynamic Fields */}
-                    {/* {inquiryType === "technology" && (
-                        <>
-                            <div>
-                                <label className="block font-medium">Tech Category</label>
-                                <select {...register("techCategory")} className="w-full p-2 border rounded">
-                                    <option value="web development">Web Development</option>
-                                    <option value="AI/ML">AI/ML</option>
-                                    <option value="software consulting">Software Consulting</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block font-medium">Project Budget ($)</label>
-                                <input {...register("projectBudget")} type="number" className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Deadline</label>
-                                <input {...register("deadline")} type="date" className="w-full p-2 border rounded" />
-                            </div>
-                        </>
-                    )}
-
-                    {inquiryType === "investment" && (
-                        <>
-                            <div>
-                                <label className="block font-medium">Investment Type</label>
-                                <select {...register("investmentType")} className="w-full p-2 border rounded">
-                                    <option value="real estate">Real Estate</option>
-                                    <option value="startups">Startups</option>
-                                    <option value="stocks">Stocks</option>
-                                    <option value="crypto">Crypto</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block font-medium">Investment Amount ($)</label>
-                                <input {...register("investmentAmount")} type="number" className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Risk Preference</label>
-                                <select {...register("riskPreference")} className="w-full p-2 border rounded">
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </select>
-                            </div>
-                        </>
-                    )}
-
-                    {inquiryType === "employment" && (
-                        <>
-                            <div>
-                                <label className="block font-medium">Company Name</label>
-                                <input {...register("companyName")} className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Job Title</label>
-                                <input {...register("jobTitle")} className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Job Type</label>
-                                <select {...register("jobType")} className="w-full p-2 border rounded">
-                                    <option value="full-time">Full-time</option>
-                                    <option value="part-time">Part-time</option>
-                                    <option value="contract">Contract</option>
-                                    <option value="freelance">Freelance</option>
-                                </select>
-                            </div>
-                        </>
-                    )}
-
-                    {inquiryType === "home-seller" && (
-                        <>
-                            <div>
-                                <label className="block font-medium">Property Address</label>
-                                <input {...register("propertyAddress")} className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Property Type</label>
-                                <select {...register("propertyType")} className="w-full p-2 border rounded">
-                                    <option value="single-family">Single Family</option>
-                                    <option value="multi-family">Multi-Family</option>
-                                    <option value="condo">Condo</option>
-                                    <option value="land">Land</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block font-medium">Asking Price ($)</label>
-                                <input {...register("askingPrice")} type="number" className="w-full p-2 border rounded" />
-                            </div>
-                            <div>
-                                <label className="block font-medium">Urgency</label>
-                                <select {...register("urgency")} className="w-full p-2 border rounded">
-                                    <option value="immediate">Immediate</option>
-                                    <option value="within 3 months">Within 3 Months</option>
-                                    <option value="within 6 months">Within 6 Months</option>
-                                    <option value="flexible">Flexible</option>
-                                </select>
-                            </div>
-                        </>
-                    )} */}
-
-                    <Button type="submit" variant="contained" className="w-full bg-blue-600 text-white p-2 rounded">
-                        Submit Inquiry
+                <div
+                    className="flexjustify-center items-center md:px-1/3 mt-6"
+                >
+                    <Button variant="contained" color="primary" type="submit" fullWidth>
+                        Submit
                     </Button>
-                </form>
-
+                </div>
+            </form>
         </div>
     );
-};
-
+}

@@ -117,7 +117,7 @@ const BlogPreview:React.FC<BlogPreviewProps> = ({
                                         categories && categories.map((c) => {
                                             return (
                                                 <BlogCategoryCard
-                                                key={c.id}
+                                                key={`${c._id} ${c.name}`}
                                                     category={c}
                                                 />
                                             )

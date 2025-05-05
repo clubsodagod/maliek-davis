@@ -2,7 +2,7 @@
 "use client"
 
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
-import { useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import React from 'react'
 import MainHeroHeader from '../headers/MainHeroHeader';
 import SectionWrapper from '../wrappers/SectionWrapper';
@@ -22,8 +22,12 @@ const ChooseYourPathCTA = ({ }) => {
     const [formType, setFormType] = React.useState<number>(0);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setOpen(!open);
     };
+
+    const handleSetFormType = (type: number) => {
+        setFormType(type);
+    }
 
     return (
         <SectionWrapper
@@ -38,16 +42,20 @@ const ChooseYourPathCTA = ({ }) => {
             <MainHeroHeader
                 headerLabel={"Let's Work Together!"}
                 tagline={"Choose Your Path"}
-                size={desktop ? "lg" : "xl"}
+                size={desktop ? undefined : "xl"}
             />
 
             <div className='max-w-full w-full h-full'>
                 <LeftFloatImgTextHero
                     imgPT='mt-[25px]'
-                    heroText="Together we can mastermind innovation."
+                    heroText={
+                        <Typography variant="h4" className='break-words sm:pr-3 2xl:text-[2rem] '>
+                            Together we can mastermind innovation.
+                        </Typography>
+                    }
                     objectFit='cover'
                     photo='https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742150340/fpgxqrksmtjyxmhwv8jr_byigi9.webp'
-                    pt='pt-[100px]'
+                    pt='pt-[25px] sm:pt-[100px]'
                     rounded='rounded-[90px]'
                     imgHeight='h-[250px] md:h-[400px] 2xl:h-[600px]'
                     imgWidth='w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]'
@@ -59,14 +67,14 @@ const ChooseYourPathCTA = ({ }) => {
                 <WorkWithMeOptionsCard
                     desktop={desktop}
                     formType={formType}
-                    setFormType={setFormType}
+                    setFormType={handleSetFormType}
                     handleClickOpen={handleClickOpen}
                 />
             </div>
 
             <SolutionsCTAForm
                 open={open}
-                setOpen={setOpen}
+                setOpen={handleClickOpen}
                 formType={formType}
             />
         </SectionWrapper>

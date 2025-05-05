@@ -35,7 +35,7 @@ const TechnologyMeetsStrategy = () => {
 
         return (
             <MotionDiv
-                className="w-full flex gap-3 relative z-50 xl:w-fit xl:mx-auto"
+                className="w-full flex gap-3 relative z-50 xl:w-fit xl:mx-auto "
             >
                 <Button variant="contained" href={`/technology/portfolio`} color='primary'>
                     Explore Work
@@ -66,6 +66,7 @@ const TechnologyMeetsStrategy = () => {
                                     component={"h5"}
                                     variant='h5'
                                     fontSize={{ xs: "1rem", sm: "2rem" }}
+                                    className='md:pl-30'
                                 >
                                     {technologyMeetsStrategyCopy}
                                 </Typography>
@@ -105,6 +106,9 @@ const TechnologyMeetsStrategy = () => {
                         imgPT='0'
                         heroText={
                             <>
+                            <div
+                                className='relative w-full md:pl-40 rounded-4xl'
+                            >
                                 {
                                     coreExpertiseCopy.map((e, i) => (
                                         <div
@@ -128,6 +132,8 @@ const TechnologyMeetsStrategy = () => {
                                         </div>
                                     ))
                                 }
+                            </div>
+                                
                             </>
 
                         }

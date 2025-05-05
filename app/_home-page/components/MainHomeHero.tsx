@@ -26,13 +26,13 @@ const MainHomeHero = () => {
                     imgPT='0'
                     heroText={
                         <>
-                            <Typography variant="h2" fontSize={{xs:"1.75rem", sm:"3rem", md:"4rem", "3xl":"1rem"}} className='break-words pr-3'>
+                            <Typography variant="h2" fontSize={{xs:"1.6rem", sm:"3rem", md:"4rem", xl:"2.75rem" }} className='break-words sm:pr-3 2xl:text-[3rem]'>
                                 Engineering the Future: Technology, Finance, and Innovation Unleashed
                             </Typography>
                         </>
                     }
                     photo={programmerImg}
-                    pt='pt-[50px] md:pt-[100px] 2xl:pt-0 3xl:pt-[500px] '
+                    pt='pt-[100px] md:pt-[100px] 2xl:pt-0 3xl:pt-[500px] '
                     rounded='rounded-[90px]'
                     imgWidth='w-[225px] md:w-[500px] md:landscape:w-[500px] lg:w-[600px] xl:landscape:w-[675px] 2xl:landscape:w-[900px] '
                     imgHeight="h-[450px] md:h-[600px] lg:h-[700px] 2xl:h-[600px] "

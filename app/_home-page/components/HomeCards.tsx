@@ -38,7 +38,7 @@ const HomeCards = ({ }) => {
         <ComponentTransition
             id="home-cards"
         >
-            <MotionDiv className=" flex justify-between relative -left-6 px-6">
+            <MotionDiv className=" flex justify-between relative -left-6 px-6 md:gap-10">
 
                 {
                     heroCards.map((c, i) => {

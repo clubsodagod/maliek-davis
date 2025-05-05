@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ComponentTransition from '../layout/ComponentTransition';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { MotionDiv } from '../motion/MotionDiv';
 import Image from 'next/image';
 
@@ -29,6 +29,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     objectFit,
     OtherComponent
 }) => {
+    const mobile = useMediaQuery(`(max-width:768px)`);
     const imageHeight = imgHeight ?? "h-[450px] md:h-[400px] 2xl:h-[600px]";
     const imageWidth = imgWidth ?? "w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]";
     const imageFit = objectFit ?? "cover";
@@ -60,7 +61,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                     </Box>
                 </div>
                 {/* Wrapped Text Content */}
-                <div className={`relative ${pt} w-[105vw]`}>
+                <div className={`relative ${pt}  ${typeof heroText === "string" ? "w-[105vw]": `${mobile ? "w-[105vw]" : "w-[100vw]"}` } `}>
                     {typeof heroText === 'string' ? (
                         <Typography
                             variant='subtitle1'

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 
 import * as React from 'react';
 import Button from '@mui/material/Button';
@@ -13,9 +13,11 @@ import { MotionDivProps } from '@/library/types/motion.types';
 import { MotionDiv } from '@/components/motion/MotionDiv';
 import { solutionsCTAForms } from '../../_library/form.const';
 import { Typography, MenuItem } from '@mui/material';
-import { IFormField } from '@/library/types/cta-form.types';
+import { ContactFormType, IFormField } from '@/library/types/cta-form.types';
 import { submitCTAForm } from '@/utility/fetchers/contact.fetchers';
 import { IContactFormClient } from '@/database/models/cta-forms.model';
+import { type } from 'os';
+import { log } from 'console';
 
 
 interface SolutionsCTAFormProps extends MotionDivProps {
@@ -23,6 +25,13 @@ interface SolutionsCTAFormProps extends MotionDivProps {
     setOpen: (open: boolean) => void;
     formType: number;
 }
+const contactFormTypeMap: ContactFormType[] = [
+    "consultation",
+    "employer",
+    "project",
+    "tech_roadmap",
+    "networking",
+];
 
 const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
     open,
@@ -30,6 +39,7 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
     formType,
     ...props
 }) => {
+
 
     const formTitle = () => {
         switch (formType) {
@@ -93,9 +103,56 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
     const requiredFields = currentFields.filter(field => field.required);
     const isSectionComplete = requiredFields.every(field => completedFields.has(field.name));
 
-    async function handleSubmit(){
-        throw new Error("not implemented")
-    }
+    async function handleSubmit() {
+        const isLastSection = formSection === solutionsCTAForms[formType]?.additionalSections.length - 1;
+    
+        if (!isSectionComplete) return;
+    
+        if (isLastSection) {
+            try {
+                await submitCTAForm(formValues as unknown as IContactFormClient);
+                handleClose(); // Close dialog after successful submit
+            } catch (error) {
+                console.error("Form submission failed:", error);
+                // Optionally handle error feedback to the user here
+            }
+        } else {
+            setFormSection(formSection + 1);
+        }
+    };
+
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                handleClose();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        console.log(formValues);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        const contactType = contactFormTypeMap[formType];
+
+        // Only set if not already set
+        setFormValues(prev => {
+            
+
+            return {
+                ...prev,
+                type: contactType,
+            };
+        });
+        console.log("formType", formType);
+    }, [formType]); // ✅ Only run when formType changes
+
 
     return (
         <MotionDiv
@@ -110,16 +167,7 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                         sx: {
                             padding: 3,
                             borderRadius: "24px",
-                            bgcolor:"#fafafaaa"
-                        },
-                        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                            
-                            event.preventDefault();
-                            const formData = new FormData(event.currentTarget);
-                            submitCTAForm({
-                                ...(formValues as unknown as IContactFormClient)
-                            })
-                            handleClose();
+                            bgcolor: "#fafafaaa"
                         },
                     },
                     backdrop: {
@@ -148,29 +196,29 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                     {
                         solutionsCTAForms[formType]?.additionalSections[formSection].fields.map((field, i) => (
 
-                                <TextField
-                                    variant="filled"
-                                    key={`${field.name} ${i} ${field.type}`}
-                                    name={field.name}
-                                    label={field.label}
-                                    type={field.type === "textarea" ? "text" : field.type}
-                                    multiline={field.multiline}
-                                    rows={field.rows}
-                                    required={field.required}
-                                    select={field.type === "select"}
-                                    fullWidth
-                                    onChange={(e) => handleChange(field, e.target.value)}
-                                    error={Boolean(formErrors[field.name])}
-                                    helperText={formErrors[field.name]}
-                                    value={formValues[field.name] || ""}
-                                >
-                                    {field.type === "select" &&
-                                        field.options?.map((option) => (
-                                            <MenuItem key={option} value={option}>
-                                                {option}
-                                            </MenuItem>
-                                        ))}
-                                </TextField>
+                            <TextField
+                                variant="filled"
+                                key={`${field.name} ${i} ${field.type}`}
+                                name={field.name}
+                                label={field.label}
+                                type={field.type === "textarea" ? "text" : field.type}
+                                multiline={field.multiline}
+                                rows={field.rows}
+                                required={field.required}
+                                select={field.type === "select"}
+                                fullWidth
+                                onChange={(e) => handleChange(field, e.target.value)}
+                                error={Boolean(formErrors[field.name])}
+                                helperText={formErrors[field.name]}
+                                value={formValues[field.name] || ""}
+                            >
+                                {field.type === "select" &&
+                                    field.options?.map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                            </TextField>
                         ))
 
                     }
@@ -191,22 +239,10 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                     }
                     <Button
                         disabled={!isSectionComplete}
-                        type={
-                            formSection === solutionsCTAForms[formType]?.additionalSections.length - 1 ? "submit" : "button"
-                        }
-                        onClick={()=>{
-                            if (formSection < solutionsCTAForms[formType]?.additionalSections.length - 1) {
-                                setFormSection(formSection + 1);
-                            } else if (formSection === solutionsCTAForms[formType]?.additionalSections.length - 1) {
-                                return
-                            } else {
-                                return
-                            }
-                        }}
+                        type="button"
+                        onClick={handleSubmit}
                     >
-                        {
-                            formSection === solutionsCTAForms[formType]?.additionalSections.length - 1 ? "Submit" : "Next"
-                        }
+                        {formSection === solutionsCTAForms[formType]?.additionalSections.length - 1 ? "Submit" : "Next"}
                     </Button>
                 </DialogActions>
             </Dialog>

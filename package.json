@@ -29,6 +29,7 @@
     "next-auth": "^5.0.0-beta.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.2",
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
     "slugify": "^1.6.6",

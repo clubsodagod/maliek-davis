@@ -35,7 +35,7 @@ const WorkWithMeOptionsCard:React.FC<WorkWithMeOptionsCardProps> = ({
             <div
                 className='relative w-full h-[125px]'
             >
-                <div className="w-screen flex gap-3 2xl:gap-20 overflow-x-auto absolute -left-6 2xl:justify-center">
+                <div className="w-screen flex gap-3 2xl:gap-20 overflow-x-auto absolute -left-6 lg:justify-center">
                     {
                         partnerWithMeCopy.map((s, i) => (
                             <div key={`${s.label} ${i}`} className='cursor-pointer flex flex-col items-center justify-center'

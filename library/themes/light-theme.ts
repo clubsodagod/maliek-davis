@@ -126,8 +126,65 @@ export const lightTheme: ThemeOptions = createTheme({
                     fontWeight: 500,
                     borderRadius: 25,
                 },
-
             }
         },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    ".MuiSelect-root": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                    ".MuiSelect-select": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                    ".MuiSelect-outlined": {
+                        border:"1px solid var(--textfield-border-color)",
+                        color:"var(--textfield-border-color)",
+                    },
+                    ".MuiSelect-iconOutlined": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                    ".MuiInputLabel-root": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                },
+            },
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    ".MuiInputLabel-formControl": {
+                        color: 'red',
+                    },
+                },
+                
+            },
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    ".MuiInputLabel-root": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                    ".MuiFilledInput-root": {
+                        border:"1px solid var(--textfield-border-color)",
+                        color:"var(--textfield-border-color)",
+                    },
+                    ".MuiFilledInput-input": {
+                        color: 'var(--textfield-border-color)',
+                    }
+                },
+            },
+        },
+        MuiFormControl:{
+            styleOverrides: {
+                root: {
+                    ".MuiFormControl-root":{
+                        border:"1px solid var(--textfield-border-color)",
+                        color:"var(--textfield-border-color)",
+                    }
+                }
+            }
+        }
     },
 });
