@@ -88,6 +88,9 @@ export async function submitPrestigePartnerBuyer(form: {
                 {
                     method: 'POST',
                     body: pof,
+                    headers:{
+                        "Content-Type": "multipart/form-data",
+                    }
                 }
             ).then((res) => res.json());
 

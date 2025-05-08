@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FileProcessingService } from '@/library/classes/services/file-processing.service';
 
+export const config = {
+    api: {
+        bodyParser: false, // disable body parsing so Next.js doesn't conflict with FormData
+    },
+};
+
+
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
