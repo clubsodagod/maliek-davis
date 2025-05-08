@@ -23,7 +23,6 @@ export async function uploadToCloudinary(
     fileName: string,
     folder: string = 'prestige-partner-buyer'
 ): Promise<UploadResponse> {
-    console.log(process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY, process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET, process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
     
     return new Promise((resolve) => {
         interface UploadStreamOptions {
