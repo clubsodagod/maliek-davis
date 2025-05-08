@@ -53,7 +53,7 @@ const ConciergeRealEstateSection = ({ }) => {
                         }}
                     >
                         <Box
-                            className="bg-(--foreground)"
+                            className="bg-(--foreground) h-full"
                         >
                             <CardContent className="flex flex-col items-center gap-4 py-8 rounded-4xl">
                                 <FaBullseye size={32} className='text-(--background)' />
@@ -73,7 +73,7 @@ const ConciergeRealEstateSection = ({ }) => {
                             borderRadius: '2rem',
                         }}>
                         <Box
-                            className="bg-(--foreground)"
+                            className="bg-(--foreground) h-full"
                         >
                             <CardContent className="flex flex-col items-center gap-4 py-8">
                                 <FaLock size={32} className='text-(--background)' />
@@ -92,7 +92,7 @@ const ConciergeRealEstateSection = ({ }) => {
                             borderRadius: '2rem',
                         }}>
                         <Box
-                            className="bg-(--foreground)"
+                            className="bg-(--foreground) h-full"
                         >
                             <CardContent className="flex flex-col items-center gap-4 py-8">
                                 <FaHourglassHalf size={32} className='text-(--background)' />
