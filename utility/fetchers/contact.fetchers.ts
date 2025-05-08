@@ -12,6 +12,7 @@ import { Resend } from "resend";
 import dotenv from 'dotenv';
 import { getBaseApiUrl } from "../get-base-api-url";
 import { appConfig } from "@/config/app.config";
+import { FileProcessingService } from "@/library/classes/services/file-processing.service";
 
 // load env file
 dotenv.config()
@@ -69,47 +70,36 @@ export async function submitPrestigePartnerBuyer(form: {
     notes: string,
     proofOfFundsFile: File | null,
 }) {
-
-
     try {
-        let proofOfFundsResponse = null;
-        let transformedImageUrl = null;
+        let transformedImageUrl: string | null = null;
 
-        // Step 1: Upload Proof of Funds file if exists
+        // Step 1: Process Proof of Funds file if exists
         if (form.proofOfFundsFile) {
-            const pof = new FormData();
-            pof.append("file", form.proofOfFundsFile);
-            pof.append("upload_preset", "new one");
-            pof.append("folder", "prestige-partner-buyer");
+            const file = form.proofOfFundsFile;
 
-            proofOfFundsResponse = await fetch(
-                `${appConfig.API_URL}/file-processing/image-and-pdf-to-webp`,
-                {
-                    method: 'POST',
-                    body: pof,
-                }
-            ).then((res) => res.json());
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const mimeType = file.type;
+            const originalFilename = file.name;
 
-            if (!proofOfFundsResponse?.url) {
+            const processor = new FileProcessingService();
+            const result = await processor.handle(buffer, mimeType, originalFilename);
+
+            if (!result?.url) {
                 return {
                     error: true,
-                    message: `Failed to upload Proof of Funds file`,
+                    message: `Failed to process Proof of Funds file.`,
                 };
             }
 
-
-            console.log(proofOfFundsResponse.url);
-            // Generate WebP preview of first page
-            transformedImageUrl = proofOfFundsResponse.url;
-
+            transformedImageUrl = result.url;
         }
 
-
-        // Step 2: Save the form
+        // Step 2: Save the form data to DB
         const { proofOfFundsFile, ...formValues } = form;
         const formDataToSave = {
             ...formValues,
-            proofOfFundsUrl: transformedImageUrl
+            proofOfFundsUrl: transformedImageUrl,
         };
 
         await connectToDB();
@@ -121,6 +111,7 @@ export async function submitPrestigePartnerBuyer(form: {
 
         await newBuyer.save();
 
+        // Step 3: Send emails
         const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
 
         await Promise.all([
@@ -150,3 +141,4 @@ export async function submitPrestigePartnerBuyer(form: {
         };
     }
 }
+

@@ -10,11 +10,10 @@ export const config = {
 
 export async function POST(req: NextRequest) {
     try {
-        const formData = await req.formData();
+        const formData = await req.body;
         console.log('Form Data:', formData);
-        console.log('Incoming FormData keys:', Array.from(formData.keys()));
 
-        const file = formData.get('file') as File;
+        const file = {} as File;
 
         if (!file) {
             return NextResponse.json({ error: true, message: 'No file uploaded' }, { status: 400 });
