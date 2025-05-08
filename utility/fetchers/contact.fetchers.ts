@@ -10,6 +10,8 @@ import ThanksForContactingMe from "@/app/emails/ThanksForContactingMe";
 import PrestigePartnerBuyer from "@/app/emails/PrestigePartnerBuyer";
 import { Resend } from "resend";
 import dotenv from 'dotenv';
+import { getBaseApiUrl } from "../get-base-api-url";
+import { appConfig } from "@/config/app.config";
 
 // load env file
 dotenv.config()
@@ -67,6 +69,9 @@ export async function submitPrestigePartnerBuyer(form: {
     notes: string,
     proofOfFundsFile: File | null,
 }) {
+
+    const apiBaseUrl = getBaseApiUrl();
+
     try {
         let proofOfFundsResponse = null;
         let transformedImageUrl = null;
@@ -79,7 +84,7 @@ export async function submitPrestigePartnerBuyer(form: {
             pof.append("folder", "prestige-partner-buyer");
 
             proofOfFundsResponse = await fetch(
-                `http://localhost:3000/api/file-processing/image-and-pdf-to-webp`,
+                `${appConfig.API_URL}/file-processing/image-and-pdf-to-webp`,
                 {
                     method: 'POST',
                     body: pof,
@@ -93,7 +98,7 @@ export async function submitPrestigePartnerBuyer(form: {
                 };
             }
 
-            
+
             console.log(proofOfFundsResponse.url);
             // Generate WebP preview of first page
             transformedImageUrl = proofOfFundsResponse.url;

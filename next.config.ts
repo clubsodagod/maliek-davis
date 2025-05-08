@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   publicRuntimeConfig: {
-    APP_NAME: "Pearl Box",
+    APP_NAME: "Maliek Davis",
     API_DEVELOPMENT: "http://localhost:7070/api",
-    API_PRODUCTION: "https://pearlbox.co/api",
+    API_PRODUCTION: "https://maliek-davis.com/api",
     PRODUCTION: false,
     DOMAIN_DEVELOPMENT: "http://localhost:3000",
-    DOMAIN_PRODUCTION: "https://pearlbox.co",
+    DOMAIN_PRODUCTION: "https://maliek-davis.com",
   },
   images: {
     remotePatterns: [
