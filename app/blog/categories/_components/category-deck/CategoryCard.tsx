@@ -2,14 +2,15 @@
 
 import ComponentTransition from '@/components/layout/ComponentTransition';
 import { MotionDiv } from '@/components/motion/MotionDiv';
-import { IBlogPostClient, NormalizedCategory } from '@/library/types/blog.types'
+import { IBlogPostClient } from '@/library/types/blog.types'
 import { Typography, Button } from '@mui/material';
 import React from 'react'
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { ICategory } from '@/database/models/category.model';
 
 interface CategoryCardProps {
-    category: NormalizedCategory;
+    category: ICategory;
     posts:IBlogPostClient[]|undefined;
     open: boolean;
 }

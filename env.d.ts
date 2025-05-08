@@ -16,5 +16,11 @@ declare namespace NodeJS {
         MONGODB_URI: string;
 
         NEXT_PUBLIC_TINY_MCE_API_KEY: string;
+        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: string;
+        NEXT_PUBLIC_CLOUDINARY_API_KEY: string;
+        NEXT_PUBLIC_CLOUDINARY_API_SECRET: string;
+        NEXT_PUBLIC_API_ENVIRONMENT_VARIABLE: string;
+
+        NEXT_PUBLIC_RESEND_API_KEY:string;
     }
 }

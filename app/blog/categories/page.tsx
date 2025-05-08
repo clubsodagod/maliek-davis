@@ -1,11 +1,11 @@
 import React from 'react'
 import CategoriesMainModule from './_components/CategoriesMainModule'
-import { mockCategories } from '@/app/investments/_library/copy'
-import { NormalizedCategory } from '@/library/types/blog.types';
+import { ICategory } from '@/database/models/category.model';
+import { getAllBlogPostCategories } from '@/utility/fetchers/blog.fetcher';
 
-const AllCategoriesPage = () => {
+export default async function AllCategoriesPage() {
 
-    const categories:NormalizedCategory[] = mockCategories;
+    const categories = await getAllBlogPostCategories() as unknown as ICategory[];
 
     return (
         <>
@@ -15,5 +15,3 @@ const AllCategoriesPage = () => {
         </>
     )
 }
-
-export default AllCategoriesPage

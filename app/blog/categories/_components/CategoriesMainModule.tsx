@@ -4,14 +4,13 @@ import MainHeroHeader from '@/components/headers/MainHeroHeader';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import SlidingCardWrapper from '@/components/wrappers/SlidingCardWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
-import { NormalizedCategory } from '@/library/types/blog.types'
 import { Skeleton, useMediaQuery } from '@mui/material';
 import React from 'react'
 import CategoryCard from './category-deck/CategoryCard';
-
+import { ICategory } from '@/database/models/category.model';
 
 interface CategoriesMainModuleProps {
-    categories: NormalizedCategory[] | undefined;
+    categories: ICategory[] | undefined;
 }
 
 const CategoriesMainModule: React.FC<CategoriesMainModuleProps> = ({

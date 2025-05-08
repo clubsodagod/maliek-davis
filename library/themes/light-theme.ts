@@ -15,8 +15,8 @@ const asap = Asap({
 });
 
 
-const primaryBase = '#60abe4'; // soft sky blue
-const secondaryBase = '#8f11cc'; // bold violet
+export const primaryBase = '#60abe4'; // soft sky blue
+export const secondaryBase = '#8f11cc'; // bold violet
 
 const primaryMain = alpha(primaryBase, 1);
 const secondaryMain = alpha(secondaryBase, 1);
@@ -133,9 +133,11 @@ export const lightTheme: ThemeOptions = createTheme({
                 root: {
                     ".MuiSelect-root": {
                         color: 'var(--textfield-border-color)',
+                        border:"1px solid var(--textfield-border-color)",
                     },
                     ".MuiSelect-select": {
                         color: 'var(--textfield-border-color)',
+                        border:"1px solid var(--textfield-border-color)",
                     },
                     ".MuiSelect-outlined": {
                         border:"1px solid var(--textfield-border-color)",
@@ -156,6 +158,9 @@ export const lightTheme: ThemeOptions = createTheme({
                     ".MuiInputLabel-formControl": {
                         color: 'red',
                     },
+                    ".MuiInputLabel-root": {
+                        color: 'var(--textfield-border-color)',
+                    },
                 },
                 
             },
@@ -166,12 +171,12 @@ export const lightTheme: ThemeOptions = createTheme({
                     ".MuiInputLabel-root": {
                         color: 'var(--textfield-border-color)',
                     },
-                    ".MuiFilledInput-root": {
+                    ".MuiOutlinedInput-root": {
                         border:"1px solid var(--textfield-border-color)",
                         color:"var(--textfield-border-color)",
                     },
-                    ".MuiFilledInput-input": {
-                        color: 'var(--textfield-border-color)',
+                    ".MuiTextField-root": {
+                        border:"1px solid var(--textfield-border-color)",
                     }
                 },
             },
