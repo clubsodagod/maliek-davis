@@ -9,22 +9,10 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-const ContactDetails: React.FC<{ form: IBuyer }> = ({  }) => {
+const ContactDetails: React.FC<{ form: IBuyer }> = ({ form }) => {
 
-    const form: IBuyer = {
-        fullName: "John Doe",
-        email: "johndoe@example.com",
-        phone: "123-456-7890",
-        companyName: "Doe Enterprises",
-        marketAreas: ["New York", "Los Angeles"],
-        propertyTypes: ["Residential", "Commercial"],
-        priceRange: { min: 100000, max: 500000 },
-        preferredCloseTime: 30,
-        fundingSource: "CASH",
-        proofOfFundsUrl: "http://res.cloudinary.com/dyfhsjtwo/image/upload/v1746668167/prestige-partner-buyer/Offer_George_490-South-Blvd-W-Rochester-Hills-MI.pdf.webp",
-        volumeGoalPerMonth: 5,
-        notes: "Looking for properties with high ROI.",
-    } as unknown as IBuyer;
+    // Destructure the form object to get the necessary fields
+    // This is a TypeScript feature that allows you to extract properties from an object and assign them to variables.
 
     const {
         fullName,
