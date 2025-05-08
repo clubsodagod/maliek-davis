@@ -11,7 +11,7 @@ const ThanksForContactingMe:React.FC<{firstName:string}> = ({firstName}) => {
                 </Heading>
                 <Text style={{ color: '#555', marginBottom: '20px' }}>
                     I appreciate you {name} for reaching out! Your message has been received, and I&apos;ll get back to you as soon as possible. 
-                    If you need immediate assistance, feel free to reply to this email or give me a call at 313-758-1753. I&apos;m looking forward to speaking with you!
+                    If you need immediate assistance, feel free to reply to this email or give me a call at 586-863-3038. I&apos;m looking forward to speaking with you!
                 </Text>
                 <Button
                     href="https://maliek-davis.com"

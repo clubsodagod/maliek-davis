@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import { getBaseApiUrl } from "../get-base-api-url";
 import { appConfig } from "@/config/app.config";
 import { FileProcessingService } from "@/library/classes/services/file-processing.service";
+import ContactDetails from "@/app/emails/ContactDetails";
 
 // load env file
 dotenv.config()
@@ -116,16 +117,16 @@ export async function submitPrestigePartnerBuyer(form: {
 
         await Promise.all([
             resend.emails.send({
-                from: 'continuous-innovation@maliek-davis.com',
+                from: 'self@maliek-davis.com',
                 to: [newBuyer.email],
                 subject: `${newBuyer.fullName}, We'll chat soon!`,
-                react: ThanksForContactingMe({ firstName: newBuyer.fullName }) as React.ReactElement,
+                react: PrestigePartnerBuyer({ firstName: newBuyer.fullName }) as React.ReactElement,
             }),
             resend.emails.send({
                 from: 'continuous-innovation@maliek-davis.com',
                 to: ['continuous-innovation@maliek-davis.com', 'maliekjdavis24@gmail.com'],
                 subject: `${newBuyer.fullName} just contacted you to join the buyer's list!`,
-                react: PrestigePartnerBuyer({ firstName: newBuyer.fullName }) as React.ReactElement,
+                react: ContactDetails({ form:newBuyer }) as React.ReactElement,
             })
         ]);
 

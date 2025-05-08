@@ -1,126 +1,89 @@
-import { Heading,  Html, } from "@react-email/components";
-import * as React from 'react';
+import { IBuyer } from "@/database/models/prestige-partner-buyer.model";
+import {
+    Html,
+    Heading,
+    Text,
+    Section,
+    Link,
+    Img,
+} from "@react-email/components";
+import * as React from "react";
 
-interface FormDetails {
-    firstName?: string;
-    lastName?: string;
-    company?: string;
-    email?: string;
-    phone?: string;
-    reason?: string;
-    message?: string;
-}
+const ContactDetails: React.FC<{ form: IBuyer }> = ({  }) => {
 
-const ContactDetails: React.FC<{ form?: FormDetails }> = ({ form }) => {
-    const firstName = form?.firstName
-    const lastName = form?.lastName
-    const company = form?.company 
-    const email = form?.email 
-    const phone = form?.phone 
-    const reason = form?.reason 
-    const message = form?.message 
+    const form: IBuyer = {
+        fullName: "John Doe",
+        email: "johndoe@example.com",
+        phone: "123-456-7890",
+        companyName: "Doe Enterprises",
+        marketAreas: ["New York", "Los Angeles"],
+        propertyTypes: ["Residential", "Commercial"],
+        priceRange: { min: 100000, max: 500000 },
+        preferredCloseTime: 30,
+        fundingSource: "CASH",
+        proofOfFundsUrl: "http://res.cloudinary.com/dyfhsjtwo/image/upload/v1746668167/prestige-partner-buyer/Offer_George_490-South-Blvd-W-Rochester-Hills-MI.pdf.webp",
+        volumeGoalPerMonth: 5,
+        notes: "Looking for properties with high ROI.",
+    } as unknown as IBuyer;
 
+    const {
+        fullName,
+        email,
+        phone,
+        companyName,
+        marketAreas,
+        propertyTypes,
+        priceRange,
+        preferredCloseTime,
+        fundingSource,
+        proofOfFundsUrl,
+        volumeGoalPerMonth,
+        notes,
+    } = form;
 
     return (
         <Html>
-            <div
-                style={{
-                    fontFamily: "sans-serif",
-                    padding: "20px",
-                    backgroundColor: "#f9f9f9",
-                }}
-            >
-                <Heading
-                    as="h1"
-                    style={{ color: "#333", marginBottom: "20px", textAlign: "center" }}
-                >
-                    Someone Just Contacted You!
+            <Section style={{ fontFamily: "sans-serif", padding: "20px" }}>
+                <Heading as="h2" style={{ color: "#333" }}>
+                    New Prestige Buyer Submission
                 </Heading>
 
-                <table
-                    style={{
-                        width: "100%",
-                        borderCollapse: "collapse",
-                        backgroundColor: "#fff",
-                        borderRadius: "24px",
-                        overflow: "hidden",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    }}
-                >
-                    <thead>
-                        <tr
-                            style={{
-                                backgroundColor: "#4CAF50",
-                                color: "#fff",
-                                textAlign: "left",
-                            }}
-                        >
-                            <th style={{ padding: "12px", fontWeight: "bold" }}>Field</th>
-                            <th style={{ padding: "12px", fontWeight: "bold" }}>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                First
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {firstName || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Last name
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {lastName || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Company
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {company || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Email
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {email || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Phone
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {phone || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Reason
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {reason || "N/A"}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                Message
-                            </td>
-                            <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                                {message || "N/A"}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <Text><strong>Full Name:</strong> {fullName}</Text>
+                <Text><strong>Email:</strong> <Link href={`mailto:${email}`}>{email}</Link></Text>
+                <Text><strong>Phone:</strong> <Link href={`tel:${phone}`}>{phone}</Link></Text>
+                {companyName && <Text><strong>Company:</strong> {companyName}</Text>}
+                <Text><strong>Market Areas:</strong> {marketAreas.join(", ")}</Text>
+                <Text><strong>Property Types:</strong> {propertyTypes.join(", ")}</Text>
+                <Text><strong>Price Range:</strong> ${priceRange.min.toLocaleString()} – ${priceRange.max.toLocaleString()}</Text>
+                <Text><strong>Preferred Close Time:</strong> {preferredCloseTime} days</Text>
+                <Text><strong>Funding Source:</strong> {fundingSource.replace("_", " ")}</Text>
+                {volumeGoalPerMonth && <Text><strong>Volume Goal/Month:</strong> {volumeGoalPerMonth}</Text>}
+                {notes && <Text><strong>Notes:</strong> {notes}</Text>}
+
+                {proofOfFundsUrl && (
+                    <>
+                        <Heading as="h3" style={{ marginTop: "30px", color: "#333" }}>
+                            Proof of Funds Preview
+                        </Heading>
+                        <Link href={proofOfFundsUrl} target="_blank" rel="noopener noreferrer">
+                            <Img
+                                src={proofOfFundsUrl}
+                                alt="Proof of Funds"
+                                style={{
+                                    width: "100%",
+                                    maxWidth: "400px",
+                                    height: "auto",
+                                    border: "1px solid #ddd",
+                                    borderRadius: "6px",
+                                    marginTop: "10px",
+                                }}
+                            />
+                        </Link>
+                    </>
+                )}
+            </Section>
         </Html>
     );
-}
+};
 
-export default ContactDetails
+export default ContactDetails;
