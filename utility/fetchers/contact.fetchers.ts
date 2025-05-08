@@ -70,7 +70,6 @@ export async function submitPrestigePartnerBuyer(form: {
     proofOfFundsFile: File | null,
 }) {
 
-    const apiBaseUrl = getBaseApiUrl();
 
     try {
         let proofOfFundsResponse = null;
