@@ -7,7 +7,7 @@ declare namespace NodeJS {
         NEXT_PUBLIC_PRODUCTION_URL: string;
 
         NEXT_PUBLIC_DEVELOPMENT_API_URL: string;
-        NEXT_PUBLIC_PRODUCTION_TEST_API_URL: string;
+        NEXT_PUBLIC_PRODUCTION_DEDICATED_SERVER_URL: string;
         NEXT_PUBLIC_PRODUCTION_API_URL: string;
 
         AUTH_GOOGLE_ID: string;

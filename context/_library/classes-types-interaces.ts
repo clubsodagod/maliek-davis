@@ -95,6 +95,7 @@ export class BlogInteraction implements IBlogInteraction {
 export type ResponseStatus = {
     error:boolean;
     message:string;
+    data?:unknown;
 }
 
 

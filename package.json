@@ -24,6 +24,8 @@
     "@react-three/drei": "^10.0.5",
     "@react-three/fiber": "^9.1.1",
     "@react-three/postprocessing": "^3.0.4",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
@@ -41,11 +43,14 @@
     "rehype-raw": "^7.0.0",
     "resend": "^4.5.1",
     "slugify": "^1.6.6",
-    "three-custom-shader-material": "^6.3.1"
+    "three-custom-shader-material": "^6.3.1",
+    "uuid": "^11.1.0",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^19",
