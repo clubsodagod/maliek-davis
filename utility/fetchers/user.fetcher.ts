@@ -1,7 +1,7 @@
 "use server"
 import { ResponseStatus } from '@/context/_library/classes-types-interaces';
 import connectToDB from '@/database/connect-to-db.database';
-import UserModel, { IUserForm } from '@/database/models/user.model';
+import UserModel, { IUser, IUserForm } from '@/database/models/user.model';
 import bcrypt from 'bcryptjs';
 import xss from 'xss';
 import { generateVerificationToken } from '../verification-token-generator';
@@ -10,7 +10,6 @@ import { getBaseUrl } from '../get-base-api-url';
 import { Resend } from "resend";
 import dotenv from 'dotenv';
 import UserRegistrationEmailVerification from '@/app/emails/UserRegistrationEmailVerification';
-import { IUser } from 'c:/Users/owner/Desktop/rebranded/database/models/user.model';
 
 // load env file
 dotenv.config()
