@@ -7,7 +7,7 @@
     "email": "email dev --dir app/emails",
     "build": "next build",
     "start": "next start",
-    "postinstall": "node ./postinstall.ts",
+    "postinstall": "ts-node ./postinstall.ts",
     "lint": "next lint"
   },
   "dependencies": {
