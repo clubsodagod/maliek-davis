@@ -1,12 +1,17 @@
 "use client"
 
 import React from 'react'
-import AdminEmployeeOnly from '@/components/route-protection/AdminEmployeeOnly'
+import MainDashboardModule from '../_components/dashboard/_/MainDashboardModule'
 
 const DashboardPage = () => {
+
     return (
-        <div>DashboardPage</div>
+        <>
+            <MainDashboardModule
+            />
+        </>
+
     )
 }
 
-export default AdminEmployeeOnly(DashboardPage)
+export default DashboardPage

@@ -7,7 +7,7 @@ const generateVerificationLink = (verificationToken: string, configUrl: string, 
         email, firstName, username,
     });
 
-    return `${configUrl}/admin/access/register/email-verification?${params.toString()}`;
+    return `${configUrl}/admin/access/register/verify/email-verification?${params.toString()}`;
 };
 
 export default generateVerificationLink;

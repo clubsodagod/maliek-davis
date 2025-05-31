@@ -6,9 +6,8 @@ export type ContactFormType =
     | "employer"
     | "project"
     | "networking"
-    | "tech_roadmap";
-
- 
+    | "tech_roadmap"
+    | "branding"; // New branding type
 
 export interface IContactFormClient {
     type: ContactFormType;
@@ -48,47 +47,19 @@ export interface IContactFormClient {
     currentStack?: string;
     companySize?: string;
     priorities?: string[];
+
+    // Branding-specific
+    businessName?: string;
+    industry?: string;
+    brandingGoals?: string;
+    brandChallenges?: string;
+    targetAudience?: string;
+    brandBudget?: string;
+    currentBrandAssets?: string;
+    desiredTimeline?: string;
 }
 
-export interface IContactForm extends Document {
-    type: ContactFormType;
-    name: string;
-    email: string;
-    phone?: string;
-    message?: string;
-    submittedAt?: Date;
-
-    // Employer-specific
-    companyName?: string;
-    roleTitle?: string;
-    workType?: "Full-time" | "Part-time" | "Contract" | "Freelance" | "Internship";
-    employmentModel?: "Remote" | "On-site" | "Hybrid";
-    startDate?: string;
-    duration?: string;
-    compensation?: string;
-    benefits?: string;
-    equityOrBonuses?: string;
-    schedule?: string;
-    website?: string;
-    companyBackground?: string;
-    techStack?: string[];
-    projectDescription?: string;
-    teamStructure?: string;
-    reasonForContact?: string;
-    negotiable?: boolean;
-    attachedJobPDFUrl?: string;
-
-    // Project
-    projectName?: string;
-    budgetRange?: string;
-    timeline?: string;
-    goals?: string;
-
-    // Tech Roadmap
-    currentStack?: string;
-    companySize?: string;
-    priorities?: string[];
-}
+export interface IContactForm extends Document, IContactFormClient {}
 
 const ContactFormSchema = new Schema<IContactForm>(
     {
@@ -100,6 +71,7 @@ const ContactFormSchema = new Schema<IContactForm>(
                 "project",
                 "networking",
                 "tech_roadmap",
+                "branding", // Add here
             ],
             required: true,
         },
@@ -139,6 +111,16 @@ const ContactFormSchema = new Schema<IContactForm>(
         currentStack: { type: String },
         companySize: { type: String },
         priorities: [{ type: String }],
+
+        // Branding-specific
+        businessName: { type: String },
+        industry: { type: String },
+        brandingGoals: { type: String },
+        brandChallenges: { type: String },
+        targetAudience: { type: String },
+        brandBudget: { type: String },
+        currentBrandAssets: { type: String },
+        desiredTimeline: { type: String },
     },
     {
         timestamps: true,
@@ -147,4 +129,4 @@ const ContactFormSchema = new Schema<IContactForm>(
 
 const ContactForm = mongoose.models.ContactForm || model<IContactForm>("ContactForm", ContactFormSchema);
 
-export default ContactForm 
+export default ContactForm;

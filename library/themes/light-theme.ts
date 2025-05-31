@@ -133,15 +133,15 @@ export const lightTheme: ThemeOptions = createTheme({
                 root: {
                     ".MuiSelect-root": {
                         color: 'var(--textfield-border-color)',
-                        border:"1px solid var(--textfield-border-color)",
+                        border: "1px solid var(--textfield-border-color)",
                     },
                     ".MuiSelect-select": {
                         color: 'var(--textfield-border-color)',
-                        border:"1px solid var(--textfield-border-color)",
+                        border: "1px solid var(--textfield-border-color)",
                     },
                     ".MuiSelect-outlined": {
-                        border:"1px solid var(--textfield-border-color)",
-                        color:"var(--textfield-border-color)",
+                        border: "1px solid var(--textfield-border-color)",
+                        color: "var(--textfield-border-color)",
                     },
                     ".MuiSelect-iconOutlined": {
                         color: 'var(--textfield-border-color)',
@@ -162,7 +162,7 @@ export const lightTheme: ThemeOptions = createTheme({
                         color: 'var(--textfield-border-color)',
                     },
                 },
-                
+
             },
         },
         MuiTextField: {
@@ -172,24 +172,42 @@ export const lightTheme: ThemeOptions = createTheme({
                         color: 'var(--textfield-border-color)',
                     },
                     ".MuiOutlinedInput-root": {
-                        border:"1px solid var(--textfield-border-color)",
-                        color:"var(--textfield-border-color)",
+                        border: "1px solid var(--textfield-border-color)",
+                        color: "var(--textfield-border-color)",
                     },
                     ".MuiTextField-root": {
-                        border:"1px solid var(--textfield-border-color)",
+                        border: "1px solid var(--textfield-border-color)",
                     }
                 },
             },
         },
-        MuiFormControl:{
+        MuiFormControl: {
             styleOverrides: {
                 root: {
-                    ".MuiFormControl-root":{
-                        border:"1px solid var(--textfield-border-color)",
-                        color:"var(--textfield-border-color)",
+                    ".MuiFormControl-root": {
+                        border: "1px solid var(--textfield-border-color)",
+                        color: "var(--textfield-border-color)",
                     }
                 }
             }
-        }
+        },
+        MuiList: {
+            styleOverrides: {
+                root: {
+                    ".MuiList-root": {
+                        listStylePosition: "inside"
+                    }
+                }
+            }
+        },
+        MuiListItem: {
+            styleOverrides: {
+                root: {
+                    ".MuiListItem-root": {
+                        listStylePosition: "inside"
+                    }
+                },
+            },
+        },
     },
 });

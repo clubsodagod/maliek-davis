@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { navigationPaths } from '@/library/navbar-assets';
 import Slide from '@mui/material/Slide';
 import { useScrollTrigger } from '@mui/material';
+import Link from 'next/link';
 
 
 const drawerWidth = 240;
@@ -45,16 +46,20 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                 className='flex items-center justify-center py-3'
             >
 
-                <Image
-                    alt='Maliek Davis brand logo'
-                    src={brandLogo}
-                    width={9}
-                    height={16}
-                    sizes='100vw'
-                    style={{
-                        objectFit: "cover", width: `${brandLogoWidth}px`, height: `auto`
-                    }}
-                />
+                <Link href={'/'} >
+                    <Image
+                        alt='Maliek Davis brand logo'
+                        src={brandLogo}
+                        width={9}
+                        height={16}
+                        sizes='100vw'
+                        style={{
+                            objectFit: "cover", width: `${brandLogoWidth}px`, height: `auto`
+                        }}
+                        className="cursor-pointer"
+                    />
+
+                </Link>
             </div>
             <div className='px-6'>
                 <Divider />
@@ -90,35 +95,40 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                 className='flex items-center justify-center py-3'
                             >
 
-                                <Image
-                                    alt='Maliek Davis brand logo'
-                                    src={brandLogo}
-                                    width={9}
-                                    height={16}
-                                    sizes='100vw'
-                                    style={{
-                                        objectFit: "cover", width: `${75}px`, height: `auto`
-                                    }}
-                                />
+                                <Link href={'/'} >
+                                    <Image
+                                        alt='Maliek Davis brand logo'
+                                        src={brandLogo}
+                                        width={9}
+                                        height={16}
+                                        sizes='100vw'
+                                        style={{
+                                            objectFit: "cover", width: `${75}px`, height: `auto`
+                                        }}
+                                        className='cursor-pointer'
+                                    />
+                                </Link>
                             </div>
                         </IconButton>
+                        <Link href={'/'} >
+                            <Image
+                                alt='Maliek Davis brand logo'
+                                src={brandLogo}
+                                width={9}
+                                height={16}
+                                sizes='100vw'
+                                style={{
+                                    objectFit: "cover", width: `${75}px`, height: `auto`
+                                }}
+                                className="cursor-pointer hidden sm:block "
+                            />
+                        </Link>
                         <Typography
                             variant="h6"
                             component="div"
                             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
                         >
-                            <span>
-                                <Image
-                                    alt='Maliek Davis brand logo'
-                                    src={brandLogo}
-                                    width={9}
-                                    height={16}
-                                    sizes='100vw'
-                                    style={{
-                                        objectFit: "cover", width: `${75}px`, height: `auto`
-                                    }}
-                                />
-                            </span>
+
                         </Typography>
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                             {navigationPaths.map((item) => (

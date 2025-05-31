@@ -7,6 +7,7 @@
     "email": "email dev --dir app/emails",
     "build": "next build",
     "start": "next start",
+    "postinstall": "node ./postinstall.ts",
     "lint": "next lint"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@react-three/drei": "^10.0.5",
     "@react-three/fiber": "^9.1.1",
     "@react-three/postprocessing": "^3.0.4",
+    "@tinymce/tinymce-react": "^6.1.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
@@ -31,6 +33,7 @@
     "dotenv": "^16.5.0",
     "formidable": "^3.5.4",
     "framer-motion-3d": "^12.4.13",
+    "fs-extra": "^11.3.0",
     "mongoose": "^8.13.0",
     "motion": "^12.5.0",
     "next": "15.2.2",
@@ -44,6 +47,7 @@
     "resend": "^4.5.1",
     "slugify": "^1.6.6",
     "three-custom-shader-material": "^6.3.1",
+    "tinymce": "^7.9.0",
     "uuid": "^11.1.0",
     "xss": "^1.0.15"
   },
@@ -52,6 +56,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

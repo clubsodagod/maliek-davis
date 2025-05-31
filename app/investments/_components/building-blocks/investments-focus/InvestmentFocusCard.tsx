@@ -31,7 +31,7 @@ const InvestmentFocusCard: React.FC<{
         return (
             <ComponentTransition id={`${investment.category}-transition-card`}>
                 <MotionDiv
-                    className="investment-card overflow-hidden rounded-t-4xl md:rounded-t-[100px] p-4"
+                    className="investment-card overflow-hidden rounded-t-4xl md:rounded-[100px] p-4 w-full h-full max-h-[158vh]"
                     initial={{ opacity: 1, y: 0 }}
                     animate={{ opacity: open ? 1 : 1, y: open ? 20 : 20, scaleX: open ? 1 : 1.03 }}
                     exit={{ opacity: 0, y: 0 }}

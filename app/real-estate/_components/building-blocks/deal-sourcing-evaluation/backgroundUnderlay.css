@@ -1,0 +1,87 @@
+@keyframes marquee-left {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes marquee-right {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.marquee-track {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+/* Direction-specific animations */
+.ltr .marquee-content {
+    animation-name: marquee-left;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.rtl .marquee-content {
+    animation-name: marquee-right;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* Speed variants */
+.speed-1 {
+    animation-duration: 22s;
+}
+
+.speed-2 {
+    animation-duration: 26s;
+}
+
+.speed-3 {
+    animation-duration: 30s;
+}
+
+.speed-4 {
+    animation-duration: 20s;
+}
+
+.speed-5 {
+    animation-duration: 24s;
+}
+
+.speed-6 {
+    animation-duration: 28s;
+}
+
+.speed-7 {
+    animation-duration: 32s;
+}
+
+.marquee-item {
+    display: inline-block;
+    padding: 0 4rem;
+    color: #1a1a1a;
+    opacity: 0.08;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1.25rem, 2vw, 2rem);
+    white-space: nowrap;
+}

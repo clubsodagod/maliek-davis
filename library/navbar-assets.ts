@@ -11,11 +11,11 @@ export type NavigationPath = {
 
 
 export const navigationPaths: NavigationPath[] = [
-    {
-        label: "Home",
-        path: "/",
-        icon: undefined,
-    },
+    // {
+    //     label: "Home",
+    //     path: "/",
+    //     icon: undefined,
+    // },
     {
         label: "Technology",
         path: "/technology",
@@ -27,8 +27,29 @@ export const navigationPaths: NavigationPath[] = [
         ],
     },
     {
-        label: "Investments",
-        path: "/investments",
+        label: "Business",
+        path: "/business",
+        icon: undefined,
+        children: [
+            { label: "Branding", path: "/business/approach", icon: undefined },
+            { label: "Digital Presence", path: "/business/solutions", icon: undefined },
+            { label: "AI & Automation", path: "/business/portfolio", icon: undefined },
+            { label: "Marketing & Growth Systems", path: "/business/portfolio", icon: undefined },
+        ],
+    },
+    // {
+    //     label: "Investments",
+    //     path: "/investments",
+    //     icon: undefined,
+    //     children: [
+    //         { label: "Real Estate Approach", path: "/investments/real-estate/approach", icon: undefined },
+    //         { label: "Prestige Partners", path: "/investments/real-estate/prestige-partners", icon: undefined },
+    //         { label: "Investment Criteria", path: "/investments/real-estate/criteria", icon: undefined },
+    //     ],
+    // },
+    {
+        label: "Real Estate",
+        path: "/real-estate",
         icon: undefined,
         children: [
             { label: "Real Estate Approach", path: "/investments/real-estate/approach", icon: undefined },

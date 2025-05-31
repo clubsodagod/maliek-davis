@@ -26,7 +26,7 @@ const Blob = ({ color }: { color: string }) => {
 
     return (
         <motion.div
-            className="absolute w-40 h-40 rounded-full blur-3xl opacity-50"
+            className="absolute w-40 h-40 rounded-full blur-[100px] opacity-50"
             style={{
                 background: color,
                 boxShadow: "inset 50px 50px 17px 0px #60abe4, inset 100px 100px 17px 0px #8f11cc"
@@ -39,10 +39,11 @@ const Blob = ({ color }: { color: string }) => {
 
 const GradientCollisionUnderlay = () => {
     return (
-        <div className="fixed top-0 left-0 w-full h-full">
+        <div className="fixed top-0 left-0 w-full  h-full">
             <Blob color="linear-gradient(47deg, #60abe4 21%, #8f11cc 67%, #60abe4 81%)" />
             <Blob color="linear-gradient(134deg, #8f11cc 21%, #60abe4 67%, #8f11cc 81%)" />
             <Blob color="linear-gradient(94deg, #60abe4 21%, #8f11cc 67%, #60abe4 81%)" />
+            <div className="w-full h-screen fixed top-0 blur-[1000px]" />
         </div>
     );
 };
