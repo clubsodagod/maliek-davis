@@ -120,7 +120,6 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                 className='flex items-center justify-center py-3'
                             >
 
-                                <Link href={'/'} >
                                     <Image
                                         alt='Maliek Davis brand logo'
                                         src={brandLogo}
@@ -132,7 +131,6 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                         }}
                                         className='cursor-pointer'
                                     />
-                                </Link>
                             </div>
                         </IconButton>
                         <Link href={'/'} >
