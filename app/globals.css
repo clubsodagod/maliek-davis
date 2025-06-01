@@ -19,7 +19,8 @@
   :root {
     --background: #232323;
     --foreground: #fafafa;
-    --textfield-border-color: #fafafa; /* light border in dark mode */
+    --textfield-border-color: #fafafa;
+    /* light border in dark mode */
     --label-color: #fafafa;
   }
 }
@@ -188,7 +189,7 @@ body {
   width: 100%;
 }
 
-.track > h1 {
+.track>h1 {
   /* margin: 20px 0; */
   font-size: 8rem;
   -webkit-text-fill-color: rgba(255, 255, 255, 0);
@@ -201,6 +202,7 @@ body {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -210,6 +212,7 @@ body {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -255,21 +258,86 @@ body {
 .speed-1 {
   animation-duration: 22s;
 }
+
 .speed-2 {
   animation-duration: 26s;
 }
+
 .speed-3 {
   animation-duration: 30s;
 }
+
 .speed-4 {
   animation-duration: 20s;
 }
+
 .speed-5 {
   animation-duration: 24s;
 }
+
 .speed-6 {
   animation-duration: 28s;
 }
+
 .speed-7 {
   animation-duration: 32s;
+}
+
+
+.glow-gradient-text {
+  background: linear-gradient(90deg, #8f11cc, #60abe4, #8f11cc);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* fallback */
+  animation: glowGradientMove 6s ease-in-out infinite;
+  font-weight: 700;
+  position: relative;
+}
+
+.glow-gradient-text::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(8px);
+  background: inherit;
+  z-index: -1;
+  opacity: 0.7;
+  animation: glowPulse 3s ease-in-out infinite;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Animate background movement */
+@keyframes glowGradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Subtle glowing pulse */
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }

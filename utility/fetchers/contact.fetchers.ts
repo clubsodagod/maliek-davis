@@ -14,6 +14,9 @@ import { getBaseApiUrl } from "../get-base-api-url";
 import { appConfig } from "@/config/app.config";
 import { FileProcessingService } from "@/library/classes/services/file-processing.service";
 import ContactDetails from "@/app/emails/ContactDetails";
+import BusinessLeadCaptureForm, { IBusinessLeadCaptureFormClient } from "@/database/models/business-cta-forms.model";
+import AdminNotificationEmail from "@/app/emails/AdminBusinessLeadNotifiation";
+import ClientConfirmationEmail from "@/app/emails/BusinessLeads";
 
 // load env file
 dotenv.config()
@@ -54,6 +57,51 @@ export async function submitInquiryForm(form: ContactInquiryType) {
 
     } catch (error) {
         return { error: true, message: `Error: ${error}` }
+    }
+}
+
+export async function submitBusinessLeadForm(form: IBusinessLeadCaptureFormClient) {
+    try {
+        await connectToDB();
+
+        const newForm = new BusinessLeadCaptureForm(form);
+
+        if (!newForm.name || !newForm.email) {
+            throw new Error("Missing required fields: name or email.");
+        }
+
+        await newForm.save();
+
+        const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+
+        await Promise.all([
+            // Email to client/inquirer
+            resend.emails.send({
+                from: 'self@maliek-davis.com',
+                to: [newForm.email],
+                subject: `Thanks for reaching out, ${newForm.name.split(" ")[0]}!`,
+                react: ClientConfirmationEmail({ name: newForm.name }) as React.ReactElement,
+            }),
+
+            // Email to you with full form details
+            resend.emails.send({
+                from: 'self@maliek-davis.com',
+                to: ['continuous-innovation@maliek-davis.com', 'maliekjdavis24@gmail.com'],
+                subject: `${newForm.name} submitted a business inquiry (${newForm.type})`,
+                react: AdminNotificationEmail({ data: newForm }) as React.ReactElement,
+            })
+        ]);
+
+        return {
+            error: false,
+            message: "Your message has been received. I’ll be in touch shortly!"
+        };
+    } catch (error) {
+        console.error("Submit Business Lead Error:", error);
+        return {
+            error: true,
+            message: `There was an error submitting the form. Please try again later.`
+        };
     }
 }
 
@@ -123,10 +171,10 @@ export async function submitPrestigePartnerBuyer(form: {
                 react: PrestigePartnerBuyer({ firstName: newBuyer.fullName }) as React.ReactElement,
             }),
             resend.emails.send({
-                from: 'continuous-innovation@maliek-davis.com',
+                from: 'self@maliek-davis.com',
                 to: ['continuous-innovation@maliek-davis.com', 'maliekjdavis24@gmail.com'],
                 subject: `${newBuyer.fullName} just contacted you to join the buyer's list!`,
-                react: ContactDetails({ form:newBuyer }) as React.ReactElement,
+                react: ContactDetails({ form: newBuyer }) as React.ReactElement,
             })
         ]);
 

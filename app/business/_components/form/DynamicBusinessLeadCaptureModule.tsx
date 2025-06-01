@@ -3,6 +3,7 @@
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import { BusinessLeadCaptureType, IBusinessLeadCaptureFormClient } from "@/database/models/business-cta-forms.model";
+import { submitBusinessLeadForm } from "@/utility/fetchers/contact.fetchers";
 import { Button, Typography } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -41,7 +42,7 @@ export default function DynamicBusinessLeadCaptureModule({ formType }: Props) {
     const onSubmit = async (data: BusinessLeadCaptureFormType) => {
         try {
             console.log("Submitted:", data);
-            // await submitBusinessLeadForm(data);
+            await submitBusinessLeadForm(data);
             reset();
         } catch (error) {
             console.error("Form submission error:", error);
@@ -49,7 +50,7 @@ export default function DynamicBusinessLeadCaptureModule({ formType }: Props) {
     };
 
     return (
-        <div className="w-full md:w-2/3 xl:w-1/2 mx-auto p-6 rounded-3xl bg-(--background) shadow-md">
+        <div className="w-full md:w-2/3 xl:w-full mx-auto p-6 rounded-3xl bg-(--background) shadow-md">
             <Typography variant="h5" className="text-2xl font-bold mb-6 text-center">
                 Let&apos;s Talk Business
             </Typography>

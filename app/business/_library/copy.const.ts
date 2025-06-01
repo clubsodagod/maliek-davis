@@ -21,7 +21,7 @@ export const whatIHelpYouWith: PlanningItem[] = [
             "Strategic goal-setting",
             "Reverse-engineered plans that create focus"
         ],
-        "photo": "/images/plan-vision.jpg"
+        "photo": "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1748725616/ChatGPT_Image_May_31_2025_05_06_08_PM_ulcvjw.webp"
     },
     {
         "title": "Revenue Strategy & Offers That Scale",
@@ -30,7 +30,7 @@ export const whatIHelpYouWith: PlanningItem[] = [
             "Offers that align with your audience & energy",
             "Revenue streams that build long-term freedom"
         ],
-        "photo": "/images/plan-revenue.jpg"
+        "photo": "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1748726591/ChatGPT_Image_May_31_2025_05_11_01_PM_ih8dhf.webp"
     },
     {
         "title": "Quarterly Planning That Keeps You on Track",
@@ -39,7 +39,7 @@ export const whatIHelpYouWith: PlanningItem[] = [
             "KPIs & metrics that matter",
             "Systems for accountability"
         ],
-        "photo": "/images/plan-quarterly.jpg"
+        "photo": "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1748726591/ChatGPT_Image_May_31_2025_05_11_04_PM_beizrl.webp"
     },
     {
         "title": "Foundations for Funding, Scaling, or Hiring",
@@ -48,7 +48,7 @@ export const whatIHelpYouWith: PlanningItem[] = [
             "SOPs for growth",
             "Investor- or team-ready documentation"
         ],
-        "photo": "/images/plan-growth.jpg"
+        "photo": "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1748726591/ChatGPT_Image_May_31_2025_05_21_29_PM_wfquuh.webp"
     }
 ]
 

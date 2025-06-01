@@ -29,7 +29,7 @@ const WhatIHelpYouSetUp = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"What I Help You Setup"}
@@ -58,7 +58,7 @@ const WhatIHelpYouSetUp = ({ }) => {
                                     variant="subtitle1"
                                     fontWeight={"italic"}
                                     fontSize={32}
-                                    className="text-(--foreground)"
+                                    className="text-(--foreground) pb-10"
                                 >
                                     Here&apos;s how we help small businesses own their digital presence and compete with the big players:
                                 </Typography>
@@ -71,19 +71,6 @@ const WhatIHelpYouSetUp = ({ }) => {
                             </List>
 
                         </MotionDiv>
-
-                        {/* <MotionDiv className=''>
-
-                            <Image
-                                alt='maliek-programmger-image'
-                                src={programmerImg}
-                                sizes='100vw'
-                                width={500}
-                                height={500}
-                                className={`relative w-full h-full  rounded-[38px] object-[50%_0]`}
-                                style={{ objectFit: "cover" }}
-                            />
-                        </MotionDiv> */}
 
 
                     </div>

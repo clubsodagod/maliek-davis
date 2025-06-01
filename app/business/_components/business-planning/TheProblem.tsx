@@ -29,17 +29,17 @@ const TheProblem = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] '
+                className='w-full sm:px-[12.5vw] '
             >
                 <MainHeroHeader
                     headerLabel={"The Problem"}
                     tagline={"Running a Business Without a Plan is Like Driving With No Map"}
-                    size={!desktop ? "md" : "lg"}
+                    size={!desktop ? "lg" : "lg"}
                     className=''
                 />
 
                 <div
-                    className='w-full px-[3vw] mt-[24vh]'
+                    className='w-full px-[3vw] mt-20'
                 >
                     <div
                         className='w-full flex flex-col md:flex-row gap-12 items-end'
@@ -95,7 +95,7 @@ const TheProblem = ({ }) => {
 
                             </List>
                         </MotionDiv>
-                        <MotionDiv className=''>
+                        <MotionDiv className='mx-auto'>
 
                             <Image
                                 alt='technology-solutions-cta-image'

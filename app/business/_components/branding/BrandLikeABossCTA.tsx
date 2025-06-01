@@ -30,7 +30,7 @@ const BrandLikeABossCTA = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] grow flex flex-col justify-center'
+                className='w-full sm:px-[12.5vw]  grow flex flex-col justify-center items-center gap-10'
             >
                 <MainHeroHeader
                     headerLabel={"It's Time to Brand Like a Boss"}
@@ -41,53 +41,68 @@ const BrandLikeABossCTA = ({ }) => {
                     className=''
                 />
 
+
                 <div
-                    className='flex flex-col md:flex-row gap-10 mt-20'
+                    className='flex flex-col md:flex-row gap-20 mt-10 '
                 >
 
                     <div
-                        className='mx-auto mt-20'
+                        className='mx-auto mt-10 flex  flex-col sm:flex-row xl:flex-col gap-10 items-center xl:w-1/2'
                     >
-                        <div className="relative w-full  h-[400px] rounded-xl overflow-hidden">
+                        <div className="relative w-full   h-[400px] sm:h-fit rounded-4xl overflow-hidden  ">
                             <Image
                                 src={investorImg}
                                 alt={"picture of maliek in a suit"}
-                                layout="fill"
-                                objectFit="contain"
-                                className="rounded-xl"
+                                width={500}
+                                height={500}
+                                objectFit="contain w-full h-full"
+                                className="rounded-4xl"
                             />
                         </div>
-                        <List
-                            className="text-center"
+
+                        <div
+                            className=" text-center sm:w-full  sm:my-auto xl:my-0 "
                         >
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ScatterPlotIcon className='color-(--foreground)' />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Ready to stop blending in?
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ScatterPlotIcon className='color-(--foreground)' />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Want to charge more and get more customers?
-                                </ListItemText>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ScatterPlotIcon className='color-(--foreground)' />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Need to finally look like the expert you are?
-                                </ListItemText>
-                            </ListItem>
-                        </List>
+                            <div
+                                className='w-full'
+                            >
+                                <List
+                                className="text-center min-w-full"
+                            >
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <ScatterPlotIcon className='color-(--foreground)' />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Ready to stop blending in?
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <ScatterPlotIcon className='color-(--foreground)' />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Want to charge more and get more customers?
+                                    </ListItemText>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        <ScatterPlotIcon className='color-(--foreground)' />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Need to finally look like the expert you are?
+                                    </ListItemText>
+                                </ListItem>
+                            </List>
+                            </div>
+                            
+                        </div>
+
                     </div>
 
-                    <DynamicBusinessLeadCaptureModule formType='branding' />
+                        <DynamicBusinessLeadCaptureModule formType='branding' />
+
+                    
                 </div>
 
                 <div

@@ -114,19 +114,55 @@ export const lightTheme: ThemeOptions = createTheme({
         },
         MuiButton: {
             defaultProps: {
-                size: 'large'
+                size: 'large',
             },
             styleOverrides: {
                 contained: {
                     background: 'linear-gradient(to right, #60abe4, #8f11cc)',
-                    color: "#fafafa",
+                    color: '#fafafa',
                 },
                 root: {
                     textTransform: 'none',
                     fontWeight: 500,
                     borderRadius: 25,
+
+                    // Default transition for smooth effect
+                    transition: 'all 0.3s ease',
+
+                    // Target specific button by ID
+                    '&#selected-btn': {
+                        background: '#000000',
+                        backgroundImage: 'linear-gradient(90deg, #60abe4, #8f11cc)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        color: '#fff', // fallback for non-webkit
+                        fontWeight: 600,
+                        animation: 'gradientShift 3s ease infinite',  
+                        boxShadow:"2px 2px 2px #000",      // Pseudo-element for black background
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            inset: 0,
+                            backgroundColor: '#000000',
+                            zIndex: -1,
+                            borderRadius: 25,
+                        },
+                    },
+
+                    // Optional: keyframes for animated gradient text
+                    '@keyframes gradientShift': {
+                        '0%': {
+                            backgroundPosition: '0% 50%',
+                        },
+                        '50%': {
+                            backgroundPosition: '100% 50%',
+                        },
+                        '100%': {
+                            backgroundPosition: '0% 50%',
+                        },
+                    },
                 },
-            }
+            },
         },
         MuiOutlinedInput: {
             styleOverrides: {

@@ -28,12 +28,12 @@ const PainPoints = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"The Pains of Weak Presence"}
                     tagline={""}
-                    size={!desktop ? "lg" : "xl"}
+                    size={!desktop ? "md" : "xl"}
                     className=''
                 />
 
@@ -102,7 +102,7 @@ const PainPoints = ({ }) => {
                             </Typography>
                         </MotionDiv>
 
-                        <MotionDiv className=''>
+                        <MotionDiv className='mx-auto'>
 
                             <Image
                                 alt='technology-solutions-cta-image'

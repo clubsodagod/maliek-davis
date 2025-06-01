@@ -29,7 +29,7 @@ const WhatIBuildWithYou = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"What I Build With You"}

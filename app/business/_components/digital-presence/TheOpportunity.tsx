@@ -29,14 +29,14 @@ const TheOpportunity = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"The Opportunity: Become Discoverable, Trustworthy, and Profitable Online"}
                     headerLabelClassName='text-right'
                     tagline={"Your Digital Presence is Your 24/7 Storefront"}
                     taglineClassName='text-right'
-                    size={!desktop ? "lg" : "xl"}
+                    size={!desktop ? "md" : "xl"}
                     className=''
                 />
 

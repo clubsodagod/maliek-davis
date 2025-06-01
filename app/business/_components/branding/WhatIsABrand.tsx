@@ -26,7 +26,7 @@ const WhatIsABrand = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] grow flex flex-col justify-center'
+                className='w-full sm:px-[12.5vw] grow flex flex-col justify-center'
             >
                 <MainHeroHeader
                     headerLabel={"What Is a Brand — And Why Does It Matter?"}
@@ -37,7 +37,7 @@ const WhatIsABrand = ({ }) => {
                     className=''
                 />
                 <div
-                    className='lg:pl-100'
+                    className='lg:pl-50'
                 >
                     <Typography variant="subtitle1"
                         fontSize={30}
@@ -50,7 +50,7 @@ const WhatIsABrand = ({ }) => {
                 </div>
 
                 <div
-                    className='lg:pr-100 mt-20 flex flex-col'
+                    className='lg:pr-50 mt-20 flex flex-col'
                 >
                     <Typography variant="h2"
                         fontSize={30}
@@ -67,24 +67,23 @@ const WhatIsABrand = ({ }) => {
                 </div>
 
                 <div
-                    className='lg:px-50 mt-50 flex flex-col'
+                    className='lg:px-20 mt-50 flex flex-col'
                 >
                     <Typography variant="h2"
-                        fontSize={100}
                         fontWeight={100}
                         className="text-center"
                     >
                         Brand <strong>=</strong> Perception
                     </Typography>
                     <div
-                        className='xl:px-50 text-center'
+                        className='lg:px-40 text-center'
                     >
                         <Typography variant="caption"
                             fontSize={24}
                             fontWeight={100}
                             className="text-center  italic"
                         >
-                            🧠 <br/> And perception dertermins value. It&apos;d be wise to remember.
+                            🧠 <br/> And perception dertermines value. It&apos;d be wise to remember.
                         </Typography>
                     </div>
 

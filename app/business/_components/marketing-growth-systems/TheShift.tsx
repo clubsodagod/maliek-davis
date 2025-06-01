@@ -26,7 +26,7 @@ const TheShift = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"The Shift: Systemized Growth That Doesn’t Rely on You Doing Everything"}
@@ -42,7 +42,7 @@ const TheShift = ({ }) => {
                     className='w-full px-[3vw] mt-30 '
                 >
                     <div
-                        className='px-20 sm:pl-70'
+                        className='px-10 sm:pl-30'
                     >
                         <Typography variant="subtitle1"
                             fontSize={24} fontWeight={100} className=" italic text-right">
@@ -52,7 +52,7 @@ const TheShift = ({ }) => {
                     </div>
 
                     <div
-                        className='mt-30 sm:pr-70'
+                        className='mt-30 sm:pr-30'
                     >
                         <Typography variant="h6"
                             fontSize={48} fontWeight={100} className="text-left ">

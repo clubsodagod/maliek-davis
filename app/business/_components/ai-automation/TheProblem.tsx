@@ -30,13 +30,13 @@ const TheProblem = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"Woes of the One Man Army"}
                     headerLabelClassName='text-center'
                     tagline={""}
-                    size={!desktop ? "lg" : "xl"}
+                    size={!desktop ? "md" : "xl"}
                     className=''
                 />
 
@@ -63,7 +63,7 @@ const TheProblem = ({ }) => {
                                         variant="subtitle1"
                                         fontWeight={"bold"}
                                         fontSize={32}
-                                        className=""
+                                        className="text-center"
                                     >
                                         You&apos;re juggling too much:
                                     </Typography>
@@ -147,7 +147,7 @@ const TheProblem = ({ }) => {
                         className='pt-10'
                     >
                         <Typography variant="subtitle1"
-                            className={"italic sm:text-center"}
+                            className={"italic text-center"}
                         >
                             You&apos;re not burned out because your business is too big — you&apos;re burned out because your systems are too small.
                         </Typography>

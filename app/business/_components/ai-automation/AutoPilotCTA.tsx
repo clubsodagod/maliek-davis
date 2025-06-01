@@ -29,14 +29,14 @@ const AutoPilotCTA = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] grow flex flex-col justify-center'
+                className='w-full sm:px-[12.5vw] grow flex flex-col justify-center'
             >
                 <MainHeroHeader
                     headerLabel={"Your Business, On Autopilot (Almost)."}
                     headerLabelClassName='text-center'
                     tagline={""}
                     taglineClassName='text-center'
-                    size={!desktop ? "lg" : "lg"}
+                    size={!desktop ? "md" : "lg"}
                     className=''
                 />
 
@@ -45,19 +45,20 @@ const AutoPilotCTA = ({ }) => {
                 >
 
                     <div
-                        className='mx-auto mt-20 flex sm:max-w-1/2 flex-col gap-10'
+                        className='mx-auto mt-10 flex  flex-col sm:flex-row xl:flex-col gap-10 items-center'
                     >
-                        <div className="relative w-full  h-[400px] rounded-xl overflow-hidden">
+                        <div className="relative w-full sm:w-1/2   h-[400px] sm:h-fit rounded-4xl overflow-hidden">
                             <Image
                                 src={investorImg}
                                 alt={"picture of maliek in a suit"}
-                                layout="fill"
-                                objectFit="contain"
-                                className="rounded-xl"
+                                width={500}
+                                height={500}
+                                objectFit="contain w-full h-full"
+                                className="rounded-4xl"
                             />
                         </div>
                         <div
-                            className="sm:px-30 text-center"
+                            className=" text-center sm:w-1/2 sm:my-auto xl:my-0 "
                         >
                             <Typography variant="subtitle1">
                                 The most successful entrepreneurs aren&apos;t working harder — they&apos;re <strong>working smarter with automation and AI</strong>.
@@ -68,7 +69,7 @@ const AutoPilotCTA = ({ }) => {
                     <DynamicBusinessLeadCaptureModule formType='ai_automation' />
                 </div>
                 <div
-                    className='mx-auto mt-10'
+                    className='mx-auto mt-10 xl:px-50'
                 >
                     <Typography variant="subtitle1">
                         👉 Let’s build systems that scale with you — not <span className='italic'>stress</span> you out.

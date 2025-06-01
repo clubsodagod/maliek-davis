@@ -30,14 +30,14 @@ const TheSolution = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"The Solution: Automation That Feels Like Hiring a Dream Team"}
                     headerLabelClassName='text-right'
                     tagline={""}
                     taglineClassName='text-right'
-                    size={!desktop ? "lg" : "xl"}
+                    size={!desktop ? "md" : "xl"}
                     className=''
                 />
 
@@ -46,7 +46,7 @@ const TheSolution = ({ }) => {
                     className='w-full px-[3vw] mt-30'
                 >
                     <div
-                        className='px-20'
+                        className='sm:px-20'
                     >
                         <Typography variant="subtitle1"
                         fontSize={24} fontWeight={100} className="text-center italic ">

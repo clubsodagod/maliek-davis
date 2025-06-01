@@ -5,11 +5,13 @@ import { MotionDiv } from '@/components/motion/MotionDiv';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
 import { List, ListItem, ListItemIcon, Typography, useMediaQuery } from '@mui/material';
-import React from 'react'
+import React, { useState } from 'react'
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import { PlanningItem, ValueItem, valueTheyGet, whatIHelpYouWith } from '../../_library/copy.const';
 import ComponentTransition from '@/components/layout/ComponentTransition';
 import slugify from 'slugify';
+import Image from 'next/image';
+import { AnimatePresence } from 'motion/react';
 
 
 const TheShift = ({ }) => {
@@ -31,12 +33,12 @@ const TheShift = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] '
+                className='w-full sm:px-[12.5vw]  '
             >
                 <MainHeroHeader
                     headerLabel={"The Shift"}
                     tagline={"Strategic Business Planning That Puts You in Control"}
-                    size={!desktop ? "md" : "lg"}
+                    size={!desktop ? "lg" : "lg"}
                     className=''
                     headerLabelClassName='text-right'
                     taglineClassName='text-right'
@@ -47,17 +49,17 @@ const TheShift = ({ }) => {
                     className='relative -left-6'
                 >
                     <div
-                        className='relative w-screen left-[-12.5vw]  mt-10 px-6 xl:pl-40'
+                        className='relative w-screen sm:left-[-12.5vw] sm:px-[12.5vw]  mt-10  xl:pl-40'
                     >
                         <div
-                            className='w-full flex flex-col md:flex-row gap-12 items-end'
+                            className='w-full flex  md:flex-row gap-12 items-end '
                         >
-                            <div className='w-1/3'>
+                            <div className='md:w-2/3  my-auto'>
 
-                                <Typography variant='h4' color='primary.dark'>
+                                <Typography variant='h4' color='secondary.dark' className="pb-6">
                                     What I Help You Plan:
                                 </Typography>
-                                <MotionDiv className='flex flex-col gap-10 px-6 w-full'>
+                                <MotionDiv className=' gap-10  w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 px-6 '>
 
                                     {
                                         whatIHelpYouWith.map((h, i) => {
@@ -74,9 +76,9 @@ const TheShift = ({ }) => {
                                 </MotionDiv>
                             </div>
                             <MotionDiv
-                                className='my-auto w-2/3 '
+                                className='my-auto md:w-1/3 '
                             >
-                                <div className='pl-40'>
+                                <div className=''>
 
                                     <List
 
@@ -170,42 +172,42 @@ const TheShift = ({ }) => {
 
             </div>
 
-                    <div className='relative w-screen -left-6 mt-20 min-h-screen h-screen justify-center items-center flex flex-col gap-20'>
+            <div className='px-6 sm:px-[12.5vw] relative w-screen -left-6 mt-20  min-h-screen justify-center items-center flex flex-col gap-20'>
 
-                        <Typography variant='h2' color='primary.dark'>
-                            What You Get:
-                        </Typography>
-                        <MotionDiv className='relative w-scren flex flex-col lg:flex-row gap-20 px-30 pb-20 w-full overflow-x-auto h-fit overflow-y-hidden'>
+                <Typography variant='h2' color='primary.dark'>
+                    What You Get:
+                </Typography>
+                <MotionDiv className='relative  flex flex-wrap justify-center items-center  md:px-30 pb-20  overflow-x-auto min-h-full  gap-20   w-full px-6'>
 
-                            {
-                                valueTheyGet.map((h, i) => {
-                                    return (
-                                        <MotionDiv
-                                            key={`${h.title} ${i}`}
-                                            className='w-full md:min-w-[300px]'
-                                        >
-                                            <ValueCard plan={h} />
-                                        </MotionDiv>
-                                    )
-                                })
-                            }
+                    {
+                        valueTheyGet.map((h, i) => {
+                            return (
+                                <MotionDiv
+                                    key={`${h.title} ${i}`}
+                                    className='w-full md:max-w-1/3'
+                                >
+                                    <ValueCard plan={h} />
+                                </MotionDiv>
+                            )
+                        })
+                    }
 
-                        </MotionDiv>
-                    </div>
+                </MotionDiv>
+            </div>
 
         </SectionWrapper>
     )
 }
 
-
 const PlanCard: React.FC<{ plan: PlanningItem }> = ({ plan }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    const toggleExpand = () => setExpanded(!expanded);
 
     return (
-        <ComponentTransition
-            id={slugify(plan.title)}
-        >
+        <ComponentTransition id={slugify(plan.title)}>
             <MotionDiv
-                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full min-w-full  py-10 cursor-pointer bg-(--background)  transition-transform hover:scale-[1.01]"
+                className="investment-card overflow-hidden rounded-4xl flex flex-col justify-between p-6 w-full py-10 cursor-pointer bg-(--background) transition-transform hover:scale-[1.01]"
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 20 }}
                 exit={{ opacity: 0, y: 0 }}
@@ -214,23 +216,60 @@ const PlanCard: React.FC<{ plan: PlanningItem }> = ({ plan }) => {
                     backdropFilter: "blur(10px)",
                     WebkitBackdropFilter: "blur(10px)",
                     boxShadow: "1px -6px 8px #17171747",
-                }}>
-
-                <Typography component="div" variant="h4" className="text-lg font-semibold text-(--foreground)">
+                }}
+                onClick={toggleExpand}
+            >
+                <Typography fontSize={{ sm: 24, lg: 36 }} component="div" variant="h4" className={`text-center text-lg font-semibold   ${expanded ? "glow-gradient-text" : "text-(--foreground)"}`}>
                     {plan.title}
                 </Typography>
+
+                <AnimatePresence>
+                    {expanded && (
+                        <MotionDiv
+                            key="details"
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{
+                                type: "spring",
+                                bounce: 0.4,
+                                duration: 0.6,
+                                ease: "easeInOut",
+                            }}
+                            className="mt-6 flex flex-col gap-4 items-center"
+                        >
+                            <Image
+                                src={plan.photo}
+                                alt={plan.title}
+                                width={500}
+                                height={500}
+                                className="w-full max-w-sm rounded-xl shadow-md"
+                            />
+                            <ul className="list-disc pl-6 text-(--foreground) text-left">
+                                {plan.bullets.map((point, index) => (
+                                    <li key={index} className="text-base">
+                                        {point}
+                                    </li>
+                                ))}
+                            </ul>
+                        </MotionDiv>
+                    )}
+                </AnimatePresence>
             </MotionDiv>
         </ComponentTransition>
-    )
-}
+    );
+};
+
+
 const ValueCard: React.FC<{ plan: ValueItem }> = ({ plan }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    const toggleExpand = () => setExpanded(!expanded);
 
     return (
-        <ComponentTransition
-            id={slugify(plan.title)}
-        >
+        <ComponentTransition id={slugify(plan.title)}>
             <MotionDiv
-                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full min-w-full  py-10 cursor-pointer bg-(--background)  transition-transform hover:scale-[1.01]"
+                className="investment-card overflow-hidden rounded-4xl flex flex-col justify-between p-6 w-full py-10 cursor-pointer bg-(--background) transition-transform hover:scale-[1.01]"
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 20 }}
                 exit={{ opacity: 0, y: 0 }}
@@ -239,15 +278,54 @@ const ValueCard: React.FC<{ plan: ValueItem }> = ({ plan }) => {
                     backdropFilter: "blur(10px)",
                     WebkitBackdropFilter: "blur(10px)",
                     boxShadow: "1px -6px 8px #17171747",
-                }}>
-
-                <Typography component="div" variant="h4" className="text-lg font-semibold text-(--foreground)">
-                    {plan.title}
+                }}
+                onClick={toggleExpand}
+            >
+                <Typography
+                    fontSize={{ sm: 24, lg: 36 }}
+                    component="div"
+                    variant="h4"
+                    className={`text-center text-lg  font-semibold ${expanded ? "glow-gradient-text" : "text-(--foreground)"}`}
+                >
+                    {plan.icon ? `${plan.icon} ${plan.title}` : plan.title}
                 </Typography>
+
+                <AnimatePresence>
+                    {expanded && (
+                        <MotionDiv
+                            key="details"
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{
+                                type: "spring",
+                                bounce: 0.4,
+                                duration: 0.6,
+                                ease: "easeInOut",
+                            }}
+                            className="mt-6 flex flex-col gap-4 items-center"
+                        >
+                            <Image
+                                src={plan.photo}
+                                alt={plan.title}
+                                width={500}
+                                height={500}
+                                className="w-full max-w-sm rounded-xl shadow-md"
+                            />
+                            <ul className="list-disc pl-6 text-(--foreground) text-left">
+                                {plan.bullets.map((point, index) => (
+                                    <li key={index} className="text-base">
+                                        {point}
+                                    </li>
+                                ))}
+                            </ul>
+                        </MotionDiv>
+                    )}
+                </AnimatePresence>
             </MotionDiv>
         </ComponentTransition>
-    )
-}
+    );
+};
 
 
 export default TheShift;

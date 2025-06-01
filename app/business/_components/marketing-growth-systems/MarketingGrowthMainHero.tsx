@@ -27,12 +27,12 @@ const MarketingGrowthMainHero = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"Marketing & Growth Systems That Scale With You"}
                     tagline={"Turn Your Marketing Into a Machine — Not a Mystery"}
-                    size={!desktop ? "xl" : "xl"}
+                    size={!desktop ? "lg" : "xl"}
                     className=''
                 />
 
@@ -43,18 +43,17 @@ const MarketingGrowthMainHero = ({ }) => {
             <LeftFloatImgTextHero
                 imgPT='0'
                 heroText={
-                    <div
-                        className="flex flex-col gap-3"
+                    <
                     >
-                        <Typography variant="subtitle1" fontSize={{ xs: "1.6rem", sm: "2rem", md: "2rem", xl: "2.25rem" }} className='break-words sm:pr-3 '>
+                        <Typography variant="subtitle1" fontSize={{ xs: "1.6rem", sm: "2rem", md: "2rem", xl: "2.25rem" }} className='break-words sm:pr-3 pl-[24vw] '>
                             Smart marketing isn&apos;t about doing more — it&apos;s about building systems that grow your business whether you&apos;re working or not.
                         </Typography>
-                        <div className='flex gap-6'>
+                        <div className='flex gap-6 pl-[24vw]'>
                             <Button variant="contained" LinkComponent={Link} href="/contact">
                                 Schedule Consultation
                             </Button>
                         </div>
-                    </div>
+                    </>
 
                 }
                 photo={`https://evenbound.com/hubfs/shutterstock_2142028755.jpg`}

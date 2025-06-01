@@ -29,7 +29,7 @@ const WhatIDoForYou = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw] mb-20'
+                className='w-full sm:px-[12.5vw] mb-20'
             >
                 <MainHeroHeader
                     headerLabel={"What I Help You Build"}
@@ -70,9 +70,14 @@ const WhatIDoForYou = ({ }) => {
                                 </Typography>
 
                                 {/* </ListSubheader> */}
-                                <StrategyList
-                                    strategies={strategies}
-                                />
+                                <div
+                                    className="w-full mt-10"
+                                >
+                                    <StrategyList
+                                        strategies={strategies}
+                                    />
+                                </div>
+
 
                             </List>
 
@@ -151,6 +156,7 @@ export const StrategyList: React.FC<StrategyListProps> = ({ strategies }) => {
                                 borderRadius: 2,
                                 boxShadow: 3,
                             }}
+                            className="mx-auto"
                         />
 
                         {/* Text Content */}

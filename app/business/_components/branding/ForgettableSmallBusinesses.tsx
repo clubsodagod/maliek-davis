@@ -27,7 +27,7 @@ const ForgettableSmallBusinesses = ({ }) => {
         >
 
             <div
-                className='w-full xl:px-[12.5vw]  flex flex-col justify-center grow'
+                className='w-full sm:px-[12.5vw]  flex flex-col justify-center grow'
             >
                 <MainHeroHeader
                     headerLabel={"You're Only Small because You're Forgettable"}

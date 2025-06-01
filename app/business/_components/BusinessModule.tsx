@@ -12,7 +12,7 @@ import AIAutomationSection from './ai-automation/AIAutomationSection';
 import MarketingGrowthSystemsSection from './marketing-growth-systems/MarketingGrowthSystemsSection';
 
 
-function renderSection(section:number) {
+function renderSection(section: number) {
     switch (section) {
         case 0:
             return <BusinessPlanningSection />
@@ -24,7 +24,7 @@ function renderSection(section:number) {
             return <AIAutomationSection />
         case 4:
             return <MarketingGrowthSystemsSection />
-    
+
         default:
             break;
     }
@@ -37,7 +37,7 @@ const BusinessModule = ({ }) => {
 
     const desktop = useMediaQuery(`(min-width:1100px)`);
 
-    const [section, setSection] = React.useState<number>(1);
+    const [section, setSection] = React.useState<number>(0);
 
     return (
         <>
@@ -53,50 +53,30 @@ const BusinessModule = ({ }) => {
             >
 
                 <div
-                    className='w-full xl:px-[12.5vw] grow flex flex-col justify-center'
+                    className='w-full sm:px-[12.5vw] grow flex flex-col justify-center'
                 >
                     <MainHeroHeader
                         headerLabel={"Compete With Giants. Run Your Business Like a Boss."}
                         headerLabelClassName='text-center'
                         taglineClassName='text-center'
                         tagline={"Branding. Digital Presence. Automation. Scalable Marketing Systems."}
-                        size={!desktop ? "xl" : "xl"}
+                        size={!desktop ? "md" : "xl"}
                         className=''
                     />
-                    <div className="w-full mt-10 flex justify-center items-center px-20 min-h-12 gap-6">
-
-                        <Button
-                            variant="contained"
-                            onClick={()=>{setSection(0)}}
-                        >
-                            Planning
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={()=>{setSection(1)}}
-                        >
-                            Branding
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={()=>{setSection(2)}}
-                        >
-                            Digital Presence
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={()=>{setSection(3)}}
-                        >
-                            AI & Automation
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            onClick={()=>{setSection(4)}}
-                        >
-                            Marketing & Growth
-                        </Button>
+                    <div className="w-full mt-10 flex flex-wrap justify-center items-center px-10 sm:px-20 min-h-12 gap-6">
+                        {["Planning", "Branding", "Digital Presence", "AI & Automation", "Marketing & Growth"].map((label, i) => (
+                            <Button
+                                key={label}
+                                variant="contained"
+                                id={section === i ? "selected-btn" : undefined}
+                                onClick={() => setSection(i)}
+                                disabled={section === i}
+                            >
+                                {label}
+                            </Button>
+                        ))}
                     </div>
+
 
                 </div>
 
