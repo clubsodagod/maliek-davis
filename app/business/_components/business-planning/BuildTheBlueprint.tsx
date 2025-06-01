@@ -74,7 +74,7 @@ const BuildTheBlueprint = ({ }) => {
                 <div
                     className='xl:px-50'
                 >
-                    <Typography variant="subtitle1" className="sm:text-center">
+                    <Typography variant="subtitle1" className="text-center">
                         👉 I help small business owners create the kind of <strong>strategic clarity</strong> that big brands <span className='text-green-500 font-bold'>pay millions</span> for. You&apos;ll walk away with a <strong>business plan</strong> — not just ideas.
                     </Typography>
                 </div>

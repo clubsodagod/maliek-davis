@@ -31,10 +31,31 @@ export const navigationPaths: NavigationPath[] = [
         path: "/business",
         icon: undefined,
         children: [
-            { label: "Branding", path: "/business/approach", icon: undefined },
-            { label: "Digital Presence", path: "/business/solutions", icon: undefined },
-            { label: "AI & Automation", path: "/business/portfolio", icon: undefined },
-            { label: "Marketing & Growth Systems", path: "/business/portfolio", icon: undefined },
+            { 
+                label: "AI & Automation", 
+                path: "/business/ai-and-automation", 
+                icon: undefined 
+            },
+            { 
+                label: "Branding", 
+                path: "/business/branding", 
+                icon: undefined 
+            },
+            { 
+                label: "Business Planning", 
+                path: "/business/business-planning", 
+                icon: undefined 
+            },
+            { 
+                label: "Digital Presence", 
+                path: "/business/digital-presence", 
+                icon: undefined 
+            },
+            { 
+                label: "Marketing & Growth Systems", 
+                path: "/business/marketing-and-growth-systems", 
+                icon: undefined 
+            },
         ],
     },
     // {
@@ -52,9 +73,23 @@ export const navigationPaths: NavigationPath[] = [
         path: "/real-estate",
         icon: undefined,
         children: [
-            { label: "Real Estate Approach", path: "/investments/real-estate/approach", icon: undefined },
-            { label: "Prestige Partners", path: "/investments/real-estate/prestige-partners", icon: undefined },
-            { label: "Investment Criteria", path: "/investments/real-estate/criteria", icon: undefined },
+            { 
+                label: "Case Studies", 
+                path: "/real-estate/case-studies", 
+                icon: undefined 
+            },
+            {
+                label: "Prestige Partners",
+                path: "/real-estate/prestige-partners",
+                icon: undefined,
+                children: [
+                    { 
+                        label: "Become a Prestige Partner", 
+                        path: "/real-estate/prestige-partners/landing-page", 
+                        icon: undefined, 
+                    },
+                ]
+            },
         ],
     },
     {
@@ -63,9 +98,7 @@ export const navigationPaths: NavigationPath[] = [
         icon: undefined,
         children: [
             { label: "Categories", path: "/blog/categories", icon: undefined },
-            { label: "Category", path: "/blog/:category", icon: undefined },
             { label: "Posts", path: "/blog/posts", icon: undefined },
-            { label: "Post", path: "/blog/:post", icon: undefined },
         ],
     },
     {

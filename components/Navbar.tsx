@@ -67,10 +67,35 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
 
             <List>
                 {navigationPaths.map((item) => (
-                    <ListItem key={item.label} disablePadding>
-                        <ListItemButton sx={{ textAlign: 'center' }} href={item.path}>
+                    <ListItem key={item.label} disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton sx={{ textAlign: 'left', py: 0 }} href={item.path}>
                             <ListItemText primary={item.label} />
                         </ListItemButton>
+                        <List>
+                            {item.children && item.children.map((child) => {
+                                return (
+                                    <ListItem key={child.label} sx={{ py: 0, display:"block" }}>
+                                        <ListItemButton sx={{ textAlign: 'left' }} href={child.path}>
+                                            <ListItemText primary={child.label} />
+                                        </ListItemButton>
+
+                                        {
+                                            child.children && child.children.length > 0 &&
+                                            <List>
+                                                {child.children.map((subChild) => (
+                                                    <ListItem key={subChild.label} sx={{ py: 0 }}>
+                                                        <ListItemButton sx={{ textAlign: 'left' }} href={subChild.path}>
+                                                            <ListItemText primary={subChild.label} />
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        }
+                                    </ListItem>
+
+                                )
+                            })}
+                        </List>
                     </ListItem>
                 ))}
             </List>

@@ -48,11 +48,11 @@ const BusinessPlanningSection = ({ }) => {
                 {/* <div className="min-h-[33vh]" /> */}
 
                 <LeftFloatImgTextHero
-                    imgPT='mt-[100px]'
+                    imgPT=''
                     heroText={
                         <
                         >
-                            <Typography variant="subtitle1" fontSize={{ xs: "1.6rem", sm: "2.25rem", md: "2.5rem", xl: "2.25rem" }} className='break-words sm:pr-3 2xl:text-[3rem] pl-[24vw]'>
+                            <Typography variant="subtitle1" fontSize={{ xs: "1.5rem", sm: "2.25rem", md: "2.5rem", xl: "2.25rem" }} className='break-words sm:pr-3 2xl:text-[3rem] pl-[24vw]'>
                                 The most successful entrepreneurs don’t just “wing it.” They run their business with clarity, direction, and strategic control. It starts with the right plan.
                             </Typography>
                             <div className='flex gap-6 pl-[24vw] md:pl-0 mt-6'>

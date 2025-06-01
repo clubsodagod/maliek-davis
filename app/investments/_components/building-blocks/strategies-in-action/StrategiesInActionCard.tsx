@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import slugify from 'slugify';
-import { useMediaQuery,} from '@mui/material';
+import { useMediaQuery, } from '@mui/material';
 
 
 const StrategiesInActionCard: React.FC<{
@@ -20,7 +20,7 @@ const StrategiesInActionCard: React.FC<{
 
     const [expanded, setExpanded] = useState(false);
     const isMobile = useMediaQuery(`(max-width:768px)`)
-    
+
     const springTransition = {
         type: "spring",
         stiffness: 80,
@@ -84,16 +84,19 @@ const StrategiesInActionCard: React.FC<{
                             {/* Action Buttons */}
                             {!isMobile ? (
                                 <MotionDiv
-                                    className="flex gap-3 justify-center mt-6"
+                                    className="flex flex-wrap gap-3 justify-center mt-6"
                                     initial={{ opacity: 0, y: 10 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ ...springTransition, delay: 0.4 }}
                                     viewport={{ once: true }}
                                 >
-                                    <Link href={`/investments/real-estate/case-studies/${slugify(caseStudy.title.toLowerCase())}`}>
+                                    <Link href={`/real-estate/case-studies/${slugify(caseStudy.title.toLowerCase())}`}>
                                         <Button variant="contained">View Full Case</Button>
                                     </Link>
-                                    <Button variant="outlined">Join Investor Network</Button>
+
+                                    <Link href={`/real-estate/prestige-partners/landing-page`}>
+                                        <Button variant="outlined">Become A Prestige Partner</Button>
+                                    </Link>
                                 </MotionDiv>
                             ) : null}
 
@@ -198,16 +201,19 @@ const StrategiesInActionCard: React.FC<{
 
                             {isMobile && (
                                 <MotionDiv
-                                    className="flex gap-3 justify-center md:justify-start mt-4"
+                                    className="flex flex-wrap gap-3 justify-center md:justify-start mt-4"
                                     initial={{ opacity: 0, y: 10 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ ...springTransition, delay: 0.5 }}
                                     viewport={{ once: true }}
                                 >
-                                    <Link href={`/investments/real-estate/case-studies/${slugify(caseStudy.title.toLowerCase())}`}>
+                                    <Link href={`/real-estate/case-studies/${slugify(caseStudy.title.toLowerCase())}`}>
                                         <Button variant="contained">View Full Case</Button>
                                     </Link>
-                                    <Button variant="outlined">Join Investor Network</Button>
+
+                                    <Link href={`/real-estate/prestige-partners/landing-page`}>
+                                        <Button variant="outlined">Become A Prestige Partner</Button>
+                                    </Link>
                                 </MotionDiv>
                             )}
 

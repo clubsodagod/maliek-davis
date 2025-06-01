@@ -16,7 +16,7 @@ const StrategiesInAction = ({ }) => {
     const tablet = useMediaQuery(`(min-width:769px)`);
     const tabletXL = useMediaQuery(`(min-width:900px)`);
     const desktop = useMediaQuery(`(min-width:1100px)`);
-    
+
     const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "lg" : tabletXL ? "xl" : tablet ? "lg" : mobile ? "xl" : undefined;
 
     const sectionRef = React.useRef<HTMLDivElement>(null);
@@ -35,32 +35,34 @@ const StrategiesInAction = ({ }) => {
                 transition={transitionHeaderAnimation}
                 exit={{ opacity: 0, scaleY: 0 }}
             >
-                <MainHeroHeader
-                    headerLabel={'Strategies In Action'} tagline={'A Study on My Investment Decisions.'}
-                    size={headerSize}
-                />
+                <div
+                    className='w-full sm:px-[12.5vw] mb-20'>
+                    <MainHeroHeader
+                        headerLabel={'Strategies In Action'} tagline={'A Study on My Investment Decisions.'}
+                        size={headerSize}
+                    />
+                </div>
 
-                
-                
-                                        <div
-                                            className='sliding-card-ctn  w-screen relative -left-6 '
-                                        >
-                                            {
-                                                mockCaseStudies.map((a, i) => (
-                                                    <SlidingCardWrapper
-                                                        key={`${a.title} ${i}`}
-                                                        id={a.title}
-                                                        onClick={() => setInvestment(i)}
-                                                    >
-                                                        <StrategiesInActionCard
-                                                            caseStudy={a}
-                                                            index={i}
-                                                            open={investment === i}
-                                                        />
-                                                    </SlidingCardWrapper>
-                                                ))
-                                            }
-                                        </div>
+
+                <div
+                    className='sliding-card-ctn  w-screen relative -left-6 '
+                >
+                    {
+                        mockCaseStudies.map((a, i) => (
+                            <SlidingCardWrapper
+                                key={`${a.title} ${i}`}
+                                id={a.title}
+                                onClick={() => setInvestment(i)}
+                            >
+                                <StrategiesInActionCard
+                                    caseStudy={a}
+                                    index={i}
+                                    open={investment === i}
+                                />
+                            </SlidingCardWrapper>
+                        ))
+                    }
+                </div>
             </SectionWrapper>
         </>
     )

@@ -39,13 +39,20 @@ const ChooseYourPathCTA = ({ }) => {
             transition={transitionHeaderAnimation}
             exit={{ opacity: 0, scaleY: 0 }}
         >
-            <MainHeroHeader
-                headerLabel={"Let's Work Together!"}
-                tagline={"Choose Your Path"}
-                size={desktop ? undefined : "xl"}
-            />
 
-            <div className='max-w-full w-full h-full'>
+            <div
+                className='w-full sm:px-[12.5vw]'
+            >
+                <MainHeroHeader
+                    headerLabel={"Let's Work Together!"}
+                    tagline={"Choose Your Path"}
+                    size={desktop ? undefined : "xl"}
+                />
+
+            </div>
+
+
+            <div className='max-w-full w-full h-full mt-10'>
                 <LeftFloatImgTextHero
                     imgPT='mt-[25px]'
                     heroText={
@@ -61,7 +68,6 @@ const ChooseYourPathCTA = ({ }) => {
                     imgWidth='w-[235px] md:w-[400px] landscape:xl:w-[550px] landscape:2xl:w-[1000px] 2xl:w-[800px]'
                 />
             </div>
-
 
             <div className='relative mt-12'>
                 <WorkWithMeOptionsCard

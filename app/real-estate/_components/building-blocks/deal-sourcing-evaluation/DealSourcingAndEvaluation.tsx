@@ -13,6 +13,7 @@ import BackgroundUnderlay from './BackgroundUnderlay';
 import { Button, Typography } from '@mui/material';
 import SourceEvaluateSlider from './SourceEvaluateSlider';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 const DealSourcingAndEvaluation = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -86,9 +87,9 @@ const DealSourcingAndEvaluation = () => {
                                             </Typography>
                                         </motion.div>
 
-                                        <div className="flex gap-3 justify-center">
-                                            <Button variant="contained">
-                                                Investor Application
+                                        <div className="flex gap-3 flex-wrap justify-center">
+                                            <Button variant="contained" LinkComponent={Link} href={'/real-estate/prestige-partners/landing-page'}>
+                                                Become A Prestige Partner
                                             </Button>
                                             <Button
                                                 variant="outlined"
@@ -105,22 +106,22 @@ const DealSourcingAndEvaluation = () => {
 
                     </div>
                 </SectionWrapper>
-                    <AnimatePresence mode="wait">
-                        {showSlider && (
-                            <motion.div
-                                key="slider"
-                                initial={{ opacity: 0, y: 50 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 50 }}
-                                transition={{ duration: 0.5 }}
-                                className=" absolute w-screen left-0  grow h-screen top-0"
-                            >
-                                <SourceEvaluateSlider forwardedRef={firstSnapRef as React.RefObject<HTMLDivElement>} 
-                                        handleClose={()=>setShowSlider(!showSlider)}
-                                    />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                <AnimatePresence mode="wait">
+                    {showSlider && (
+                        <motion.div
+                            key="slider"
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 50 }}
+                            transition={{ duration: 0.5 }}
+                            className=" absolute w-screen left-0  grow h-screen top-0"
+                        >
+                            <SourceEvaluateSlider forwardedRef={firstSnapRef as React.RefObject<HTMLDivElement>}
+                                handleClose={() => setShowSlider(!showSlider)}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

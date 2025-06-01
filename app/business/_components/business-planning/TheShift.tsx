@@ -49,10 +49,10 @@ const TheShift = ({ }) => {
                     className='relative -left-6'
                 >
                     <div
-                        className='relative w-screen sm:left-[-12.5vw] sm:px-[12.5vw]  mt-10  xl:pl-40'
+                        className='relative w-screen sm:left-[-12.5vw] px-6 sm:px-[12.5vw]  mt-10  xl:pl-40'
                     >
                         <div
-                            className='w-full flex  md:flex-row gap-12 items-end '
+                            className='w-full flex flex-col   sm:flex-row gap-12 items-end '
                         >
                             <div className='md:w-2/3  my-auto'>
 

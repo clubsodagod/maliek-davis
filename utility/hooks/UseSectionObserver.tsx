@@ -7,7 +7,7 @@ export function useSectionObserver(threshold: number = 0.6) {
     const pathname = usePathname();
 
     useEffect(() => {
-        const sections = document.querySelectorAll("[id*='section']"); // Select elements with "section" in id
+        const sections = document.querySelectorAll("[id*='pectionzzzzzzzzz']"); // Select elements with "section" in id
 
         const observer = new IntersectionObserver(
             (entries) => {

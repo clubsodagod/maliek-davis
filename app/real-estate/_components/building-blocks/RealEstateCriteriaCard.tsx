@@ -5,6 +5,7 @@ import ComponentTransition from '@/components/layout/ComponentTransition'
 import { MotionDiv } from '@/components/motion/MotionDiv'
 import { Typography, Button } from '@mui/material'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 const RealEstateCriteriaCard: React.FC<{
@@ -84,8 +85,7 @@ const RealEstateCriteriaCard: React.FC<{
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3, delay: 0.2 }}
                                 >
-                                    <Button variant="contained">More</Button>
-                                    <Button variant="outlined">Subscribe</Button>
+                                    <Button LinkComponent={Link} variant="contained">Let&apos;s Talk Alignment</Button>
                                 </MotionDiv>
                             </div>
                         </MotionDiv>

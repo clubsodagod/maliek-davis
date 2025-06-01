@@ -167,7 +167,7 @@ const SolutionsCTAForm: React.FC<SolutionsCTAFormProps> = ({
                         sx: {
                             padding: 3,
                             borderRadius: "24px",
-                            bgcolor: "#00000017"
+                            bgcolor: "#FAFAFA"
                         },
                     },
                     backdrop: {

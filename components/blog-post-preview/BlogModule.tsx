@@ -56,7 +56,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
             exit={{ opacity: 0, scaleY: 0 }}
         >
             <div
-                className='flex flex-col justify-between h-full grow'
+                className='flex flex-col justify-between h-full grow  sm:px-[12.5vw]'
             >
                 <MainHeroHeader
                     id={"blog-preview-header"}
@@ -159,12 +159,10 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                             Go to Blog
                         </Button>
                     </Link>
-                    <Link href={`/blog/subscribe`}>
                         <Button variant="outlined" color='primary'
                         >
                             Subscribe
                         </Button>
-                    </Link>
 
                 </MotionDiv>
             </div>
