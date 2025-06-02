@@ -6,6 +6,9 @@ import { lightTheme } from '@/library/themes/light-theme';
 import Navbar from '../Navbar';
 import AppServiceProvider from '@/context/AppContext';
 import AuthProvider from './AuthProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 
 const Providers: React.FC<{
     children: React.ReactNode;
@@ -15,13 +18,16 @@ const Providers: React.FC<{
         return (
             <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                 <AuthProvider>
-                    <ThemeProvider theme={lightTheme}>
-                        <AppServiceProvider>
-                            <Navbar />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <ThemeProvider theme={lightTheme}>
+                            <AppServiceProvider>
+                                <Navbar />
 
-                            {children}
-                        </AppServiceProvider>
-                    </ThemeProvider>
+                                {children}
+                            </AppServiceProvider>
+                        </ThemeProvider>
+                    </LocalizationProvider>
+
                 </AuthProvider>
 
             </AppRouterCacheProvider>

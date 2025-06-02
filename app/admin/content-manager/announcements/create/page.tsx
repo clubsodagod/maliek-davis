@@ -1,8 +1,9 @@
 import React from 'react'
+import CreateAnnouncement from './_components/CreateAnnouncement'
 
 const CreatePage = () => {
     return (
-        <div>CreatePage</div>
+        <CreateAnnouncement />
     )
 }
 

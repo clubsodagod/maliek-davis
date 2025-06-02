@@ -17,13 +17,13 @@ export interface IAnnouncementForm {
     type: AnnouncementType;
 
     // Optional fields based on type
-    // speakingEngagement?: {
-    //     event: string;
-    //     date: Date;
-    //     location: string;
-    //     topic: string;
-    //     link?: string;
-    // };
+    speakingEngagement?: {
+        event: string;
+        date: Date;
+        location: string;
+        topic: string;
+        link?: string;
+    };
 
     investmentOpportunity?: {
         category: "real_estate" | "technical_project";
@@ -41,6 +41,7 @@ export interface IAnnouncementForm {
         technologiesUsed: string[];
         summary: string;
         caseStudyLink?: string;
+        projectUrl?: string; // Optional URL for the project
     };
 
     newSocialContent?: {
@@ -50,38 +51,38 @@ export interface IAnnouncementForm {
         tags?: string[];
     };
 
-    // newStoreProduct?: {
-    //     productName: string;
-    //     productId: mongoose.Types.ObjectId;
-    //     productUrl: string;
-    //     launchDate?: Date;
-    // };
+    newStoreProduct?: {
+        productName: string;
+        productId: mongoose.Types.ObjectId;
+        productUrl: string;
+        launchDate?: Date;
+    };
 
-    // communityServiceEvent?: {
-    //     eventName: string;
-    //     date: Date;
-    //     location: string;
-    //     description: string;
-    //     signupLink?: string;
-    // };
+    communityServiceEvent?: {
+        eventName: string;
+        date: Date;
+        location: string;
+        description: string;
+        signupLink?: string;
+    };
 
-    // fundraising?: {
-    //     goalAmount: number;
-    //     raisedAmount?: number;
-    //     cause: string;
-    //     endDate: Date;
-    //     donationLink: string;
-    // };
+    fundraising?: {
+        goalAmount: number;
+        raisedAmount?: number;
+        cause: string;
+        endDate: Date;
+        donationLink: string;
+    };
 
-    // realEstateSyndication?: {
-    //     propertyName: string;
-    //     location: string;
-    //     totalRaise: number;
-    //     minimumInvestment: number;
-    //     expectedReturns: string;
-    //     contactEmail: string;
-    //     offeringMemorandumUrl?: string;
-    // };
+    realEstateSyndication?: {
+        propertyName: string;
+        location: string;
+        totalRaise: number;
+        minimumInvestment: number;
+        expectedReturns: string;
+        contactEmail: string;
+        offeringMemorandumUrl?: string;
+    };
 }
 
 export interface IAnnouncement extends Document {
@@ -207,6 +208,7 @@ const AnnouncementSchema = new Schema<IAnnouncement>(
             technologiesUsed: [String],
             summary: String,
             caseStudyLink: String,
+            projectUrl: String,
         },
 
         newSocialContent: {
