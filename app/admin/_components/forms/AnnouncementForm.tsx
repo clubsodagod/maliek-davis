@@ -1,4 +1,4 @@
-import { AnnouncementType, IAnnouncement, IAnnouncementForm } from "@/database/models/announcement.model";
+import { AnnouncementType,  IAnnouncementForm } from "@/database/models/announcement.model";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import FormInput from "@/components/FormInput";
@@ -30,6 +30,7 @@ export function AnnouncementForm() {
         handleSubmit,
         trigger,
         setValue,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         reset
     } = useForm<IAnnouncementForm>({
         defaultValues: {
