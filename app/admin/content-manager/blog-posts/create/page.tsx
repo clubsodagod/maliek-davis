@@ -1,8 +1,9 @@
 import React from 'react'
+import CreateBlogPostModule from './_components/CreateBlogPostModule'
 
 const CreatePage = () => {
     return (
-        <div>CreatePage</div>
+        <CreateBlogPostModule />
     )
 }
 

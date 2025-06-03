@@ -1,8 +1,9 @@
+import DynamicCreateModule from '@/app/admin/_components/common/DynamicCreateAdminModule'
 import React from 'react'
 
 const CreatePage = () => {
     return (
-        <div>CreatePage</div>
+        <DynamicCreateModule formType='case-studies' />
     )
 }
 

@@ -29,28 +29,20 @@ interface INewSocialContent {
 }
 
 interface AnnouncementEmailProps {
-    title?: string;
-    description?: string;
+    title: string;
+    description: string;
     image?: string;
-    type?: string;
-    investmentOpportunity?: IInvestmentOpportunity;
-    completedClientProject?: ICompletedClientProject;
-    newSocialContent?: INewSocialContent;
+    type: string;
+    investmentOpportunity?: IInvestmentOpportunity|undefined;
+    completedClientProject?: ICompletedClientProject|undefined;
+    newSocialContent?: INewSocialContent|undefined;
 }
 
 const AnnouncementEmail: React.FC<AnnouncementEmailProps> = ({
-    title = "Exciting Investment Opportunity!",
-    description = "We’re thrilled to announce a new real estate opportunity in downtown Detroit. High ROI and low entry point!",
-    image = "https://example.com/announcement.jpg",
-    investmentOpportunity = {
-        category: "real_estate",
-        dealSummary: "A multifamily building in an up-and-coming neighborhood with projected 15% annual ROI.",
-        location: "Detroit, MI",
-        minInvestment: 10000,
-        projectedReturns: "15% annually",
-        deadline: new Date("2025-06-30"),
-        linkToMoreInfo: "https://example.com/deal-details"
-    },
+    title,
+    description,
+    image,
+    investmentOpportunity ,
     completedClientProject,
     newSocialContent
 }) => {
@@ -70,7 +62,7 @@ const AnnouncementEmail: React.FC<AnnouncementEmailProps> = ({
                     backgroundPosition: "center",
                 }}
             >
-                <div style={{ padding: "40px", fontFamily: "sans-serif"  }}>
+                <div style={{  fontFamily: "sans-serif"  }}>
                     <Heading as="h2" style={{ color: '#60abe4' }}>{title}</Heading>
                     {image && (
                         <Img src={image} alt="Announcement image" style={{ width: "100%", marginBottom: "20px" }} />

@@ -12,7 +12,7 @@ interface AdminSectionCardProps {
     section: AdminSection;
 }
 
-const AnnouncementCard: React.FC<AdminSectionCardProps> = ({ section }) => {
+const BlogPostCard: React.FC<AdminSectionCardProps> = ({ section }) => {
     const router = useRouter();
 
     const handleClick = () => {
@@ -49,15 +49,15 @@ const AnnouncementCard: React.FC<AdminSectionCardProps> = ({ section }) => {
 
 
 const AnnouncementCards = ({ }) => {
-    const announcementActions = adminSections[0]?.subSections?.[0]?.subSections ?? [];
+    const blogPostActions = adminSections[0]?.subSections?.[1]?.subSections ?? [];
     return (
         <MotionDiv
             className='w-full h-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-12'
         >
             {
-                announcementActions.map((s, i) => {
+                blogPostActions.map((s, i) => {
                     return (
-                        <AnnouncementCard
+                        <BlogPostCard
                             key={`${s.name} : ${i}`}
                             section={s}
                         />

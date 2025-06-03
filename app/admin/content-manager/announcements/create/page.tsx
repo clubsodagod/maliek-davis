@@ -1,9 +1,9 @@
 import React from 'react'
-import CreateAnnouncement from './_components/CreateAnnouncement'
+import CreateAnnouncementModule from './_components/CreateAnnouncementModule'
 
 const CreatePage = () => {
     return (
-        <CreateAnnouncement />
+        <CreateAnnouncementModule />
     )
 }
 

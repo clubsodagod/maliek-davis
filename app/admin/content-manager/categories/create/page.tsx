@@ -1,8 +1,9 @@
 import React from 'react'
+import CreateCategoryModule from './_components/CreateCategoryModule'
 
 const CreatePage = () => {
     return (
-        <div>CreatePage</div>
+        <CreateCategoryModule />
     )
 }
 

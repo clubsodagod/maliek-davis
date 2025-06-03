@@ -1,5 +1,24 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface ICaseStudyForm {
+    title: string;
+    type: 'TechnicalApplication' | 'Property' | '';
+    featuredImg: { url: string; alt: string };
+    featuredVideo: { url: string; alt: string };
+    photos: string[];
+    logo: string;
+    summary: string;
+    objectives: string[];
+    challenges: string[];
+    solutions: string[];
+    outcomes: {
+        description: string;
+        valueGenerated: number;
+        technicalImpact: string;
+    };
+    address?: string;
+}
+
 export interface CaseStudyDocument extends Document {
     title: string;
     type: 'TechnicalApplication' | 'Property' | '';

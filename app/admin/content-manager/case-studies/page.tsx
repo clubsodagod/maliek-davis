@@ -1,8 +1,10 @@
 import React from 'react'
+import DynamicAdminModule from '../../_components/common/DynamicAdminModule'
 
 const ContentManagerCaseStudiesPage = () => {
     return (
-        <div>ContentManagerCaseStudiesPage</div>
+        <DynamicAdminModule sectionName={'case-studies'}        
+        />
     )
 }
 
