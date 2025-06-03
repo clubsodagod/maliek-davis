@@ -30,14 +30,14 @@ function renderSection(section: number) {
     }
 }
 
-const BusinessModule = ({ }) => {
+const BusinessModule:React.FC<{s:number}> = ({s}) => {
 
 
     const sectionRef = React.useRef(null);
 
     const desktop = useMediaQuery(`(min-width:1100px)`);
 
-    const [section, setSection] = React.useState<number>(0);
+    const [section, setSection] = React.useState<number>(s);
 
     return (
         <>

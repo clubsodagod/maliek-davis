@@ -74,19 +74,23 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                         <List>
                             {item.children && item.children.map((child) => {
                                 return (
-                                    <ListItem key={child.label} sx={{ py: 0, display:"block" }}>
-                                        <ListItemButton sx={{ textAlign: 'left' }} href={child.path}>
-                                            <ListItemText primary={child.label} />
-                                        </ListItemButton>
+                                    <ListItem key={child.label} sx={{ py: 0, display: "block" }}>
+                                        <Link href={child.path}>
+                                            <ListItemButton sx={{ textAlign: 'left' }}>
+                                                <ListItemText primary={child.label} />
+                                            </ListItemButton>
+                                        </Link>
 
                                         {
                                             child.children && child.children.length > 0 &&
                                             <List>
                                                 {child.children.map((subChild) => (
                                                     <ListItem key={subChild.label} sx={{ py: 0 }}>
-                                                        <ListItemButton sx={{ textAlign: 'left' }} href={subChild.path}>
-                                                            <ListItemText primary={subChild.label} />
-                                                        </ListItemButton>
+                                                        <Link href={subChild.path}>
+                                                            <ListItemButton sx={{ textAlign: 'left' }} >
+                                                                <ListItemText primary={subChild.label} />
+                                                            </ListItemButton>
+                                                        </Link>
                                                     </ListItem>
                                                 ))}
                                             </List>
@@ -120,17 +124,17 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                 className='flex items-center justify-center py-3'
                             >
 
-                                    <Image
-                                        alt='Maliek Davis brand logo'
-                                        src={brandLogo}
-                                        width={9}
-                                        height={16}
-                                        sizes='100vw'
-                                        style={{
-                                            objectFit: "cover", width: `${75}px`, height: `auto`
-                                        }}
-                                        className='cursor-pointer'
-                                    />
+                                <Image
+                                    alt='Maliek Davis brand logo'
+                                    src={brandLogo}
+                                    width={9}
+                                    height={16}
+                                    sizes='100vw'
+                                    style={{
+                                        objectFit: "cover", width: `${75}px`, height: `auto`
+                                    }}
+                                    className='cursor-pointer'
+                                />
                             </div>
                         </IconButton>
                         <Link href={'/'} >

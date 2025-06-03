@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from "next";
-import BusinessModule from './_components/BusinessModule';
+import BusinessModule from '../_components/BusinessModule';
 
 
 export const metadata: Metadata = {
@@ -8,10 +8,10 @@ export const metadata: Metadata = {
     description: "Discover how to brand, automate, and scale your small business like the pros. We help entrepreneurs build a powerful online presence, master AI tools, and market with systems — not stress.",
 };
 
-const BusinessPage = () => {
+const BusinessMarketingAndGrowthSystemsPage = () => {
     return (
-        <BusinessModule s={0} />
+        <BusinessModule s={4} />
     )
 }
 
-export default BusinessPage
+export default BusinessMarketingAndGrowthSystemsPage
