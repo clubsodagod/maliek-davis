@@ -31,6 +31,7 @@ const SlugPostModule: React.FC<{
                 animate={animateHeaderAnimation}
                 transition={transitionHeaderAnimation}
                 exit={{ opacity: 0, scaleY: 0 }}
+                pb='pb-[53vh]'
             >
                 <PostScrollProgress />
                 <div>
