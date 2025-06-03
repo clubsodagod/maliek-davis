@@ -49,22 +49,22 @@ const PostContent: FC<{
                             </Button>
                         ),
                         h1: (props) => (
-                            <Typography variant='h1'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h3'>{props.children}</Typography>
                         ),
                         h2: (props) => (
-                            <Typography variant='h2'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h4'>{props.children}</Typography>
                         ),
                         h3: (props) => (
-                            <Typography variant='h3'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h4'>{props.children}</Typography>
                         ),
                         h4: (props) => (
-                            <Typography variant='h4'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h4'>{props.children}</Typography>
                         ),
                         h5: (props) => (
-                            <Typography variant='h5'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h5'>{props.children}</Typography>
                         ),
                         h6: (props) => (
-                            <Typography variant='h6'>{props.children}</Typography>
+                            <Typography className="break-words" variant='h6'>{props.children}</Typography>
                         ),
                     }}>
                     {content}
