@@ -19,16 +19,16 @@ const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
         .use(() => {
             return (tree) => {
                 visit(tree, 'element', function (node: any) {
-                    if (node.tagName === 'h3') {
+                    if (node.tagName === 'h3' && node.children?.[0]?.type === 'text' && typeof node.children[0].value === 'string') {
                         const id = parameterize(node.children[0].value);
+
+                        node.properties = node.properties || {};
                         node.properties.id = id;
 
                         toc.push({
                             id,
                             title: node.children[0].value,
                         });
-
-                        console.log('node', node)
                     }
                 });
                 return;
