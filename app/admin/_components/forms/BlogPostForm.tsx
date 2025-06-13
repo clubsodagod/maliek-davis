@@ -10,6 +10,7 @@ import { IBlogPostClient } from "@/database/models/blog-posts.model";
 import { blogPostFormSections } from "../../_library/forms.const";
 import FormMultiSelect from "@/components/FormMultiSelect";
 import RichTextInput from "@/components/tinyMCE/RichTextInput";
+import { submitBlogPost } from "@/utility/fetchers/content-manager.fetcher";
 
 export function BlogPostForm() {
     const { data: session } = useSession();
@@ -142,7 +143,4 @@ export function BlogPostForm() {
     );
 }
 
-function submitBlogPost(data: IBlogPostClient) {
-    console.log(data);
-    throw new Error("Function not implemented.");
-}
+

@@ -2,24 +2,20 @@
 
 import ComponentTransition from "@/components/layout/ComponentTransition";
 import { MotionDiv } from "@/components/motion/MotionDiv";
+import { IAnnouncement } from "@/database/models/announcement.model";
 import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 
-interface Announcement {
-    name: string;
-    ftImg: string;
-    description: string;
-    path: string;
-}
+
 
 const AnnouncementCard: React.FC<{
-    announcement: Announcement;
+    announcement: IAnnouncement;
     open: boolean;
     index: number;
 }> = ({ announcement, open }) => {
     return (
-        <ComponentTransition id={`${announcement.name}-transition-card`}>
+        <ComponentTransition id={`${announcement.title}-transition-card`}>
             <MotionDiv
                 className="announcement-card overflow-hidden  rounded-t-4xl p-4"
                 initial={{ opacity: 1, y: 0 }} // Starts slightly above
@@ -34,7 +30,7 @@ const AnnouncementCard: React.FC<{
             >
                 {/* Title */}
                 <Typography variant="subtitle1" fontWeight={"bold"}>
-                    {announcement.name}
+                    {announcement.title}
                 </Typography>
 
                 {/* Expanded Content */}
@@ -49,8 +45,8 @@ const AnnouncementCard: React.FC<{
                         {/* Image */}
                         <MotionDiv className="flex justify-center my-4">
                             <Image
-                                alt={`${announcement.name} featured photo for announcement.`}
-                                src={announcement.ftImg}
+                                alt={`${announcement.title} featured photo for announcement.`}
+                                src={announcement.image||""}
                                 sizes="100vw"
                                 width={9}
                                 height={16}

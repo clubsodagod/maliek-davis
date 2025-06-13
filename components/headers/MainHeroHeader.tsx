@@ -55,7 +55,8 @@ const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className={`break-words text-pretty ${headerLabelClassName || ''}`}
+                sx={{textShadow: '0 2px 3px rgba(0, 0, 0, 0.5)'}}
+                className={`break-words text-pretty ${headerLabelClassName || ''}   `}
             >
                 {headerLabel}
             </Typography>

@@ -17,6 +17,9 @@ import ContactDetails from "@/app/emails/ContactDetails";
 import BusinessLeadCaptureForm, { IBusinessLeadCaptureFormClient } from "@/database/models/business-cta-forms.model";
 import AdminNotificationEmail from "@/app/emails/AdminBusinessLeadNotifiation";
 import ClientConfirmationEmail from "@/app/emails/BusinessLeads";
+import SellerLeadConfirmation from "@/app/emails/SellerLeadConfirmation";
+import MotivatedSellerModel from "@/database/models/property-lead.model";
+import MotivatedSellerNotificationEmail from "@/app/emails/MotivatedSellerNotification";
 
 // load env file
 dotenv.config()
@@ -191,3 +194,101 @@ export async function submitPrestigePartnerBuyer(form: {
     }
 }
 
+export interface MotivatedSellerFormInput {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    contactMethod: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    propertyType: string;
+    bedrooms: number;
+    bathrooms: number;
+    condition: string;
+    occupancy: string;
+    timeline: string;
+    askingPrice?: number;
+    notes?: string;
+    disclosures?: File | null;
+    photos?: File[] | null;
+    otherDocs?: File | null;
+}
+
+export async function submitMotivatedSeller(form: MotivatedSellerFormInput) {
+    try {
+        await connectToDB();
+
+        const processor = new FileProcessingService();
+
+        // Step 1: Process file uploads
+        const fileUrls: {
+            disclosures?: string;
+            otherDocs?: string;
+            photos?: string[];
+        } = {};
+
+        if (form.disclosures) {
+            const buffer = Buffer.from(await form.disclosures.arrayBuffer());
+            const result = await processor.handle(buffer, form.disclosures.type, form.disclosures.name);
+            if (result?.url) fileUrls.disclosures = result.url;
+        }
+
+        if (form.otherDocs) {
+            const buffer = Buffer.from(await form.otherDocs.arrayBuffer());
+            const result = await processor.handle(buffer, form.otherDocs.type, form.otherDocs.name);
+            if (result?.url) fileUrls.otherDocs = result.url;
+        }
+
+        if (form.photos && form.photos.length > 0) {
+            fileUrls.photos = [];
+            for (const photo of form.photos) {
+                const buffer = Buffer.from(await photo.arrayBuffer());
+                const result = await processor.handle(buffer, photo.type, photo.name);
+                if (result?.url) fileUrls.photos.push(result.url);
+            }
+        }
+
+        // Step 2: Save to DB
+        const { disclosures, otherDocs, photos, ...formValues } = form;
+
+        const newLead = new MotivatedSellerModel({
+            ...formValues,
+            ...fileUrls,
+        });
+
+        await newLead.save();
+
+        // Step 3: Send Emails
+        const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+
+        await Promise.all([
+            resend.emails.send({
+                from: "self@maliek-davis.com",
+                to: [newLead.email],
+                subject: "We Received Your Property Submission",
+                react: SellerLeadConfirmation({ firstName: newLead.firstName }) as React.ReactElement,
+            }),
+            resend.emails.send({
+                from: "self@maliek-davis.com",
+                to: ["continuous-innovation@maliek-davis.com", "maliekjdavis24@gmail.com"],
+                subject: `New Seller Lead: ${newLead.firstName} ${newLead.lastName}`,
+                react: MotivatedSellerNotificationEmail({ form: newLead }) as React.ReactElement,
+            }),
+        ]);
+
+        return {
+            error: false,
+            message: "Form submitted successfully. We’ll reach out shortly.",
+        };
+    } catch (error: unknown) {
+        console.error("[Motivated Seller Submission Error]", error);
+        return {
+            error: true,
+            message: `Error submitting form: ${error instanceof Error ? error.message : String(error)
+                }`,
+        };
+    }
+}

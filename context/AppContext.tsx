@@ -33,20 +33,18 @@ export const UseAppService = (): AppServiceType => {
  * @returns {JSX.Element} The AppServiceContext.Provider component with the app services.
  */
 const AppServiceProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const interactionService: AppServiceType["interactionService"] = useMemo(() => {
-        // Initialize your userService here
-        return new InteractionService;
-    }, []);
+    const interactionService = useMemo(() => new InteractionService(), []);
 
     const appService = useMemo(() => ({
-        interactionService
-    }), [interactionService]);
+        interactionService,
+    }), [interactionService, ]);
 
     return (
         <AppServiceContext.Provider value={appService}>
             {children}
         </AppServiceContext.Provider>
-    )
-}
+    );
+};
+
 
 export default AppServiceProvider

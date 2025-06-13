@@ -76,7 +76,7 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                     )}
 
                     <div
-                        className="hidden lg:landscape:block"
+                        className="hidden lg:landscape:block "
                     >
                         {
                             OtherComponent

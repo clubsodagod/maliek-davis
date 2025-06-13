@@ -2,8 +2,9 @@ import { getContentReactions, reactToContent } from "@/utility/fetchers/blog.fet
 import mongoose from "mongoose";
 
 export interface AppServiceType {
-    interactionService: InteractionService
+    interactionService: InteractionService;
 }
+
 
 
 

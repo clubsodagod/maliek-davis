@@ -13,10 +13,10 @@ const announcementTypeLabels: Record<AnnouncementType, string> = {
     completed_client_project: "Completed Project",
     new_social_content: "Social Content",
     speaking_engagement: "Speaking Engagement",
-    new_store_product: "New Store Product",
     community_service_event: "Community Service",
     fundraising: "Fundraising",
-    real_estate_syndication: "Real Estate Syndication"
+    real_estate_syndication: "Real Estate Syndication",
+    inhouse_app: "Real Estate Syndication",
 };
 
 export function AnnouncementForm() {
