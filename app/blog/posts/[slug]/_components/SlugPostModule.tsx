@@ -11,6 +11,7 @@ import PostSummary from './PostSummary';
 import IdentifiersRow from './IdentifiersRow';
 import PostContent from './PostContent';
 import { IBlogPost } from '@/database/models/blog-posts.model';
+import TableOfContents from './TableOfContents';
 
 
 const SlugPostModule: React.FC<{
@@ -50,6 +51,9 @@ const SlugPostModule: React.FC<{
                                 />
                                 <IdentifiersRow
                                     category={post?.category} subcategories={post?.tags}
+                                />
+                                <TableOfContents 
+                                    payload={post?.content}
                                 />
                                 <PostContent
                                     content={post?.content}

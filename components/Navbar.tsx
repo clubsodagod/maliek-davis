@@ -13,7 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { brandLogo, brandLogoWidth } from '@/library/brand.const';
+import { brandLogo, brandLogoAlt, brandLogoWidth } from '@/library/brand.const';
 import Image from 'next/image';
 import { navigationPaths } from '@/library/navbar-assets';
 import Slide from '@mui/material/Slide';
@@ -49,7 +49,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                 <Link href={'/'} >
                     <Image
                         alt='Maliek Davis brand logo'
-                        src={brandLogo}
+                        src={brandLogoAlt}
                         width={9}
                         height={16}
                         sizes='100vw'
@@ -131,7 +131,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                     height={16}
                                     sizes='100vw'
                                     style={{
-                                        objectFit: "cover", width: `${75}px`, height: `auto`
+                                        objectFit: "cover", width: `${100}px`, height: `auto`
                                     }}
                                     className='cursor-pointer'
                                 />
@@ -140,7 +140,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                         <Link href={'/'} >
                             <Image
                                 alt='Maliek Davis brand logo'
-                                src={brandLogo}
+                                src={brandLogoAlt}
                                 width={9}
                                 height={16}
                                 sizes='100vw'
