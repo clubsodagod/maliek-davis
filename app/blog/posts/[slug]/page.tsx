@@ -38,9 +38,11 @@ export default async function Page({
 export async function generateMetadata({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-    const post: IBlogPost | null = await getBlogPostBySlug(params.slug);
+
+    const slug = (await params).slug;
+    const post:IBlogPost|null = await getBlogPostBySlug(slug);
 
     if (!post) {
         return {
@@ -51,18 +53,12 @@ export async function generateMetadata({
 
     return {
         title: `${post.title} | Maliek Davis`,
-        description:
-            post.metaDescription || post.metaDescription || post.content?.slice(0, 160) || "Expert insights on real estate, technology, and strategy.",
-        keywords: post.seoKeywords || [
-            "real estate investing",
-            "automation",
-            "business growth",
-            "Maliek Davis blog",
-        ],
+        description: post.metaDescription || post.metaDescription || post.content?.slice(0, 160),
+        keywords: post.seoKeywords || ["blog", "real estate", "technology", "business growth"],
         openGraph: {
             title: post.title,
-            description: post.metaDescription || "",
-            url: `https://maliek-davis.com/blog/posts/${post.slug}`,
+            description: post.metaDescription || post.metaDescription || "",
+            url: `https://maliek-davis.com/blog/${post.slug}`,
             type: "article",
             images: post.featuredImg
                 ? [{ url: post.featuredImg, alt: post.title }]
