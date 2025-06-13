@@ -45,11 +45,13 @@ export default async function CategorySlugPage({
 }
 
 
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ category: string }>;
-}): Promise<Metadata> {
+type PageProps = {
+    params: Promise<{
+        category: string;
+    }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const category = await getCategoryBySlug((await params).category);
 
     if (!category) {
@@ -59,29 +61,43 @@ export async function generateMetadata({
         };
     }
 
+    const name = category.name;
+    const description =
+        category.description || `Read the latest blog posts and insights on ${name}.`;
+
+    const url = `https://maliek-davis.com/categories/${category.slug}`;
+
     return {
-        title: `${category.name} Articles | Maliek Davis`,
-        description: category.description || `Read all blog posts about ${category.name}.`,
+        title: `${name} Articles | Maliek Davis`,
+        description,
         keywords: [
             category.slug,
-            `${category.name} blog`,
+            `${name.toLowerCase()} blog`,
             `maliek davis ${category.slug}`,
-            `${category.name} insights`,
+            `${name.toLowerCase()} insights`,
         ],
         openGraph: {
-            title: `${category.name} Blog Posts | Maliek Davis`,
-            description:
-                category.description ||
-                `Explore expert articles by Maliek Davis focused on ${category.name}.`,
-            url: `https://maliek-davis.com/categories/${category.slug}`,
+            title: `${name} Blog Posts | Maliek Davis`,
+            description,
+            url,
             siteName: "Maliek Davis",
             type: "website",
+            images: category.photo
+                ? [
+                    {
+                        url: category.photo,
+                        width: 1200,
+                        height: 630,
+                        alt: `${name} category`,
+                    },
+                ]
+                : [],
         },
         twitter: {
             card: "summary_large_image",
-            title: `${category.name} | Maliek Davis`,
-            description:
-                category.description || `Real-world insights on ${category.name}, straight from the blog.`,
+            title: `${name} | Maliek Davis`,
+            description,
+            images: category.photo ? [category.photo] : [],
         },
     };
 }
