@@ -38,9 +38,9 @@ export default async function Page({
 export async function generateMetadata({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-    const post:IBlogPost|null = await getBlogPostBySlug(params.slug);
+    const post:IBlogPost|null = await getBlogPostBySlug((await params).slug);
 
     if (!post) {
         return {

@@ -48,9 +48,9 @@ export default async function CategorySlugPage({
 export async function generateMetadata({
     params,
 }: {
-    params: { category: string };
+    params: Promise<{ category: string }>;
 }): Promise<Metadata> {
-    const category = await getCategoryBySlug(params.category);
+    const category = await getCategoryBySlug((await params).category);
 
     if (!category) {
         return {
