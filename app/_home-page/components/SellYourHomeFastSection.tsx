@@ -30,7 +30,7 @@ const SellYourHomeFastSection = () => {
                     headerLabelClassName="text-center"
                     taglineClassName="text-center"
                     tagline=""
-                    size={!desktop ? 'md' : 'lg'}
+                    size={!desktop ? 'lg' : 'lg'}
                 />
 
                 <Typography className="text-center" variant="subtitle1">
