@@ -108,6 +108,29 @@ export const adminSections: AdminSection[] = [
                         image: "/images/admin/categories.jpg",
                     }
                 ]
+            },
+            {
+                name: "subcategories",
+                label: "Subcategories",
+                path: "/admin/content-manager/subcategories",
+                description: "Organize content and products into more specific subcategories to enhance navigation and filtering.",
+                image: "/images/admin/subcategories.jpg",
+                subSections: [
+                    {
+                        name: "subcategories-create",
+                        label: "Create Subcategory",
+                        path: "/admin/content-manager/subcategories/create",
+                        description: "Add a new subcategory to refine your content structure.",
+                        image: "/images/admin/subcategories.jpg",
+                    },
+                    {
+                        name: "subcategories-update",
+                        label: "Update Subcategory",
+                        path: "/admin/content-manager/subcategories/update",
+                        description: "Edit or remove existing subcategories.",
+                        image: "/images/admin/subcategories.jpg",
+                    }
+                ]
             }
         ]
     },

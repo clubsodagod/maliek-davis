@@ -114,6 +114,28 @@ const PostContent: FC<{
                             </Typography>
                         );
                     },
+                    hr: () => {
+                        return (
+                            <hr className="my-10 " />
+                        );
+                    },
+                    ol: ({ children }) => {
+                        return (
+                            <ol className="my-4">
+                                {children}
+                            </ol>
+                        );
+                    },
+                    li: ({ children }) => {
+                        return (
+                            <div className="pl-12">
+                                <li className="my-2 list-disc pl-3  mt-2">
+                                    {children}
+                                </li>
+                            </div>
+
+                        );
+                    }
                 }}
             >
                 {content}

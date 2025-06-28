@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getContentReactions, reactToContent } from "@/utility/fetchers/blog.fetcher";
 import mongoose from "mongoose";
 
@@ -64,12 +65,16 @@ export class BlogInteraction implements IBlogInteraction {
                 throw new Error(response.message);
             } else {
                 return {
-                    error: false, message: response.message
+                    success: true,
+                    error: false,
+                    message: response.message
                 };
             }
         } catch (error) {
             return {
-                error: true, message: `${error}`
+                success: false,
+                error: true,
+                message: `${error}`
             };
         }
     }
@@ -85,7 +90,9 @@ export class BlogInteraction implements IBlogInteraction {
             }
         } catch (error) {
             return {
-                error: true, message: `${error}`
+                success: false,
+                error: true,
+                message: `${error}`
             };
         }
     }
@@ -94,6 +101,7 @@ export class BlogInteraction implements IBlogInteraction {
 
 
 export type ResponseStatus = {
+    success?: any;
     error:boolean;
     message:string;
     data?:unknown;

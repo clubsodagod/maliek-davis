@@ -1,8 +1,10 @@
+import DynamicUpdateModule from '@/app/admin/_components/common/DynamicUpdateAdminModule'
 import React from 'react'
 
 const UpdatePage = () => {
     return (
-        <div>UpdatePage</div>
+        <DynamicUpdateModule formType={'announcement'}        
+        />
     )
 }
 

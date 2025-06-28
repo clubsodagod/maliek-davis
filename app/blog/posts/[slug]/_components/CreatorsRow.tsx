@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import relativeTime from 'dayjs/plugin/relativeTime';
 import ComponentTransition from '@/components/layout/ComponentTransition';
 import { IBlogPost } from '@/database/models/blog-posts.model';
+import { brandLogo} from '@/library/brand.const';
 
 // Extend dayjs with the relativeTime plugin
 dayjs.extend(relativeTime);
@@ -30,19 +31,19 @@ const CreatorsRow: FC<{
                     <div
                         className='w-full h-fit flex gap-3 justify-center items-center'
                     >
-                        <div>
+                        <div className='p-2 bg-(--foreground) rounded-full border border-(--border) shadow-md flex justify-center items-center'>
                             {
                                 author ?
                                     <Image
                                         alt={`${author.firstName}` || ""}
-                                        src={author.avatar || ""}
+                                        src={author.avatar||brandLogo}
                                         sizes='100vw'
                                         width={16}
                                         height={9}
                                         style={{
                                             width: "75px",
                                             height: "75px",
-                                            objectFit: "cover",
+                                            objectFit: "contain",
                                             borderRadius: "100%"
                                         }}
                                         priority
@@ -63,7 +64,7 @@ const CreatorsRow: FC<{
                         >
                             <Typography variant='subtitle1'
                             >
-                                <span className='font-bold'>Author</span> {author.firstName}
+                                <span className='font-bold'>Author</span> {author.firstName} {author.lastName}
                             </Typography>
 
                             <Typography variant='caption'>

@@ -83,7 +83,7 @@ const CategoryModule: React.FC<CategoryModuleProps> = ({
                 <Typography variant="h5"  className={`w-full text-center`}>
                     {category?.name} Posts
                 </Typography>
-                <div className='w-screen h-full relative -left-6  z-10 2xl:grid 2xl:grid-cols-4 '>
+                <div className='w-screen h-full relative -left-6  z-10 2xl:grid 2xl:grid-cols-4 2xl:gap-12 2xl:px-[12vw]'>
 
                     {
                         posts && posts.map((p, i) => {

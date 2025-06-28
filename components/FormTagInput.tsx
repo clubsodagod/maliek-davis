@@ -27,10 +27,11 @@ function FormTagInput<T extends FieldValues>({
             defaultValue={defaultValue as T[Path<T>]}
             render={({ field }) => {
                 const addTag = (e: KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === "Enter" && inputValue.trim()) {
-                        e.preventDefault();
-                        if (!field.value.includes(inputValue.trim())) {
-                            field.onChange([...field.value, inputValue.trim()]);
+                    if (e.key === "Enter") {
+                        e.preventDefault(); // Prevent form submission
+                        const trimmed = inputValue.trim();
+                        if (trimmed && !field.value.includes(trimmed)) {
+                            field.onChange([...field.value, trimmed]);
                         }
                         setInputValue("");
                     }

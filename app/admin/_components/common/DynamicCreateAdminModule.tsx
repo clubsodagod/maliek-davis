@@ -5,12 +5,14 @@ import { CategoryForm } from '@/app/admin/_components/forms/CategoryForm'; // en
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
 import AdminWrapper from '@/components/wrappers/AdminWrapper';
 import { useMediaQuery } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BlogPostForm } from '../forms/BlogPostForm';
 import { CaseStudyForm } from '../forms/CaseStudyForm';
+import { SubcategoryForm } from '../forms/SubcategoryForm';
+import { getSubcategoryOptions } from '@/utility/fetchers/content-manager.fetcher';
 
 // Extend this type with other form keys as needed
-type FormType = "announcement" | "category" | "blog-post" | "case-studies";
+type FormType = "announcement" | "category" | "subcategory" | "blog-post" | "case-studies";
 
 interface DynamicCreateModuleProps {
     formType: FormType;
@@ -21,6 +23,8 @@ const DynamicCreateModule: React.FC<DynamicCreateModuleProps> = ({ formType }) =
     const tablet = useMediaQuery(`(min-width:769px)`);
     const tabletXL = useMediaQuery(`(min-width:900px)`);
     const desktop = useMediaQuery(`(min-width:1100px)`);
+
+    const [subcategoryOptions, setSubcategoryOptions] = React.useState<{ label: string; value: string }[]>([]);
 
     const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined =
         desktop ? "xl" : tabletXL ? "xl" : tablet ? "lg" : mobile ? "md" : undefined;
@@ -33,7 +37,9 @@ const DynamicCreateModule: React.FC<DynamicCreateModuleProps> = ({ formType }) =
             case "announcement":
                 return <AnnouncementForm />;
             case "category":
-                return <CategoryForm />;
+                return <CategoryForm options={subcategoryOptions} />;
+            case "subcategory":
+                return <SubcategoryForm />;
             case "blog-post":
                 return <BlogPostForm />;
             case "case-studies":
@@ -42,6 +48,14 @@ const DynamicCreateModule: React.FC<DynamicCreateModuleProps> = ({ formType }) =
                 return <div className="text-red-600">Invalid form type</div>;
         }
     };
+
+    useEffect(() => {
+        const handleOptions = async() => {
+            const res = await getSubcategoryOptions();
+            setSubcategoryOptions(res);
+        };
+        handleOptions(); 
+    }, [])
 
     return (
         <AdminWrapper

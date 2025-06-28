@@ -8,7 +8,7 @@ export interface ICategoryForm {
     slug: string;
     tagline: string;
     description: string;
-    subcategories: mongoose.Types.ObjectId[];
+    subcategories: mongoose.Types.ObjectId[]|string[];
     photo: string;
     video?: string;
     createdAt: Date;

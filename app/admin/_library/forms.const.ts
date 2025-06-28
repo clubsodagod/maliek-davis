@@ -13,7 +13,7 @@ export const blogPostFormSections: FormSection[] = [
                     { value: "technology", label: "Technology" },
                     { value: "finance", label: "Finance" },
                     { value: "health", label: "Health" },
-                    { value: "real_estate", label: "Real Estate" },
+                    { value: "678c0562ef993fd95d3aa6f1", label: "Real Estate" },
                 ],
                 validation: {
                     required: "Category is required",

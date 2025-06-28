@@ -11,7 +11,7 @@ import DynamicAdminCards from './DynamicAdminCards';
 import { adminSections } from '@/app/admin/_library/copy.const';
 
 interface AdminModuleProps {
-    sectionName: "announcement" | "categories" | "blog-posts" | "case-studies"
+    sectionName: "announcement" | "categories" | "blog-posts" | "case-studies" | "subcategories"
 }
 
 const DynamicAdminModule: React.FC<AdminModuleProps> = ({ sectionName }) => {

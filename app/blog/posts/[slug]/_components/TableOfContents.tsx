@@ -68,8 +68,8 @@ const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
                         >
                             <ListItemText
                                 primary={
-                                    <Typography variant="body2" color="text.primary">
-                                        {title}
+                                    <Typography variant="body2" color="">
+                                        - {title}
                                     </Typography>
                                 }
                             />

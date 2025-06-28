@@ -17,6 +17,7 @@ export const ReportSchema = new Schema<IReport>(
 );
 
 export interface IBlogPostClient {
+    _id: string;
     title: string;
     featuredImg: string;
     content: string;

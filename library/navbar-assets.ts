@@ -21,6 +21,12 @@ export const navigationPaths: NavigationPath[] = [
         path: "/technology",
         icon: undefined,
         children: [
+            {
+                label: "Apps", path: "/technology/apps", icon: undefined,
+                children: [
+                    { label: "Email Pearl", path: "/technology/apps/email-pearl", icon: undefined },
+                ]
+            },
             { label: "Approach", path: "/technology/approach", icon: undefined },
             { label: "Solutions", path: "/technology/solutions", icon: undefined },
             { label: "Portfolio", path: "/technology/portfolio", icon: undefined },
@@ -31,30 +37,30 @@ export const navigationPaths: NavigationPath[] = [
         path: "/business",
         icon: undefined,
         children: [
-            { 
-                label: "AI & Automation", 
-                path: "/business/ai-and-automation", 
-                icon: undefined 
+            {
+                label: "AI & Automation",
+                path: "/business/ai-and-automation",
+                icon: undefined
             },
-            { 
-                label: "Branding", 
-                path: "/business/branding", 
-                icon: undefined 
+            {
+                label: "Branding",
+                path: "/business/branding",
+                icon: undefined
             },
-            { 
-                label: "Business Planning", 
-                path: "/business/business-planning", 
-                icon: undefined 
+            {
+                label: "Business Planning",
+                path: "/business/business-planning",
+                icon: undefined
             },
-            { 
-                label: "Digital Presence", 
-                path: "/business/digital-presence", 
-                icon: undefined 
+            {
+                label: "Digital Presence",
+                path: "/business/digital-presence",
+                icon: undefined
             },
-            { 
-                label: "Marketing & Growth Systems", 
-                path: "/business/marketing-and-growth-systems", 
-                icon: undefined 
+            {
+                label: "Marketing & Growth Systems",
+                path: "/business/marketing-and-growth-systems",
+                icon: undefined
             },
         ],
     },
@@ -73,20 +79,20 @@ export const navigationPaths: NavigationPath[] = [
         path: "/real-estate",
         icon: undefined,
         children: [
-            { 
-                label: "Case Studies", 
-                path: "/real-estate/case-studies", 
-                icon: undefined 
+            {
+                label: "Case Studies",
+                path: "/real-estate/case-studies",
+                icon: undefined
             },
             {
                 label: "Prestige Partners",
                 path: "/real-estate/prestige-partners",
                 icon: undefined,
                 children: [
-                    { 
-                        label: "Become a Prestige Partner", 
-                        path: "/real-estate/prestige-partners/landing-page", 
-                        icon: undefined, 
+                    {
+                        label: "Become a Prestige Partner",
+                        path: "/real-estate/prestige-partners/landing-page",
+                        icon: undefined,
                     },
                 ]
             },

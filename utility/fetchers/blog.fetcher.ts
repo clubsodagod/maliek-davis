@@ -1,4 +1,4 @@
-"client"
+
 import { ReactionFormType, ResponseStatus } from "@/context/_library/classes-types-interaces";
 import { IBlogPost } from "@/database/models/blog-posts.model";
 import { apiUrl } from "@/library/global.const";

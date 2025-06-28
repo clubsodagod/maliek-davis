@@ -6,15 +6,19 @@ import { useEffect, useState } from "react";
 import FormInput from "@/components/FormInput";
 import FormTagInput from "@/components/FormTagInput";
 import FormSelect from "@/components/FormSelect";
-import { IBlogPostClient } from "@/database/models/blog-posts.model";
-import { blogPostFormSections } from "../../_library/forms.const";
 import FormMultiSelect from "@/components/FormMultiSelect";
 import RichTextInput from "@/components/tinyMCE/RichTextInput";
-import { submitBlogPost } from "@/utility/fetchers/content-manager.fetcher";
+import { IBlogPostClient } from "@/database/models/blog-posts.model";
+import { blogPostFormSections } from "../../_library/forms.const";
+import { submitBlogPost, getSubcategoryOptions, getCategoryOptions } from "@/utility/fetchers/content-manager.fetcher";
+import { Button } from "@mui/material";
 
 export function BlogPostForm() {
     const { data: session } = useSession();
     const [step, setStep] = useState(0);
+    const [categoryOptions, setCategoryOptions] = useState<{ label: string; value: string }[]>([]);
+    const [subcategoryOptions, setSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
+    console.log(session, 'session in blog post form');
 
     const {
         control,
@@ -31,31 +35,48 @@ export function BlogPostForm() {
             subcategories: [],
             tags: [],
             metaDescription: "",
-            seoKeywords: [],
         },
-        mode: "onTouched",
+        mode: "onSubmit",
     });
 
     useEffect(() => {
-        if (session?.user?.id) {
-            setValue("author", session.user.id);
+        async function fetchOptions() {
+            const cats = await getCategoryOptions();
+            const subs = await getSubcategoryOptions();
+            setCategoryOptions(cats);
+            setSubcategoryOptions(subs);
+        }
+        fetchOptions();
+    }, []);
+
+
+    useEffect(() => {
+        const rawId = session?.user?._id;
+
+        if (rawId && typeof rawId === "object" && typeof rawId.toHexString === "function") {
+            setValue("author", rawId.toHexString());
+        } else if (typeof rawId === "string") {
+            setValue("author", rawId);
         }
     }, [session, setValue]);
 
+
+
     const onSubmit = async (data: IBlogPostClient) => {
-        await submitBlogPost(data);
-        console.log("Blog post submitted:", data);
-        reset();
+        if (!data.author && session?.user?.id) {
+            data.author = session.user.id;
+        }
+
+        const result = await submitBlogPost(data);
+        console.log("Blog post submitted:", result);
+
+        reset(); // Optional: Reset form after submission
+        setValue("author", session?.user?.id || ""); // Reset author to current user ID
         setStep(0);
     };
 
-    const handleNext = () => {
-        setStep(prev => prev + 1);
-    };
-
-    const handleBack = () => {
-        setStep(prev => Math.max(prev - 1, 0));
-    };
+    const handleNext = () => setStep((prev) => prev + 1);
+    const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
     const currentSection = blogPostFormSections[step];
 
@@ -77,28 +98,39 @@ export function BlogPostForm() {
                         />
                     );
                 }
+
                 if (field.type === "select") {
-                    return (
+                    const options =
+                        field.name === "category" ? categoryOptions : field.options!;
+                    return options.length ? (
                         <FormSelect
                             key={field.name}
                             name={field.name}
                             label={field.label}
                             control={control}
-                            options={field.options!}
+                            options={options}
                         />
+                    ) : (
+                        <p key={field.name}>Loading {field.label} options...</p>
                     );
                 }
+
                 if (field.type === "multi-select") {
-                    return (
+                    const options =
+                        field.name === "subcategories" ? subcategoryOptions : field.options!;
+                    return options.length ? (
                         <FormMultiSelect
                             key={field.name}
                             name={field.name}
                             label={field.label}
                             control={control}
-                            options={field.options!}
+                            options={options}
                         />
+                    ) : (
+                        <p key={field.name}>Loading {field.label} options...</p>
                     );
                 }
+
                 if (field.type === "tag") {
                     return (
                         <FormTagInput
@@ -110,6 +142,7 @@ export function BlogPostForm() {
                         />
                     );
                 }
+
                 if (field.type === "tinyMCE") {
                     return (
                         <RichTextInput
@@ -120,6 +153,7 @@ export function BlogPostForm() {
                         />
                     );
                 }
+
                 return null;
             })}
 
@@ -129,18 +163,22 @@ export function BlogPostForm() {
                         Back
                     </button>
                 )}
-                {step < blogPostFormSections.length - 1 ? (
-                    <button type="button" className="btn ml-auto" onClick={handleNext}>
-                        Next
-                    </button>
-                ) : (
-                    <button type="submit" className="btn ml-auto">
+                <div className="flex gap-3 ml-auto">
+                    {step < blogPostFormSections.length - 1 ? (
+                        <button type="button" className="btn ml-auto" onClick={handleNext}>
+                            Next
+                        </button>
+                    ) : null}
+                    <Button
+                        variant="contained"
+                        disabled={step !== blogPostFormSections.length - 1}
+                        type="submit"
+                        className="btn ml-auto"
+                    >
                         Submit Blog Post
-                    </button>
-                )}
+                    </Button>
+                </div>
             </div>
         </form>
     );
 }
-
-

@@ -8,6 +8,7 @@ import AppServiceProvider from '@/context/AppContext';
 import AuthProvider from './AuthProvider';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Toaster } from 'react-hot-toast';
 
 
 const Providers: React.FC<{
@@ -22,6 +23,9 @@ const Providers: React.FC<{
                         <ThemeProvider theme={lightTheme}>
                             <AppServiceProvider>
                                 <Navbar />
+                                <Toaster 
+                                    position="top-right"
+                                />
 
                                 {children}
                             </AppServiceProvider>

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
-import { allPostsMockRealEstate, mockCategories } from '@/app/investments/_library/copy';
 import FtPostCard from '@/components/blog-post-preview/FtPostCard';
 import SmallPostCard from '@/components/blog-post-preview/SmallPostCard';
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
@@ -97,7 +96,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                             return (
                                 <Grid2
                                     size={{ xs: 6, md: 4, xl: 12 }}
-                                    key={post.id}
+                                    key={`${post._id} : ${index}`}
                                     className={`min-w-full`}
                                 >
                                     <SmallPostCard
@@ -126,7 +125,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
 
             <div className='w-screen h-full relative -left-6  z-50'>
 
-                <Typography variant="h4" color="secondary.dark" className="px-6">
+                <Typography variant="h4" color="secondary" className="px-6 ">
                     Categories
                 </Typography>
                 <div
@@ -135,7 +134,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                     {
                         categories && categories.map((c, i) => (
                             <SlidingCardWrapper
-                                key={`${c.id} ${i}`}
+                                key={`${c._id} ${i* 100}`}
                                 id={c.name}
                                 onClick={() => setCategory(i)}
                             >
@@ -161,37 +160,17 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                                 if (index===0) {
                                     return
                                 }
-                                return (
-                                    <>
-                                        <div key={post.id} className="w-full flex justify-center">
-                                            <Typography variant="caption"
-                                                color="primary.dark"
-
-                                            >
-                                                No more posts available.
-                                            </Typography>
-                                        </div>
-                                    </>
-                                )
+                                return 
                             }
                         } else {
-                            if (index < 4 || index > 7) return (
-                                <>
-                                    <div key={post.id} className="w-full flex justify-center">
-                                        <Typography variant="caption"
-                                            color="primary.dark"
-
-                                        >
-                                            No more posts available.
-                                        </Typography>
-                                    </div>
-                                </>
-                            )
+                            if (index < 4 || index > 7) {
+                                return
+                            } 
                         }
                         return (
                             <Grid2
                                 size={{ xs: 6, md: 4, xl: 3 }}
-                                key={post.id}
+                                key={`${post._id} ${index* 200}`}
                                 className={``}
                             >
                                 <SmallPostCard

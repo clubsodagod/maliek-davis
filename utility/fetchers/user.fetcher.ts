@@ -10,6 +10,9 @@ import { getBaseUrl } from '../get-base-api-url';
 import { Resend } from "resend";
 import dotenv from 'dotenv';
 import UserRegistrationEmailVerification from '@/app/emails/UserRegistrationEmailVerification';
+import SubscriberModel, { UserSubscriber, GuestSubscriber } from '@/database/models/subscriber.model';
+import { isValidObjectId } from 'mongoose';
+import NewSubscriberEmail from '@/app/emails/NewSubscriberEmail';
 
 // load env file
 dotenv.config()
@@ -73,7 +76,7 @@ export async function registerAdminUser(data: IUserForm): Promise<ResponseStatus
         };
 
         // 4. Check if user already exists
-        const existingUser:IUser|null = await UserModel.findOne({
+        const existingUser: IUser | null = await UserModel.findOne({
             $or: [
                 { email: sanitizedData.email },
                 { username: sanitizedData.username },
@@ -169,10 +172,10 @@ interface VerifyEmailInput {
     token: string;
 }
 
-export async function verifyUserEmail({ token }: VerifyEmailInput): Promise<{ success: boolean; message: string; user?:IUser | null | undefined }> {
+export async function verifyUserEmail({ token }: VerifyEmailInput): Promise<{ success: boolean; message: string; user?: IUser | null | undefined }> {
     try {
         console.log(token);
-        
+
         if (!token) {
             return { success: false, message: "Verification token is required." };
         }
@@ -199,9 +202,94 @@ export async function verifyUserEmail({ token }: VerifyEmailInput): Promise<{ su
         await user.save();
 
         return { success: true, message: "Email verified successfully.", user };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("Error verifying email:", error);
         return { success: false, message: "An unexpected error occurred during email verification." };
+    }
+}
+
+
+
+interface SubscriberInput {
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    userId?: string;
+}
+
+export async function submitSubscriber(input: SubscriberInput): Promise<ResponseStatus> {
+    await connectToDB();
+
+    const { email, firstName, lastName, userId } = input;
+
+    const trimmedEmail = email?.trim().toLowerCase();
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        return { error: true, message: "Invalid email address" };
+    }
+
+    const existing = await SubscriberModel.findOne({ email: trimmedEmail });
+    if (existing) {
+        return { error: true, message: "This email is already subscribed" };
+    }
+
+    try {
+        let newSubscriber;
+        let subscriberType: "UserSubscriber" | "GuestSubscriber" = "GuestSubscriber";
+
+        if (userId && isValidObjectId(userId)) {
+            newSubscriber = new UserSubscriber({
+                email: trimmedEmail,
+                type: "UserSubscriber",
+                user: userId,
+            });
+            subscriberType = "UserSubscriber";
+        } else {
+            if (!firstName || !lastName) {
+                return { error: true, message: "First and last name are required for guest subscribers" };
+            }
+            newSubscriber = new GuestSubscriber({
+                email: trimmedEmail,
+                type: "GuestSubscriber",
+                name: `${firstName.trim()} ${lastName.trim()}`,
+            });
+        }
+
+        await newSubscriber.save();
+
+        // Construct email JSX
+        const emailComponent = NewSubscriberEmail({
+            email: trimmedEmail,
+            name: firstName ? `${firstName.trim()} ${lastName?.trim() ?? ""}` : undefined,
+            type: subscriberType,
+        });
+
+        // Send email using Resend
+        const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+        const response = await resend.emails.send({
+            from: "self@maliek-davis.com",
+            to: [trimmedEmail],
+            subject: "Welcome to the Community – You're Subscribed!",
+            react: emailComponent as React.ReactElement,
+        });
+
+        if (response.error) {
+            return {
+                error: true,
+                message: `Failed to send welcome email: ${response.error.message}`,
+            };
+        }
+
+        return {
+            error: false,
+            message: "Subscription successful and welcome email sent.",
+            data: newSubscriber._id.toString(),
+        };
+    } catch (error) {
+        console.error("Subscriber error:", error);
+        return {
+            error: true,
+            message: "An unexpected error occurred. Please try again.",
+        };
     }
 }

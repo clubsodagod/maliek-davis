@@ -29,6 +29,7 @@ export default function RichTextInput<T extends FieldValues>({
                     <Editor
                         tinymceScriptSrc='/tinymce/tinymce.min.js'
                         apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+                        licenseKey={'gpl'}
                         value={value}
                         init={{
                             height: 500,
