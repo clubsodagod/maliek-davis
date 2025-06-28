@@ -29,36 +29,42 @@ export default async function HomePage() {
   )
 }
 
+
 export const metadata: Metadata = {
-  title: "Maliek Davis | Software Engineer & Real Estate Investor",
+  title: "Maliek Davis | Intelligent Systems & Strategic Investments",
   description:
-    "Explore the world of Maliek Davis — a results-driven software engineer, real estate investor, and entrepreneur focused on innovation, strategy, and impact. Discover tech solutions, investment opportunities, and more.",
+    "Building intelligent systems, profitable investments, and innovation without limits. Maliek Davis helps visionary businesses and investors unlock scalable growth through AI, automation, and real estate strategy.",
   keywords: [
     "Maliek Davis",
+    "AI Automation",
+    "Real Estate Investing",
+    "Strategic Investments",
     "Software Engineer",
-    "Real Estate Investor",
     "Entrepreneur",
+    "Business Systems",
+    "Real Estate Innovation",
     "Tech Consultant",
-    "Web Development",
-    "Multifamily Investing",
-    "Real Estate Automation",
-    "Michigan Real Estate",
+    "Automated Solutions",
     "Startup Strategy",
+    "Multifamily Real Estate",
+    "Michigan Real Estate",
+    "Growth Engineering",
   ],
   openGraph: {
-    title: "Maliek Davis | Software Engineer & Real Estate Investor",
+    title: "Maliek Davis | Intelligent Systems & Strategic Investments",
     description:
-      "Learn about Maliek Davis, a strategic software engineer and real estate investor helping others create leverage through technology and property acquisition.",
+      "Explore how Maliek Davis engineers profitable investments and future-proof systems at the intersection of AI, automation, and real estate innovation.",
     url: "https://maliek-davis.com",
     siteName: "Maliek Davis",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maliek Davis",
+    title: "Maliek Davis | Systems, Capital, Innovation",
     description:
-      "Entrepreneur, software engineer, and investor focused on building tech and real estate systems that create freedom and long-term value.",
+      "Entrepreneur and investor engineering systems and opportunities for long-term value. AI. Automation. Real estate. Growth without limits.",
   },
 };
+
 
 

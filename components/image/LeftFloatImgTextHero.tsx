@@ -3,8 +3,8 @@
 import React from 'react';
 import ComponentTransition from '../layout/ComponentTransition';
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { MotionDiv } from '../motion/MotionDiv';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface LeftFloatImgTextHeroProps {
     photo: string;
@@ -17,6 +17,18 @@ interface LeftFloatImgTextHeroProps {
     objectFit?: React.CSSProperties["objectFit"];
     OtherComponent?: React.ReactNode;
 }
+
+const imageAnimation = {
+    initial: { x: -100, opacity: 0, scale: 1.25 },
+    whileInView: { x: 0, opacity: 1, scale: 1 },
+    transition: { duration: 1, ease: "easeOut" },
+};
+
+const textAnimation = {
+    initial: { x: 100, opacity: 0, scale: 1.25 },
+    whileInView: { x: 0, opacity: 1, scale: 1 },
+    transition: { duration: 1, ease: "easeOut", delay: 0.3 },
+};
 
 const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
     photo,
@@ -38,10 +50,11 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
         <ComponentTransition>
             <div className='relative -left-20 z-10'>
                 <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded}`}>
-                    {/* Float Image */}
+                    {/* Float Image with Motion */}
                     <Box
                         sx={{ bgcolor: "#000" }}
-                        component={MotionDiv}
+                        component={motion.div}
+                        {...imageAnimation}
                         className={`relative -left-6 ${imageWidth} ${imageHeight} rounded-4xl float-right right-[100px] mr-4 mb-4 ${imgPT} ${rounded}`}
                         style={{
                             shapeOutside: "content-box",
@@ -60,8 +73,12 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                         />
                     </Box>
                 </div>
-                {/* Wrapped Text Content */}
-                <div className={`relative ${pt}  ${typeof heroText === "string" ? "w-[105vw]": `${mobile ? "w-[105vw]" : "w-[100vw]"}` } `}>
+
+                {/* Wrapped Text Content with Motion */}
+                <motion.div
+                    {...textAnimation}
+                    className={`relative ${pt} ${typeof heroText === "string" ? "w-[105vw]" : `${mobile ? "w-[105vw]" : "w-[100vw]"}`}`}
+                >
                     {typeof heroText === 'string' ? (
                         <Typography
                             variant='subtitle1'
@@ -75,17 +92,10 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                         heroText
                     )}
 
-                    <div
-                        className="hidden lg:landscape:block "
-                    >
-                        {
-                            OtherComponent
-                        }
+                    <div className="hidden lg:landscape:block">
+                        {OtherComponent}
                     </div>
-
-                </div>
-
-
+                </motion.div>
             </div>
         </ComponentTransition>
     );

@@ -27,7 +27,10 @@ const MainHomeHero = () => {
                     heroText={
                         <>
                             <Typography variant="h2" fontSize={{xs:"1.6rem", sm:"3rem", md:"4rem", xl:"2.75rem" }} className='break-words sm:pr-3 2xl:text-[3rem]'>
-                                Engineering the Future: Technology, Finance, and Innovation Unleashed
+                                Building Intelligent Systems. Profitable Investments. Innovation Without Limits.
+                            </Typography>
+                            <Typography variant="subtitle1" fontSize={{xs:"1.25rem", sm:"2rem", md:"2.5rem", xl:"2.25rem" }} className='break-words sm:pr-3 2xl:text-[3rem]'>
+                                Where forward-thinking businesses and strategic investors engineer tomorrow’s edge — through automation, real estate, and high-performance technology.
                             </Typography>
                         </>
                     }
@@ -39,6 +42,8 @@ const MainHomeHero = () => {
                     objectFit='cover'
                     OtherComponent={<HomeCards />}
                 />
+                <div>
+                </div>
                 <div
                     className='section-btn-ctn flex gap-3 pt-6 min-w-full md:w-fit'
                 >

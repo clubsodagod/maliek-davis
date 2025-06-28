@@ -20,6 +20,7 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import FormFileUpload from "@/components/FormFileUpload";
 import { MotivatedSellerFormInput, submitMotivatedSeller } from "@/utility/fetchers/contact.fetchers";
+import {  brandLogoAlt } from "@/library/brand.const";
 
 interface LeadFormDialogProps {
     open: boolean;
@@ -91,7 +92,7 @@ export function SellMyHouseForm({ open, setOpen }: LeadFormDialogProps) {
         };
         window.addEventListener("keydown", escHandler);
         return () => window.removeEventListener("keydown", escHandler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -105,18 +106,30 @@ export function SellMyHouseForm({ open, setOpen }: LeadFormDialogProps) {
                     sx: {
                         p: 4,
                         borderRadius: "24px",
-                        bgcolor: "#FAFAFA",
+                        bgcolor: "transparent",
+                    backgroundImage: `url("${brandLogoAlt}")`,
+                        backgroundSize: "contain",
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        // backgroundColor: "var(--foreground)"
                     },
                 },
                 backdrop: {
                     sx: {
                         backdropFilter: "blur(25px)",
-                        bgcolor: "transparent",
+                        bgcolor: "transparent", // optional: acts as fallback
                     },
                 },
             }}
         >
             <div ref={topRef} />
+            <DialogTitle>
+                <Typography
+                    variant="h4" color="primary" className="text-center"
+                >
+                    Cash Offer Request
+                </Typography>
+            </DialogTitle>
             <DialogTitle>{currentSection.title}</DialogTitle>
             <DialogContent dividers>
                 {currentSection.description && (
