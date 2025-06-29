@@ -14,7 +14,7 @@ import { IBlogPost } from '@/database/models/blog-posts.model';
 dayjs.extend(relativeTime);
 
 
-const BlogRelatedPostCard: React.FC<{ post: IBlogPost|undefined }> = ({
+const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
     post,
 }) => {
 
@@ -22,32 +22,43 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost|undefined }> = ({
 
     const CardText = () => {
         return (
-            <MotionDiv className='flex flex-col gap-3 p-3 h-full justify-center'>
+            <MotionDiv className='flex flex-col   h-full justify-center'>
                 <MotionDiv
-                className='w-full'
-                onClick={(e)=>{e.preventDefault();router.push(`/blog/posts/${post?.slug}`)}}
+                    className="w-full p-3 bg-cover bg-center bg-no-repeat cursor-pointer rounded-t-4xl"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        router.push(`/blog/posts/${post?.slug}`);
+                    }}
+                    style={{
+                        backgroundImage: `url(${post?.featuredImg})`,
+                    }}
                 >
-                                    <Typography variant='subtitle1' fontWeight={'bold'} className='cursor-pointer'>
-                    {post?.title}
-                </Typography>
+                    <div className="bg-black/30 backdrop-blur-sm p-2 rounded-4xl">
+                        <Typography variant="subtitle2" fontWeight="bold" className="text-(--foreground)">
+                            {post?.title}
+                        </Typography>
+                    </div>
                 </MotionDiv>
 
-                <Typography variant='body1' className='line-clamp-2'>
-                    {post?.metaDescription}
-                </Typography>
-                                        <MotionDiv
-                                            className='flex flex-col'
-                                        >
-                
-                                            <Typography variant='body2'>
-                                                {post?.title}
-                                            </Typography>
-                
-                                            <Typography variant='body2'>
-                                                {dayjs(post?.createdAt).fromNow()}
-                                            </Typography>
-                
-                                        </MotionDiv>
+
+                <div
+                    className='p-3 flex flex-col gap-3 bg-(--foreground) text-(--background) rounded-b-4xl'
+                >
+                    <MotionDiv
+                        className='flex flex-col'
+                    >
+
+                    <Typography variant='body2' className='line-clamp-6'>
+                        {post?.metaDescription}
+                    </Typography>
+
+                        <Typography variant='body2' className="pt-1">
+                            {dayjs(post?.createdAt).fromNow()}
+                        </Typography>
+
+                    </MotionDiv>
+                </div>
+
             </MotionDiv>
         )
     }
@@ -62,7 +73,7 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost|undefined }> = ({
         >
 
             <CardText />
-        </MotionDiv> 
+        </MotionDiv>
     )
 }
 

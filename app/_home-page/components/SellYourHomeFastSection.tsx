@@ -143,7 +143,7 @@ const SellYourHomeFastSection = () => {
 
                 {/* Buttons with Pulse Animation */}
                 <motion.div {...fadeUp}>
-                    <div className="flex flex-col md:flex-row justify-center gap-10">
+                    <div className="flex flex-col items-center md:flex-row justify-center gap-10">
                         <motion.div {...pulse}>
                             <Button
                                 variant="contained"

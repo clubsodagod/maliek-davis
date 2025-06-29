@@ -19,7 +19,7 @@ const AnnouncementCard: React.FC<{
     return (
         <ComponentTransition id={`${announcement.title}-transition-card`}>
             <MotionDiv
-                className="announcement-card overflow-hidden  rounded-t-4xl md:rounded-4xl p-4 bg-(--foreground) text-(--background)"
+                className="announcement-card overflow-hidden  rounded-t-4xl md:rounded-4xl p-4 md:bg-(--foreground) md:text-(--background)"
                 initial={{ opacity: 1, y: 0 }} // Starts slightly above
                 animate={{ opacity: open ? 1 : 1, y: open ? 20 : 20, scaleX: open ? 1.05 : 1 }} // Moves down when open
                 exit={{ opacity: 0, y: 0 }} // Moves up when closing
@@ -63,10 +63,10 @@ const AnnouncementCard: React.FC<{
 
 
                         <div
-                            className="flex flex-col justify-start md:text-left my-4"
+                            className="flex flex-col justify-start md:text-left my-4 px-6"
                         >
                             {/* Description */}
-                            <Typography variant="body1" className='line-clamp-4'
+                            <Typography variant="body1" className='line-clamp-4 '
                             >{announcement.description}</Typography>
 
                             {/* Buttons */}

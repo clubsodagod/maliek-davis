@@ -4,11 +4,21 @@ import LeftFloatImgTextHero from '@/components/image/LeftFloatImgTextHero'
 import SectionWrapper from '@/components/wrappers/SectionWrapper'
 import { brandName } from '@/library/brand.const'
 import { programmerImg } from '@/library/image.cdn'
-import { Button, Typography } from '@mui/material'
+import { Button, Typography, useMediaQuery } from '@mui/material'
 import React from 'react'
 import HomeCards from './HomeCards'
+import { motion } from "motion/react";
+import { fadeToRight } from './WhatsHappening'
+
 
 const MainHomeHero = () => {
+
+    const mobile = useMediaQuery(`(max-width:768px)`);
+    const tablet = useMediaQuery(`(min-width:769px)`);
+    const tabletXL = useMediaQuery(`(min-width:900px)`);
+    const desktop = useMediaQuery(`(min-width:1100px)`);
+
+    const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? undefined : tabletXL ? undefined : tablet ? "lg" : mobile ? "xl" : undefined;
 
     return (
         <SectionWrapper
@@ -16,11 +26,17 @@ const MainHomeHero = () => {
             <div
                 className='hidden md:block w-full h-[25px] md:landscape:hidden'
             />
-            <MainHeroHeader
-                headerLabel={brandName}
-                tagline={''}
-                center='md:text-center'
-            />
+            <motion.div {...fadeToRight}
+                className=''
+            >
+                <MainHeroHeader
+                    headerLabel={brandName}
+                    tagline={''}
+                    center='md:text-center'
+                    size={headerSize}
+                />
+            </motion.div>
+
             <div className='max-w-full w-full h-full md:mt-12'>
                 <LeftFloatImgTextHero
                     imgPT='0'
@@ -51,7 +67,7 @@ const MainHomeHero = () => {
                 <div>
                 </div>
                 <div
-                    className='section-btn-ctn flex gap-3 pt-6 min-w-full md:w-fit justify-center'
+                    className='section-btn-ctn flex gap-3 mt-20 min-w-full md:w-fit justify-center'
                 >
                     <Button variant='contained' color='primary' href={'/about'}>
                         About Me

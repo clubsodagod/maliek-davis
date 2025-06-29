@@ -53,10 +53,9 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
                 <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded} `}>
                     {/* Float Image on the Right with Motion */}
                     <Box
-                        sx={{ bgcolor: "#000" }}
                         component={MotionDiv}
                         {...imageMotion}
-                        className={`relative -right-6 ${imageWidth} ${imageHeight} rounded-4xl float-left ${blkBoxLeft} ml-4 mb-4 ${imgPT} ${rounded}`}
+                        className={`bg-(--foreground) relative -right-6 ${imageWidth} ${imageHeight} rounded-4xl float-left ${blkBoxLeft} ml-4 mb-4 ${imgPT} ${rounded} drop-shadow-2xl`}
                         style={{
                             shapeOutside: "content-box",
                             shapeMargin: "5px",

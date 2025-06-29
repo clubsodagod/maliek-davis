@@ -52,7 +52,7 @@ export const slideUpBounce = {
     },
 };
 
-const fadeToRight = {
+export const fadeToRight = {
     initial: { x: -200, opacity: 0 },
     whileInView: {
         x: 0,

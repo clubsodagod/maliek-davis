@@ -3,14 +3,15 @@ import MainHomeHero from './_home-page/components/MainHomeHero'
 import TechnologyMeetsStrategy from './_home-page/components/TechnologyMeetsStrategy'
 import WhatsHappening from './_home-page/components/WhatsHappening';
 import BlogPreview from './_home-page/components/BlogPreview';
-import { getAllBlogPostCategories, paginatedBlogFetcher } from '@/utility/fetchers/blog.fetcher';
+import { getAllBlogPostCategories } from '@/utility/fetchers/blog.fetcher';
 import { IBlogPost } from '@/database/models/blog-posts.model';
 import { ICategory } from '@/database/models/category.model';
 import SellYourHomeFastSection from './_home-page/components/SellYourHomeFastSection';
 import { Metadata } from 'next';
+import { paginatedServerBlogFetcher, } from '@/utility/fetchers/blog.server-fetcher';
 
 export default async function HomePage() {
-  const posts = await paginatedBlogFetcher(0, 0) as unknown as IBlogPost[];
+  const posts = await paginatedServerBlogFetcher(0,0) as unknown as IBlogPost[];
   const categories = await getAllBlogPostCategories() as unknown as ICategory[];
   console.log(posts);
 

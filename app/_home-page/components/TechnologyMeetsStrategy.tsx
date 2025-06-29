@@ -10,26 +10,30 @@ import { coreExpertiseCopy } from '../library/copy'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import RightFloatImgTextHero from '@/components/image/RightFloatImgTextHero'
 import { motion, useAnimation, useInView } from 'motion/react'
+import { fadeToRight } from './WhatsHappening'
 
 
 const MotionButton = motion(Button);
 
 const TechnologyMeetsStrategy = () => {
 
+    const mobile = useMediaQuery(`(max-width:768px)`);
+    const tablet = useMediaQuery(`(min-width:769px)`);
+    const tabletXL = useMediaQuery(`(min-width:900px)`);
+    const desktop = useMediaQuery(`(min-width:1100px)`);
+
+    const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "xl" : tabletXL ? undefined : tablet ? "lg" : mobile ? "xl" : undefined;
     const sectionRef = React.useRef<HTMLDivElement>(null);
 
-    const mobile = useMediaQuery(`(max-width:767px)`);
 
     const [headerLabel, setHeaderLabel] = React.useState<'Core Expertise' | 'Technology Meets Strategy'>('Technology Meets Strategy');
     const [tagline, setTagline] = React.useState<string | "">('A New Perspective on Innovation');
-    const [headerSize, setHeaderSize] = React.useState<'xs' | 'sm' | 'md' | 'lg' | 'xl'>(mobile ? "md" : "xl");
     const [coreExpertise, setCoreExpertise] = React.useState<boolean>(false);
 
     function handleCoreExpertise() {
         setCoreExpertise(!coreExpertise);
         setHeaderLabel(coreExpertise === true ? 'Core Expertise' : 'Technology Meets Strategy');
         setTagline(coreExpertise ? 'Explore Our Expertise' : 'A New Perspective on Innovation');
-        setHeaderSize(coreExpertise ? 'md' : 'xl');
     }
 
     const BtnGroup = () => {
@@ -75,7 +79,7 @@ const TechnologyMeetsStrategy = () => {
 
             <motion.div
                 ref={ref}
-                className="w-full flex gap-10 relative z-50 xl:w-fit md:mx-auto md:justify-center" 
+                className="w-full flex gap-10 relative z-50 xl:w-fit md:mx-auto md:justify-center"
             >
                 <MotionButton
                     variant="contained"
@@ -217,11 +221,9 @@ const TechnologyMeetsStrategy = () => {
         if (coreExpertise === true) {
             setHeaderLabel('Core Expertise');
             setTagline("");
-            setHeaderSize('lg');
         } else {
             setHeaderLabel('Technology Meets Strategy');
             setTagline("A New Perspective on Innovation");
-            setHeaderSize(mobile ? "lg" : "xl");
         }
     }, [coreExpertise, mobile])
 
@@ -242,12 +244,17 @@ const TechnologyMeetsStrategy = () => {
                 exit={{ opacity: 0, scaleY: 0 }}
             >
 
-                <MainHeroHeader
-                    id={headerLabel}
-                    headerLabel={headerLabel}
-                    tagline={tagline}
-                    size={headerSize}
-                />
+                <motion.div {...fadeToRight}
+                    className=''
+                >
+                    <MainHeroHeader
+                        id={headerLabel}
+                        headerLabel={headerLabel}
+                        tagline={tagline}
+                        size={headerSize}
+                    />
+                </motion.div>
+
 
 
                 {!coreExpertise && <TechnologyMeetsStrategyMain />}

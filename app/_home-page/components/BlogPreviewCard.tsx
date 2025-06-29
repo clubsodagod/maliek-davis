@@ -8,6 +8,7 @@ import React from 'react';
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { IBlogPost } from '@/database/models/blog-posts.model';
+import Link from 'next/link';
 // import useMediaQuery from '@mui/material/useMediaQuery';
 
 // Extend dayjs with the relativeTime plugin
@@ -17,6 +18,7 @@ dayjs.extend(relativeTime);
 const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
     post,
 }) => {
+    
 
 
     // const mobile = useMediaQuery(`(max-width:767px)`);
@@ -24,10 +26,10 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
     return (
         <ComponentTransition>
             <MotionDiv
-                className='w-full  h-full flex flex-col gap-6 relative'
+                className='w-full  h-fit flex flex-col gap-6 relative  bg-(--foreground) rounded-4xl '
             >
                 <div
-                className='w-[110vw] md:w-full  xl:w-full'
+                className='w-full md:w-full  xl:w-full'
                 >
                     <Image
                         alt={`something`}
@@ -38,15 +40,18 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
                         style={{
                             objectFit:"cover"
                         }}
-                        className='rounded-4xl h-[40vh] md:landscape:h-[50vh] xl:h-[60dvh] w-full '
+                        className='rounded-t-4xl h-[40vh] md:landscape:h-[25vh]  w-full '
                     />
                 </div>
 
-                <div className='absolute top-0 text-white h-[40vh] md:landscape:h-[50vh] xl:h-[60dvh] flex flex-col justify-end  py-6 px-6 pl-6 '>
+                <div className=' text-white  flex flex-col justify-end  pb-6 px-12 pl-12 '>
                     <MotionDiv>
-                        <Typography variant='h6' fontWeight={"bold"}>
-                            {post?.title}
-                        </Typography>
+                        <Link href={`/blog/posts/${post?.slug}`}>
+                            <Typography  variant='h6' fontWeight={"bold"}>
+                                {post?.title}
+                            </Typography>
+                        </Link>
+                        
                     </MotionDiv>
 
                     <MotionDiv>
@@ -56,7 +61,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
                     </MotionDiv>
 
                     <MotionDiv
-                        className='flex gap-3'
+                        className='flex gap-3 mt-3'
                     >
 
                         <Image
@@ -76,7 +81,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
                         >
 
                             <Typography variant='body1'>
-                                {post?.author.toString()}
+                                {post?.author.firstName}
                             </Typography>
 
                             <Typography variant='body1'>
