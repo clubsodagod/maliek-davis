@@ -139,11 +139,14 @@ body {
   position: relative;
   right: 24px;
   width: 100vw;
-  padding-inline: 6vw;
+  padding-inline: 1vw;
   padding-block: 1vh 3vh;
   box-shadow: 2px -3px 7px #00000050;
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
+  @media screen and (min-width:768px) {
+    width: 100%;
+  }
 }
 
 /* HTML: <div class="inverted-radius"></div> */

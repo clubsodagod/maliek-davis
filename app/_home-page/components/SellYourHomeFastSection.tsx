@@ -12,11 +12,20 @@ import { Button, Typography, useMediaQuery } from '@mui/material';
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const pulse = {
+export const pulse = {
     animate: {
-        scale: [1, 1.1, 1],
+        scale: [1, 1.2, 1],
         transition: {
-            duration: 1.5,
+            duration: 2,
+            repeat: Infinity,
+        },
+    },
+};
+export const pulseAlt = {
+    animate: {
+        scale: [1.2, 1, 1.2],
+        transition: {
+            duration: 2,
             repeat: Infinity,
         },
     },
@@ -38,7 +47,7 @@ const fadeUp = {
 };
 
 const cardVariants = {
-    hidden: { x: 200, opacity: 0 },
+    hidden: { x: 170, opacity: 0 },
     visible: (i: number) => ({
         x: 0,
         opacity: 1,
@@ -52,7 +61,13 @@ const cardVariants = {
 
 const SellYourHomeFastSection = () => {
     const sectionRef = React.useRef(null);
+    const mobile = useMediaQuery(`(max-width:768px)`);
+    const tablet = useMediaQuery(`(min-width:769px)`);
+    const tabletXL = useMediaQuery(`(min-width:900px)`);
     const desktop = useMediaQuery(`(min-width:1100px)`);
+
+    const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "xl" : tabletXL ? undefined : tablet ? "lg" : mobile ? "md" : undefined;
+
     const [dialogOpen, setDialogOpen] = React.useState(false);
 
     return (
@@ -74,7 +89,7 @@ const SellYourHomeFastSection = () => {
                         headerLabelClassName="text-center"
                         taglineClassName="text-center"
                         tagline=""
-                        size={!desktop ? 'lg' : 'lg'}
+                        size={headerSize}
                     />
                 </motion.div>
 
@@ -88,8 +103,8 @@ const SellYourHomeFastSection = () => {
                 </motion.div>
 
                 {/* Benefit Cards with stagger */}
-                <div className="flex justify-center w-full mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex justify-center w-full mb-8 px-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-7xl">
                         {[
                             "✅ Local Michigan Buyer — Detroit & Grand Rapids Focus",
                             "✅ No Repairs. No Commissions. No Showings.",
@@ -101,15 +116,21 @@ const SellYourHomeFastSection = () => {
                                 variants={cardVariants}
                                 initial="hidden"
                                 whileInView="visible"
-                                className="dark:bg-(--foreground) bg-(--background) dark:text-(--background) text-(--foreground) p-6 rounded-4xl shadow h-[33vh] w-[33vh] flex items-center justify-center text-center"
+                                viewport={{ once: true, amount: 0.5 }}
+                                className="bg-(--background) dark:bg-(--foreground) text-(--foreground) dark:text-(--background) p-4 sm:p-6  rounded-3xl shadow-md  w-full h-[200px] sm:h-[225px] md:h-[250px] flex items-center justify-center text-center transition-all"
                             >
-                                <Typography variant="body1" fontWeight="600">
+                                <Typography
+                                    variant="body1"
+                                    fontWeight={600}
+                                    className="text-base sm:text-lg md:text-xl"
+                                >
                                     {text}
                                 </Typography>
                             </motion.div>
                         ))}
                     </div>
                 </div>
+
 
                 {/* Bottom Paragraph */}
                 <motion.div {...fadeUp}>
@@ -132,7 +153,7 @@ const SellYourHomeFastSection = () => {
                                 Learn How It Works
                             </Button>
                         </motion.div>
-                        <motion.div {...pulse}>
+                        <motion.div {...pulseAlt}>
                             <Button
                                 variant="outlined"
                                 onClick={(e) => {

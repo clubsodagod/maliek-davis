@@ -73,7 +73,7 @@ export const HomeCard: React.FC<{ item: HeroCardType }> = ({ item }) => {
             <Link
                 href={item.path}
             >
-                <MotionDiv className='w-[100px] h-[100px]'>
+                <MotionDiv className='w-[100px] h-[100px] drop-shadow-s rounded-4xl'>
                     <Image alt={`${item.label}`}
                         src={item.photo}
                         sizes='100vw'
@@ -90,6 +90,9 @@ export const HomeCard: React.FC<{ item: HeroCardType }> = ({ item }) => {
                 <Typography variant="subtitle1"
                     fontWeight={600}
                     className="w-full text-center"
+                    sx={{
+                        textShadow: "1px 1px 2px #00000001"
+                    }}
                 >
                     {item.label}
                 </Typography>

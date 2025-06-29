@@ -26,10 +26,16 @@ const MainHomeHero = () => {
                     imgPT='0'
                     heroText={
                         <>
-                            <Typography variant="h2" fontSize={{xs:"1.6rem", sm:"3rem", md:"4rem", xl:"2.75rem" }} className='break-words sm:pr-3 2xl:text-[3rem]'>
+                            <Typography
+                                sx={{
+                                    textShadow: "1px 1px 2px #00000001"
+                                }} variant="h2" fontSize={{ xs: "1.6rem", sm: "3rem", md: "4rem", xl: "2.75rem" }} className='break-words  sm:pr-3 2xl:text-[3rem] pl-[24vw]'>
                                 Building Intelligent Systems. Profitable Investments. Innovation Without Limits.
                             </Typography>
-                            <Typography variant="subtitle1" fontSize={{xs:"1.25rem", sm:"2rem", md:"2.5rem", xl:"2.25rem" }} className='break-words sm:pr-3 2xl:text-[3rem]'>
+                            <Typography
+                                sx={{
+                                    textShadow: "2px 2px 3px #23232337"
+                                }} variant="subtitle1" fontSize={{ xs: "1.25rem", sm: "2rem", md: "2.5rem", xl: "2.25rem" }} className='break-words sm:pr-3 2xl:text-[3rem] pl-[24vw]'>
                                 Where forward-thinking businesses and strategic investors engineer tomorrow’s edge — through automation, real estate, and high-performance technology.
                             </Typography>
                         </>
@@ -45,7 +51,7 @@ const MainHomeHero = () => {
                 <div>
                 </div>
                 <div
-                    className='section-btn-ctn flex gap-3 pt-6 min-w-full md:w-fit'
+                    className='section-btn-ctn flex gap-3 pt-6 min-w-full md:w-fit justify-center'
                 >
                     <Button variant='contained' color='primary' href={'/about'}>
                         About Me

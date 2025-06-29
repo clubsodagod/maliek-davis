@@ -52,10 +52,9 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                 <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded}`}>
                     {/* Float Image with Motion */}
                     <Box
-                        sx={{ bgcolor: "#000" }}
                         component={motion.div}
                         {...imageAnimation}
-                        className={`relative -left-6 ${imageWidth} ${imageHeight} rounded-4xl float-right right-[100px] mr-4 mb-4 ${imgPT} ${rounded}`}
+                        className={`relative -left-6 ${imageWidth} ${imageHeight} rounded-4xl float-right right-[100px] mr-4 mb-4 ${imgPT} ${rounded} bg-(--foreground) shadow-2xl`}
                         style={{
                             shapeOutside: "content-box",
                             shapeMargin: "5px",
@@ -84,7 +83,10 @@ const LeftFloatImgTextHero: React.FC<LeftFloatImgTextHeroProps> = ({
                             variant='subtitle1'
                             component='div'
                             fontWeight={100}
-                            className="break-words relative"
+                            sx={{
+                                textShadow:"2px 2px"
+                            }}
+                            className="break-words relative "
                         >
                             {heroText}
                         </Typography>

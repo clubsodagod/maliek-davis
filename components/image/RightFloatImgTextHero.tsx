@@ -19,6 +19,18 @@ interface RightFloatImgTextHeroProps {
     blkBoxLeft?: string;
 }
 
+const imageMotion = {
+    initial: { x: 100, opacity: 0, scale: 1.25 },
+    whileInView: { x: 0, opacity: 1, scale: 1 },
+    transition: { duration: 1, ease: "easeOut" },
+};
+
+const textMotion = {
+    initial: { x: -100, opacity: 0, scale: 1.25 },
+    whileInView: { x: 0, opacity: 1, scale: 1 },
+    transition: { duration: 1, ease: "easeOut", delay: 0.3 },
+};
+
 const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
     photo,
     heroText,
@@ -39,10 +51,11 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
         <ComponentTransition>
             <div className={` relative ${mainCtnRight} z-10 `}>
                 <div className={`relative w-screen px-6 h-full 2xl:-top-12 ${rounded} `}>
-                    {/* Float Image on the Right */}
+                    {/* Float Image on the Right with Motion */}
                     <Box
                         sx={{ bgcolor: "#000" }}
                         component={MotionDiv}
+                        {...imageMotion}
                         className={`relative -right-6 ${imageWidth} ${imageHeight} rounded-4xl float-left ${blkBoxLeft} ml-4 mb-4 ${imgPT} ${rounded}`}
                         style={{
                             shapeOutside: "content-box",
@@ -62,8 +75,8 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
                     </Box>
                 </div>
 
-                {/* Wrapped Text Content */}
-                <div className={`relative ${pt} `}>
+                {/* Wrapped Text Content with Motion */}
+                <MotionDiv {...textMotion} className={`relative ${pt}`}>
                     {typeof heroText === 'string' ? (
                         <Typography
                             variant='subtitle1'
@@ -76,18 +89,10 @@ const RightFloatImgTextHero: React.FC<RightFloatImgTextHeroProps> = ({
                     ) : (
                         heroText
                     )}
-
-                    {/* <div
-                        className="hidden lg:landscape:block"
-                    >
-                        {
-                            OtherComponent
-                        }
-                    </div> */}
-
-                </div>
+                </MotionDiv>
             </div>
         </ComponentTransition>
+
     );
 };
 
