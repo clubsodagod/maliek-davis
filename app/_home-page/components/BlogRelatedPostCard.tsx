@@ -33,8 +33,8 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
                         backgroundImage: `url(${post?.featuredImg})`,
                     }}
                 >
-                    <div className="bg-black/30 backdrop-blur-sm p-2 rounded-4xl">
-                        <Typography variant="subtitle2" fontWeight="bold" className="text-(#232323)">
+                    <div className="bg-black/30 backdrop-blur-sm p-2 rounded-4xl p-4">
+                        <Typography variant="subtitle2" fontWeight="bold" className="text-[#fafafa]">
                             {post?.title}
                         </Typography>
                     </div>

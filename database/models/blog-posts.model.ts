@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { ICategory } from "./category.model";
 import { IUser } from "./user.model";
+import { ISubcategory } from "./subcategory.model";
 
 
 /**
@@ -37,7 +38,7 @@ export interface IBlogPost extends Document {
     content: string;
     author: IUser;
     category: ICategory;
-    subcategories: mongoose.Types.ObjectId[];
+    subcategories: ISubcategory[];
     tags: string[];
     createdAt: Date;
     updatedAt: Date;
@@ -83,7 +84,7 @@ const BlogPostSchema = new Schema<IBlogPost>({
     content: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    subcategories: [{ type: Schema.Types.ObjectId, ref: "Subcategory" }],
+    subcategories: [{ type: Schema.Types.ObjectId, ref: "Subcategory", default:[] }],
     tags: [{ type: String }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
