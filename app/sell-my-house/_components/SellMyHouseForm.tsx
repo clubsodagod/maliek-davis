@@ -106,7 +106,7 @@ export function SellMyHouseForm({ open, setOpen }: LeadFormDialogProps) {
                     sx: {
                         p: 4,
                         borderRadius: "24px",
-                        bgcolor: "transparent",
+                        bgcolor: "#fafafa",
                     backgroundImage: `url("${brandLogoAlt}")`,
                         backgroundSize: "contain",
                         backgroundPosition: 'center',
@@ -130,7 +130,8 @@ export function SellMyHouseForm({ open, setOpen }: LeadFormDialogProps) {
                     Cash Offer Request
                 </Typography>
             </DialogTitle>
-            <DialogTitle>{currentSection.title}</DialogTitle>
+
+            <DialogTitle sx={{color:"#232323"}}>{currentSection.title}</DialogTitle>
             <DialogContent dividers>
                 {currentSection.description && (
                     <Typography variant="body2" color="text.secondary" mb={2}>
@@ -138,7 +139,13 @@ export function SellMyHouseForm({ open, setOpen }: LeadFormDialogProps) {
                     </Typography>
                 )}
 
-                <Grid2 container spacing={3}>
+                <Grid2 container spacing={3}
+                    sx={{
+                        bgcolor:"#23232337",
+                        p:2, borderRadius:4
+                    }}
+                    
+                >
                     {currentSection.fields.map((field) => {
                         const sharedProps = {
                             name: field.name,

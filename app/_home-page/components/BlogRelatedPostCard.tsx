@@ -34,7 +34,7 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
                     }}
                 >
                     <div className="bg-black/30 backdrop-blur-sm p-2 rounded-4xl">
-                        <Typography variant="subtitle2" fontWeight="bold" className="text-(--foreground)">
+                        <Typography variant="subtitle2" fontWeight="bold" className="text-(#232323)">
                             {post?.title}
                         </Typography>
                     </div>
@@ -48,13 +48,21 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
                         className='flex flex-col'
                     >
 
-                    <Typography variant='body2' className='line-clamp-6'>
-                        {post?.metaDescription}
-                    </Typography>
-
-                        <Typography variant='body2' className="pt-1">
-                            {dayjs(post?.createdAt).fromNow()}
+                        <Typography variant='body2' className='line-clamp-4'>
+                            {post?.metaDescription}
                         </Typography>
+
+                        <div
+                            className="flex justify-between"
+                        >
+
+                            <Typography variant='body2' className="pt-1">
+                                {post?.author.firstName}
+                            </Typography>
+                            <Typography variant='body2' className="pt-1">
+                                {dayjs(post?.createdAt).fromNow()}
+                            </Typography>
+                        </div>
 
                     </MotionDiv>
                 </div>

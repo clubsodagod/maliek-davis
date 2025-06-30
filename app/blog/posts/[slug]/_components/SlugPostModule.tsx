@@ -41,7 +41,7 @@ console.log(post);
                             description={post?.metaDescription} featuredImg={post?.featuredImg}
                         />
                         <MotionDiv
-                            className='relative top-[53vh] flex flex-col gap-5 sm:px-10 md:px-20 lg:px-75 xl:px-100 2xl:px-140 pb-10  w-full items-center'
+                            className='relative top-[53vh] flex flex-col gap-5 sm:px-10 md:px-20 lg:px-75 xl:px-100 2xl:px-120 pb-10  w-full items-center'
                         >
                             <CreatorsRow author={post?.author} />
                             <div

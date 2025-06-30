@@ -14,7 +14,7 @@ import { submitBlogPost, getSubcategoryOptions, getCategoryOptions } from "@/uti
 import { Button } from "@mui/material";
 
 export function BlogPostForm() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [step, setStep] = useState(0);
     const [categoryOptions, setCategoryOptions] = useState<{ label: string; value: string }[]>([]);
     const [subcategoryOptions, setSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
@@ -47,25 +47,27 @@ export function BlogPostForm() {
             setSubcategoryOptions(subs);
         }
         fetchOptions();
+
     }, []);
 
 
-    useEffect(() => {
-        const rawId = session?.user?._id;
+useEffect(() => {
+    if (status === "authenticated" && session?.user?._id) {
+        const userId =
+            typeof session.user._id === "string"
+                ? session.user._id
+                : "681fa586c53053e82efbdb00"; // Explicit BSON serialization
+        setValue("author", userId);
+        
+    }
+}, [session, setValue, status]);
 
-        if (rawId && typeof rawId === "object" && typeof rawId.toHexString === "function") {
-            setValue("author", rawId.toHexString());
-        } else if (typeof rawId === "string") {
-            setValue("author", rawId);
-        }
-    }, [session, setValue]);
+
+
 
 
 
     const onSubmit = async (data: IBlogPostClient) => {
-        if (!data.author && session?.user?.id) {
-            data.author = session.user.id;
-        }
 
         const result = await submitBlogPost(data);
         console.log("Blog post submitted:", result);

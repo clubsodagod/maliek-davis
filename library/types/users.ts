@@ -7,7 +7,7 @@ export type Credentials = {
 
 
 export type UserType = {
-    _id:mongoose.Types.ObjectId;
+    _id:string;
     firstName: string;
     lastName: string;
     username: string;

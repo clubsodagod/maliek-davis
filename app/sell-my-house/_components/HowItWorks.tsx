@@ -9,7 +9,14 @@ import React from 'react'
 
 const HowItWorks = ({ }) => {
     const sectionRef = React.useRef(null);
-    const desktop = useMediaQuery(`(min-width:1100px)`);
+    
+        const mobile = useMediaQuery(`(max-width:768px)`);
+        const tablet = useMediaQuery(`(min-width:769px)`);
+        const tabletXL = useMediaQuery(`(min-width:900px)`);
+        const desktop = useMediaQuery(`(min-width:1100px)`);
+    
+        const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? undefined : tabletXL ? undefined : tablet ? "lg" : mobile ? "xl" : undefined;
+    
 
     return (
         <>
@@ -30,14 +37,14 @@ const HowItWorks = ({ }) => {
                             headerLabelClassName="md:text-center"
                             taglineClassName="md:text-center"
                             tagline="I make the home-selling process simple, fast, and transparent."
-                            size={!desktop ? 'lg' : 'lg'}
+                            size={headerSize}
                         />
-                        <div className="grid md:grid-cols-3 gap-10 text-left mt-20">
+                        <div className=" gap-10 text-left mt-50">
                             <Typography variant="h4" className="text-lg md:text-xl text-center" >
                                 Simple Process:
                             </Typography>
 
-                            <Box className="grid md:grid-cols-3 gap-8 text-center ">
+                            <Box className="grid md:grid-cols-3 gap-8 text-center mt-20">
                                 <Box className="flex flex-col items-center gap-4">
                                     <Typography variant="h3" component="div">
                                         📝

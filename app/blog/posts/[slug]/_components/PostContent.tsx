@@ -5,7 +5,7 @@ import React, { FC } from "react";
 import rehypeRaw from "rehype-raw";
 import type { Options } from "rehype-raw";
 import ReactMarkdown from "react-markdown";
-import { Button, CardMedia, Typography } from "@mui/material";
+import { Button, CardMedia, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import ComponentTransition from "@/components/layout/ComponentTransition";
 import { IBlogPostClient } from "@/library/types/blog.types";
 import parameterize from "parameterize";
@@ -66,7 +66,7 @@ const PostContent: FC<{
                         const id = parameterize(children?.toString() || "");
                         return (
                             <Typography
-                                className="break-words"
+                                className="break-words pt-10"
                                 variant="h4"
                                 id={id}
                                 gutterBottom
@@ -135,7 +135,72 @@ const PostContent: FC<{
                             </div>
 
                         );
-                    }
+                    }, table: ({ children }) => {
+                        return (
+                            <Table
+                                className="my-6 border border-solid border-gray-300 shadow-sm rounded-md overflow-hidden "
+                            >
+                                {children}
+                            </Table>
+                        );
+                    },
+
+                    thead: ({ children }) => {
+                        return (
+                            <TableHead
+                                sx={{
+                                    backgroundColor: "#1e1e1e",
+                                    color:"theme.palette.primary.main" // or use `theme.palette.primary.main` if using MUI theme
+                                }}
+                                className=" uppercase tracking-wide"
+                            >
+                                {children}
+                            </TableHead>
+                        );
+                    },
+
+                    tbody: ({ children }) => {
+                        return (
+                            <TableBody
+                                className="divide-y divide-gray-200"
+                            >
+                                {children}
+                            </TableBody>
+                        );
+                    },
+
+                    tr: ({ children }) => {
+                        return (
+                            <TableRow className="hover:bg-gray-300 transition-colors duration-200">
+                                {children}
+                            </TableRow>
+                        );
+                    },
+
+                    th: ({ children }) => {
+                        return (
+                            <TableCell
+                                component="th"
+                                scope="col"
+                                className="px-4 py-2 font-semibold text-left  bg-(--foreground) text-sm"
+                                sx={{
+                                    color:"#60abe4"
+                                }}
+                            >
+                                {children}
+                            </TableCell>
+                        );
+                    },
+
+                    td: ({ children }) => {
+                        return (
+                            <TableCell
+                                className="px-4 py-2 text-sm text-(--background)"
+                            >
+                                {children}
+                            </TableCell>
+                        );
+                    },
                 }}
             >
                 {content}

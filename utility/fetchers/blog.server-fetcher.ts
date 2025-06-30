@@ -4,16 +4,23 @@
 import connectToDB from "@/database/connect-to-db.database";
 import BlogPostModel, { IBlogPost } from "@/database/models/blog-posts.model";
 import CategoryModel, { ICategory } from "@/database/models/category.model";
+import SubcategoryModel from "@/database/models/subcategory.model";
+import UserModel from "@/database/models/user.model";
 
 function toStr(value: any) {
     return value?.toString?.() ?? null;
 }
 
-function serializeUser(user: any): any {
+export async function serializeUser(user: any): Promise<any> {
     const toStr = (v: any) => v?.toString?.();
-
+    const serializeObjectId = (id: any) => {
+        if (!id || typeof id !== 'object' || !id.id) return undefined;
+        return Array.from(id.id as Uint8Array)
+            .map((byte: number) => byte.toString(16).padStart(2, '0'))
+            .join('');
+    };
     return {
-        _id: toStr(user._id),
+        _id: serializeObjectId(user._id),
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,
@@ -118,7 +125,7 @@ function serializeBlogPost(post: any): any {
         author: serializeUser(post.author),
         category: serializeCategory(post.category),
 
-        subcategories: safeMap(post.subcategories, serializeItem),
+        subcategories: safeMap(post.subcategories, serializeCategory),
         relatedPosts: safeMap(post.relatedPosts, serializeItem),
         comments: safeMap(post.comments, serializeItem),
         favorites: safeMap(post.favorites, serializeItem),
@@ -139,7 +146,8 @@ function serializeBlogPost(post: any): any {
 export async function serverGetBlogPostBySlug(blogSlug: string): Promise<IBlogPost | null> {
     try {
         await connectToDB();
-
+        console.log(blogSlug);
+        await SubcategoryModel.find({})
         const rawPost = await BlogPostModel.findOne({ slug: blogSlug })
             .populate("author")
             .populate("category")
@@ -150,6 +158,9 @@ export async function serverGetBlogPostBySlug(blogSlug: string): Promise<IBlogPo
             .populate("downVotes")
             .lean()
             .exec();
+
+            console.log(rawPost);
+            
 
         if (!rawPost) return null;
 
@@ -165,7 +176,7 @@ export async function serverGetBlogPostBySlug(blogSlug: string): Promise<IBlogPo
 export async function paginatedServerBlogFetcher(skip: number, limit: number) {
     try {
         await connectToDB();
-
+        await UserModel.find()
         const rawPosts = await BlogPostModel.find({})
             .populate("author")
             .populate("category")
@@ -182,6 +193,21 @@ export async function paginatedServerBlogFetcher(skip: number, limit: number) {
         
             const data = rawPosts.map(serializeBlogPost)
         return data
+    } catch (error: unknown) {
+        return {
+            error: true,
+            message: `Error fetching blog posts: ${error instanceof Error ? error.message : String(error)}`,
+        };
+    }
+}
+export async function serverBlogFetcher() {
+    try {
+        await connectToDB();
+        await UserModel.find()
+        const rawPosts = await BlogPostModel.find({});
+        console.log(rawPosts);
+        
+        return rawPosts.map(serializeBlogPost)
     } catch (error: unknown) {
         return {
             error: true,

@@ -1,15 +1,14 @@
 import React from 'react'
 import { IBlogPost } from '@/database/models/blog-posts.model';
-import { getBlogPostBySlug } from '@/utility/fetchers/blog.fetcher';
 import SlugPostModule from './_components/SlugPostModule';
 import { Metadata } from 'next';
-import { paginatedServerBlogFetcher, serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
+import { serverBlogFetcher, serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-    const posts = await paginatedServerBlogFetcher(0, 100) as unknown as IBlogPost[];
+    const posts = await serverBlogFetcher() as unknown as IBlogPost[];
 
     return posts.map((post) => ({
         slug: post.slug,
@@ -43,7 +42,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 
     const slug = (await params).slug;
-    const post:IBlogPost|null = await getBlogPostBySlug(slug);
+    const post:IBlogPost|null = await serverGetBlogPostBySlug(slug);
 
     if (!post) {
         return {

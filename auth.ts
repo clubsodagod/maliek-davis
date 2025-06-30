@@ -6,6 +6,7 @@ import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
 import { UserType } from "./library/types/users";
 import credentialUserLogin from "./utility/hooks/credential-user-login";
+import { serializeUser } from "./utility/fetchers/blog.server-fetcher";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -34,7 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     throw new Error('Something went wrong with the login attempt. Please try again.')
                 }
 
-                return user 
+                return serializeUser(user)
             }
         })
     ],

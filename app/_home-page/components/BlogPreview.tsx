@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
@@ -6,7 +7,7 @@ import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimati
 import React from 'react'
 import BlogPreviewCard from './BlogPreviewCard';
 import { MotionDiv } from '@/components/motion/MotionDiv';
-import { Button, duration, Typography } from '@mui/material';
+import { Button,  Typography } from '@mui/material';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import BlogRelatedPostCard from './BlogRelatedPostCard';
@@ -45,6 +46,7 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({
     posts,
     categories
 }) => {
+console.log(posts);
 
     const sectionRef = React.useRef(null);
 
@@ -114,7 +116,7 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({
                                         animate="visible"
                                         whileInView={"visible"}
                                     >
-                                        {posts?.map((p, i) => {
+                                        {posts && posts?.map((p, i) => {
                                             if (i === 0) return null;
                                             return (
                                                 <motion.div

@@ -15,7 +15,7 @@ type HeroCardType = {
 
 const heroCards: HeroCardType[] = [
     {
-        label: "Business Boost",
+        label: "Business",
         photo: "https://res.cloudinary.com/dyfhsjtwo/image/upload/v1744145213/DALL_E_2025-03-12_23.52.30_-_A_high-resolution_3D-styled_abstract_design_featuring_a_liquid_metal_and_carbon_blob_loosely_forming_the_concept_of_community_and_forward_thinking._T_fsckzk.webp",
         path: "/business"
     },

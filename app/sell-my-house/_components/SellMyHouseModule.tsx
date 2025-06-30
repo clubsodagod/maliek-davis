@@ -5,7 +5,6 @@ import SellMyHouseMainHero from './SellMyHouseMainHero';
 import HowItWorks from './HowItWorks';
 import WhatIBuy from './WhatIBuy';
 import HowIBuildYourOffer from './HowIBuildYourOffer';
-import WhySellersTrustMe from './WhySellersTrustMe';
 import SellMyHouseCTA from './SellMyHouseCTA';
 
 
@@ -17,7 +16,7 @@ const SellMyHouseModule = ({ }) => {
             <HowItWorks />
             <WhatIBuy />
             <HowIBuildYourOffer />
-            <WhySellersTrustMe />
+            {/* <WhySellersTrustMe /> */}
             <SellMyHouseCTA />
         </>
     )

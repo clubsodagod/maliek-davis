@@ -479,7 +479,7 @@ export async function submitSubcategory(form: ISubcategoryForm): Promise<Respons
             success: true,
             error: false,
             message: "Subcategory created successfully.",
-            data: newSubcategory._id.toString(),
+            data: newSubcategory._id,
         };
     } catch (err: any) {
         console.error("[submitSubcategory]", err);

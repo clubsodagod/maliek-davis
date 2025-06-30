@@ -1,10 +1,11 @@
 "use client"
 
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
-import LeftFloatImgTextHero from '@/components/image/LeftFloatImgTextHero';
+import { MotionDiv } from '@/components/motion/MotionDiv';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import { initialHeaderAnimation, animateHeaderAnimation, transitionHeaderAnimation } from '@/library/animations/enter.animations';
 import { Box, Typography, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
 import React from 'react'
 
 
@@ -36,33 +37,40 @@ const WhySellersTrustMe = ({ }) => {
                 />
 
 
-                <LeftFloatImgTextHero
-                    imgPT='0'
-                    heroText={
-                        <>
-                                {[
-                                    "✔️ Direct communication — no gatekeepers",
-                                    "✔️ Discreet, professional, and fast",
-                                    "✔️ No commissions, fees, or hidden costs",
-                                    "✔️ Real estate investor who closes with cash",
-                                ].map((item, index) => (
-                                    <Typography key={index} variant="body1" fontWeight="600" className='pb-10 pl-[24vw]'>
-                                        {item}
-                                    </Typography>
-                                ))}
-                        </>
-
-                    }
-                    photo={`https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170630/tchrkeie3jbe8qe8ei6k_nhnajt.webp`}
-                    pt='pt-[50px] md:pt-[50px] 2xl:pt-[200px] 3xl:pt-[500px] '
-                    rounded='rounded-[90px]'
-                    imgWidth='w-[225px] sm:w-[400px] md:w-[500px] md:landscape:w-[500px] lg:w-[600px] xl:landscape:w-[675px] 2xl:landscape:w-[950px] '
-                    imgHeight="h-[450px] md:h-[600px] lg:h-[700px] 2xl:h-[850px] "
-                    objectFit='cover'
-                />
-                <Box component="section" px={3} >
+                <Box component="section" px={3} 
+                    className="flex"
+                >
+                        <MotionDiv
+                            className="w-[50%] h-[24vh] 2xl:h-[60vh] overflow-hidden"
+                            style={{
+                                borderRadius:"38px"
+                            }}
+                        >
+                            <Image
+                                src={`https://res.cloudinary.com/dyfhsjtwo/image/upload/v1742170631/pfd8lmzgdoaf4fjhjyf6_lio0hs.webp`}
+                                className="w-full h-full "
+                                width={9}
+                                height={16}
+                                sizes='100vw'
+                                alt=""
+                                style={{
+                                    objectFit: "cover"
+                                }}
+                            />
+                        </MotionDiv>
                     <Box maxWidth="lg" mx="auto" textAlign="center">
 
+
+                        {[
+                            "✔️ Direct communication — no gatekeepers",
+                            "✔️ Discreet, professional, and fast",
+                            "✔️ No commissions, fees, or hidden costs",
+                            "✔️ Real estate investor who closes with cash",
+                        ].map((item, index) => (
+                            <Typography key={index} variant="body1" fontWeight="600" className='pb-10 pl-[24vw]'>
+                                {item}
+                            </Typography>
+                        ))}
                     </Box>
                 </Box>
             </div>

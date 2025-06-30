@@ -45,13 +45,13 @@ const SellMyHouseMainHero = ({ }) => {
                     </div>
                     <div className="w-full sm:px-[12.5vw] grow flex flex-col justify-center gap-10 mt-10">
                         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6 text-center">
-                            <div className="p-6 bg-white shadow rounded-xl">
+                            <div className="p-6 bg-(--foreground) text-(--background) shadow rounded-xl">
                                 <p className="font-semibold">✅ Metro Detroit & Grand Rapids Specialist</p>
                             </div>
-                            <div className="p-6 bg-white shadow rounded-xl">
+                            <div className="p-6 bg-(--foreground) text-(--background) shadow rounded-xl">
                                 <p className="font-semibold">✅ Sell As-Is — No Repairs, No Showings</p>
                             </div>
-                            <div className="p-6 bg-white shadow rounded-xl">
+                            <div className="p-6 bg-(--foreground) text-(--background) shadow rounded-xl">
                                 <p className="font-semibold">✅ Close in as Little as 7 Days — You Choose</p>
                             </div>
                         </div>
