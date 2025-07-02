@@ -149,7 +149,7 @@ export async function getAnnouncements() {
 export async function getAnnouncementBySlug(slug: string) {
     await connectToDB();
 
-    const doc = await AnnouncementModel.findOne({ slug }).lean().exec();
+    const doc = await AnnouncementModel.findOne({ slug }).lean().exec() as IAnnouncement | null;
 
     if (!doc) return null;
 
@@ -157,7 +157,7 @@ export async function getAnnouncementBySlug(slug: string) {
         ...doc
     };
 
-    return announcement;
+    return announcement as IAnnouncement | null;
 }
 
 

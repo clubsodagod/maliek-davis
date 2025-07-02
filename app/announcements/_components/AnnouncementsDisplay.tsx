@@ -1,14 +1,24 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
 import { IAnnouncement } from "@/database/models/announcement.model";
 import SectionWrapper from "@/components/wrappers/SectionWrapper";
 
 interface Props {
-    announcement: IAnnouncement;
+    announcement: IAnnouncement | null;
 }
 
 export const AnnouncementDisplay: React.FC<Props> = ({ announcement }) => {
+    if (!announcement) {
+        return (
+            <SectionWrapper>
+                <div className="max-w-3xl mx-auto px-4 py-10 text-center text-gray-500">
+                    <p>No announcement found.</p>
+                </div>
+            </SectionWrapper>
+        );
+    }
+
     const {
         title,
         description,
@@ -80,6 +90,5 @@ export const AnnouncementDisplay: React.FC<Props> = ({ announcement }) => {
                 )}
             </div>
         </SectionWrapper>
-
     );
 };
