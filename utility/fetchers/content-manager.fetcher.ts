@@ -22,7 +22,11 @@ export async function submitAnnouncement(form: IAnnouncementForm) {
         await connectToDB();
 
         const newAnnouncement = new AnnouncementModel(form);
-        newAnnouncement.slug = slugify(form.title.toLowerCase());
+        newAnnouncement.slug = slugify(form.title.toLowerCase(), {
+            lower: true,
+            strict: true, // removes special characters
+            trim: true,
+        });
 
         if (!newAnnouncement.title || !newAnnouncement.description) {
             throw new Error("Missing required fields: title or description.");
@@ -65,7 +69,11 @@ export async function updateAnnouncement(form: IAnnouncementForm & { _id: string
 
         // Update core fields
         existing.title = form.title;
-        existing.slug = slugify(form.title.toLowerCase());
+        existing.slug = slugify(form.title.toLowerCase(), {
+            lower: true,
+            strict: true, // removes special characters
+            trim: true,
+        });
         existing.description = form.description;
         existing.image = form.image;
         existing.type = form.type;
@@ -138,6 +146,21 @@ export async function getAnnouncements() {
     return announcements;
 }
 
+export async function getAnnouncementBySlug(slug: string) {
+    await connectToDB();
+
+    const doc = await AnnouncementModel.findOne({ slug }).lean().exec();
+
+    if (!doc) return null;
+
+    const announcement = {
+        ...doc
+    };
+
+    return announcement;
+}
+
+
 
 //
 // BLOG POSTS
@@ -165,7 +188,11 @@ export async function submitBlogPost(form: IBlogPostClient): Promise<ResponseSta
         // Create blog post
         const newPost = new BlogPostModel({
             title: form.title,
-            slug: slugify(form.title.toLowerCase()),
+            slug: slugify(form.title.toLowerCase(), {
+                lower: true,
+                strict: true, // removes special characters
+                trim: true,
+            }),
             metaDescription: form.metaDescription,
             featuredImg: form.featuredImg,
             content: form.content,
@@ -260,7 +287,11 @@ export async function updateBlogPost(form: IBlogPostClient & { _id: string }): P
 
         // Update fields
         existing.title = form.title;
-        existing.slug = slugify(form.title.toLowerCase());
+        existing.slug = slugify(form.title.toLowerCase(), {
+            lower: true,
+            strict: true, // removes special characters
+            trim: true,
+        });
         existing.metaDescription = form.metaDescription;
         existing.featuredImg = form.featuredImg;
         existing.content = form.content;
@@ -421,7 +452,11 @@ export async function submitCategory(form: ICategoryForm): Promise<ResponseStatu
         // Create new category
         const newCategory = new CategoryModel({
             name: form.name,
-            slug: slugify(form.name.toLowerCase()),
+            slug: slugify(form.name.toLowerCase(), {
+                lower: true,
+                strict: true, // removes special characters
+                trim: true,
+            }),
             tagline: form.tagline,
             description: form.description,
             subcategories: subcategoryIds,
@@ -463,7 +498,11 @@ export async function submitSubcategory(form: ISubcategoryForm): Promise<Respons
         // Create new subcategory
         const newSubcategory = new SubcategoryModel({
             name: form.name,
-            slug: slugify(form.name.toLowerCase()),
+            slug: slugify(form.name.toLowerCase(), {
+                lower: true,
+                strict: true, // removes special characters
+                trim: true,
+            }),
             tagline: form.tagline,
             description: form.description,
             subcategories: nestedIds,

@@ -6,8 +6,10 @@ import { IAnnouncement } from "@/database/models/announcement.model";
 import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
-import {motion} from "motion/react"
+import { motion } from "motion/react"
 import { pulse, pulseAlt } from "./SellYourHomeFastSection";
+import SubscriberCTAForm from "@/components/contact-forms/SubscriberCTAForm";
+import Link from "next/link";
 
 
 
@@ -16,6 +18,7 @@ const AnnouncementCard: React.FC<{
     open: boolean;
     index: number;
 }> = ({ announcement, open }) => {
+    const [subscribe, setSubscribe] = React.useState(false);
     return (
         <ComponentTransition id={`${announcement.title}-transition-card`}>
             <MotionDiv
@@ -76,11 +79,13 @@ const AnnouncementCard: React.FC<{
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3, delay: 0.2 }}
                             >
-                                <motion.div {...pulse}>
-                                    <Button variant="contained">More</Button>
-                                </motion.div>
+                                <Link href={`/announcements/${announcement.slug}` || "#"}>
+                                    <motion.div {...pulse}>
+                                        <Button variant="contained">More</Button>
+                                    </motion.div>
+                                </Link>
                                 <motion.div {...pulseAlt}>
-                                    <Button variant="outlined">Subscribe</Button>
+                                    <Button variant="outlined" onClick={() => setSubscribe(!subscribe)}>Subscribe</Button>
                                 </motion.div>
 
 
@@ -90,6 +95,11 @@ const AnnouncementCard: React.FC<{
                     </MotionDiv>
                 )}
             </MotionDiv>
+
+            <SubscriberCTAForm
+                open={subscribe}
+                setOpen={setSubscribe}
+            />
         </ComponentTransition>
     );
 };

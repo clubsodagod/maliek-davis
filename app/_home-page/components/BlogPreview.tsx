@@ -15,6 +15,7 @@ import { IBlogPost } from '@/database/models/blog-posts.model';
 import { ICategory } from '@/database/models/category.model';
 import { AnimatePresence, motion } from "motion/react"
 import { fadeToRight } from './WhatsHappening';
+import SubscriberCTAForm from '@/components/contact-forms/SubscriberCTAForm';
 
 interface BlogPreviewProps {
     posts: IBlogPost[] | undefined;
@@ -57,6 +58,7 @@ console.log(posts);
 
     const headerSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined = desktop ? "xl" : tabletXL ? undefined : tablet ? "lg" : mobile ? "md" : undefined;
 
+    const [open, setOpen] = React.useState(false);
 
     return (
 
@@ -176,17 +178,22 @@ console.log(posts);
                             Go to Blog
                         </Button>
                     </Link>
-                    <Link href={`/blog/subscribe`}>
-                        <Button variant="outlined" color='primary'
+                    
+                        <Button 
+                            onClick={() => setOpen(!open)}
+                        variant="outlined" color='primary'
                         >
                             Subscribe
                         </Button>
-                    </Link>
+                    
 
                 </MotionDiv>
             </div>
 
-
+                            <SubscriberCTAForm 
+                                open={open}
+                                setOpen={setOpen}
+                            />
         </SectionWrapper>
 
     )
