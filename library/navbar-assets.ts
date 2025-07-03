@@ -21,12 +21,12 @@ export const navigationPaths: NavigationPath[] = [
         path: "/technology",
         icon: undefined,
         children: [
-            {
-                label: "Apps", path: "/technology/apps", icon: undefined,
-                children: [
-                    { label: "Email Pearl", path: "/technology/apps/email-pearl", icon: undefined },
-                ]
-            },
+            // {
+            //     label: "Apps", path: "/technology/apps", icon: undefined,
+            //     children: [
+            //         { label: "Email Pearl", path: "/technology/apps/email-pearl", icon: undefined },
+            //     ]
+            // },
             { label: "Approach", path: "/technology/approach", icon: undefined },
             { label: "Solutions", path: "/technology/solutions", icon: undefined },
             { label: "Portfolio", path: "/technology/portfolio", icon: undefined },
