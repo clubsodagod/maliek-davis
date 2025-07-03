@@ -6,6 +6,7 @@ import BlogPostModel, { IBlogPost } from "@/database/models/blog-posts.model";
 import CategoryModel, { ICategory } from "@/database/models/category.model";
 import SubcategoryModel from "@/database/models/subcategory.model";
 import UserModel from "@/database/models/user.model";
+import { revalidatePath } from "next/cache";
 
 function toStr(value: any) {
     return value?.toString?.() ?? null;
@@ -252,6 +253,7 @@ export async function paginatedServerBlogFetcher(skip: number, limit: number) {
     }
 }
 export async function serverBlogFetcher() {
+revalidatePath('/blog/posts/[slug]')
     try {
         await connectToDB();
         await UserModel.find()
