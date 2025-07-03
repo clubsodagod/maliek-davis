@@ -64,7 +64,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                 className='flex md:flex-col lg:flex-row gap-20'
             >
                 <MotionDiv
-                    className='flex flex-col gap-6 md:mt-12 min-w-full  md:w-2/3'
+                    className='flex flex-col gap-6 md:mt-12 w-full  md:w-2/3'
                 >
 
                     <Typography variant="h4">
@@ -96,7 +96,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                             if (index >= 3 || index === 0) return
                             return (
                                 <Grid2
-                                    size={{ xs: 6, md: 4, xl: 4 }}
+                                    size={{ xs: 6, md: 4, xl: 12 }}
                                     key={`${post._id} : ${index}`}
                                     className={`w-fit`}
                                 >

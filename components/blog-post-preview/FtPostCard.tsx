@@ -37,7 +37,7 @@ const FtPostCard: React.FC<PostCardProps> = ({
                 className="relative cursor-pointer rounded-xl overflow-hidden shadow-md"
                 onClick={() => setExpanded((prev) => !prev)}
             >
-                    <MotionDiv className="w-full h-[45vh] 2xl:w-fit aspect-video overflow-hidden rounded-lg relative group">
+                    <MotionDiv className="w-full h-[45vh] 2xl:h-full 2xl:w-fit aspect-video overflow-hidden rounded-lg relative group">
                     <div className=" w-full relative h-full">
                         {isLoading ? (
                             <Skeleton variant="rectangular" width="100%" height="100%" />
@@ -71,7 +71,14 @@ const FtPostCard: React.FC<PostCardProps> = ({
                                     >
                                         {post.title}
                                     </Typography>
-
+                                            <Typography
+                                                variant="body2"
+                                                color="inherit"
+                                                className="mb-4 hidden md:block"
+                                            >
+                                                {post.metaDescription}
+                                            </Typography>
+  
                                     {expanded && (
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
