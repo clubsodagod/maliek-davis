@@ -6,6 +6,7 @@ import { serverBlogFetcher, serverGetBlogPostBySlug } from '@/utility/fetchers/b
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
+export const revalidate = 360;
 
 export async function generateStaticParams() {
     const posts = await serverBlogFetcher() as unknown as IBlogPost[];
