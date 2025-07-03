@@ -7,25 +7,28 @@ import Link from 'next/link';
 import ComponentTransition from '../layout/ComponentTransition';
 import { MotionDiv } from '../motion/MotionDiv';
 import Image from 'next/image';
-import { motion } from 'motion/react';
-
+import { motion } from 'framer-motion';
 
 const SmallPostCard: React.FC<PostCardProps> = ({
-    post, cardWrapper, cardImage, w, h,
+    post,
+    cardWrapper,
+    cardImage,
+    w,
+    h,
 }) => {
     const isLoading = !post;
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <ComponentTransition id={post?.id || 'ft-post-loading'}>
+        <ComponentTransition id={post?._id?.toString() || 'small-post-loading'}>
             <MotionDiv
-                className="relative cursor-pointer "
+                {...cardWrapper}
+                className="relative cursor-pointer rounded-xl overflow-hidden shadow-md"
                 onClick={() => setExpanded((prev) => !prev)}
             >
-                <MotionDiv
-                    className="flex flex-col gap-3">
-                    {/* Image Block */}
-                    <MotionDiv {...cardWrapper} className="w-full aspect-video overflow-hidden rounded-lg relative group h-[200px]">
+                <MotionDiv className="flex flex-col gap-3">
+                    {/* Image Container */}
+                    <div className=" w-full relative">
                         {isLoading ? (
                             <Skeleton variant="rectangular" width="100%" height="100%" />
                         ) : (
@@ -36,7 +39,8 @@ const SmallPostCard: React.FC<PostCardProps> = ({
                                     className={cardImage.className}
                                     sizes="100vw"
                                     style={{ objectFit: 'cover' }}
-                                    width={w} height={h}
+                                    width={w}
+                                    height={h}
                                 />
 
                                 {/* Overlay Content */}
@@ -46,17 +50,13 @@ const SmallPostCard: React.FC<PostCardProps> = ({
                                         height: expanded ? "100%" : "4rem",
                                     }}
                                     transition={{ duration: 0.4, ease: "easeInOut" }}
-                                    className="absolute bottom-0 left-0 w-full z-10 backdrop-blur-md bg-black/40 text-white p-4 flex flex-col justify-end rounded-b-lg"
+                                    className="absolute bottom-0 left-0 w-full z-10 backdrop-blur-md bg-black/50 text-white p-4 flex flex-col justify-end"
                                     style={{
                                         borderTopLeftRadius: expanded ? "0.5rem" : "0",
                                         borderTopRightRadius: expanded ? "0.5rem" : "0",
                                     }}
                                 >
-                                    <Typography
-                                        variant="h6"
-                                        fontWeight="bold"
-                                        className="text-white"
-                                    >
+                                    <Typography variant="subtitle1" fontWeight={600} className="text-white">
                                         {post.title}
                                     </Typography>
 
@@ -79,7 +79,7 @@ const SmallPostCard: React.FC<PostCardProps> = ({
                                                     variant="text"
                                                     color="inherit"
                                                     size="small"
-                                                    className='underline'
+                                                    className="underline"
                                                     onClick={(e) => e.stopPropagation()}
                                                 >
                                                     Read Full Article
@@ -90,9 +90,9 @@ const SmallPostCard: React.FC<PostCardProps> = ({
                                 </motion.div>
                             </>
                         )}
-                    </MotionDiv>
+                    </div>
 
-                    {/* Loading State for Description (skeleton) */}
+                    {/* Skeleton Description */}
                     {isLoading && (
                         <MotionDiv>
                             <Skeleton variant="text" width="100%" height={20} />
@@ -103,8 +103,6 @@ const SmallPostCard: React.FC<PostCardProps> = ({
             </MotionDiv>
         </ComponentTransition>
     );
-}
-
-
+};
 
 export default SmallPostCard;

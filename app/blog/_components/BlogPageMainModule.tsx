@@ -61,10 +61,10 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
 
 
             <div
-                className='flex gap-20'
+                className='flex md:flex-col lg:flex-row gap-20'
             >
                 <MotionDiv
-                    className='flex flex-col gap-6 md:mt-12 2xl:w-2/3'
+                    className='flex flex-col gap-6 md:mt-12 min-w-full  md:w-2/3'
                 >
 
                     <Typography variant="h4">
@@ -84,20 +84,21 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
 
 
 
-                <MotionDiv className="hidden 2xl:flex flex-col gap-6 mt-12 min-w-1/3">
+                <MotionDiv className="hidden md:flex flex-col gap-6 mt-12 w-full 2xl:w-1/3">
                     <Typography variant="h4"></Typography>
 
                     <Grid2 container spacing={4}
-                        flexDirection={"column"}
+                        flexDirection={"row"}
+                        // columns={{ xs: 6, sm: 1, xl: 1}}
                         className="w-full min-w-full"
                     >
                         {ftPosts?.map((post, index) => {
-                            if (index >= 4 || index === 0) return
+                            if (index >= 3 || index === 0) return
                             return (
                                 <Grid2
-                                    size={{ xs: 6, md: 4, xl: 12 }}
+                                    size={{ xs: 6, md: 4, xl: 4 }}
                                     key={`${post._id} : ${index}`}
-                                    className={`min-w-full`}
+                                    className={`w-fit`}
                                 >
                                     <SmallPostCard
                                         post={post}
@@ -169,17 +170,17 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                         }
                         return (
                             <Grid2
-                                size={{ xs: 6, md: 4, xl: 3 }}
+                                size={{ xs: 12, md: 4, xl: 3 }}
                                 key={`${post._id} ${index* 200}`}
                                 className={``}
                             >
                                 <SmallPostCard
                                     post={post}
                                     cardImage={{
-                                        className: "h-[300px] w-full",
+                                        className: "h-[200px] w-full",
                                     }}
                                     cardWrapper={{
-                                        className: "w-full h-[300px]",
+                                        className: "w-full h-[200px]",
                                     }}
                                     w={9} h={16}
                                 />

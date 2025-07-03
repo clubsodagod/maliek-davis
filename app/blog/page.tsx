@@ -2,14 +2,15 @@ import React from 'react'
 import BlogPageMainModule from './_components/BlogPageMainModule'
 import { IBlogPost } from '@/database/models/blog-posts.model';
 import { ICategory } from '@/database/models/category.model';
-import { getAllBlogPostCategories, paginatedBlogFetcher } from '@/utility/fetchers/blog.fetcher';
+import { getAllBlogPostCategories  } from '@/utility/fetchers/blog.fetcher';
 import { Metadata } from 'next';
+import { paginatedServerBlogFetcher } from '@/utility/fetchers/blog.server-fetcher';
 
 export default async function BlogPage() {
 
     const categories = await getAllBlogPostCategories() as unknown as ICategory[];
 
-    const posts = await paginatedBlogFetcher(0, 0) as unknown as IBlogPost[];
+    const posts = await paginatedServerBlogFetcher(0, 0) as unknown as IBlogPost[];
 
     return (
         <BlogPageMainModule posts={posts} categories={categories} />
