@@ -4,7 +4,7 @@ import { motion, MotionProps } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Typography } from "@mui/material";
-import { SourceEvaluate } from "@/app/investments/_library/copy";
+import { SourceEvaluate } from "@/app/_investments/_library/copy";
 
 type CorePrincipleComponentProps = {
     method: SourceEvaluate;

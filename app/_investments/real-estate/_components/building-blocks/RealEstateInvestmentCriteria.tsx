@@ -1,6 +1,6 @@
 "use client"
 
-import { realEstateStrategies } from '@/app/investments/_library/copy';
+import { realEstateStrategies } from '@/app/_investments/_library/copy';
 import MainHeroHeader from '@/components/headers/MainHeroHeader';
 import SectionWrapper from '@/components/wrappers/SectionWrapper';
 import SlidingCardWrapper from '@/components/wrappers/SlidingCardWrapper';

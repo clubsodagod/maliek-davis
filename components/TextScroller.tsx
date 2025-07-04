@@ -1,6 +1,6 @@
 "use client";
 
-import { PartnerBenefit } from '@/app/investments/real-estate/prestige-partners/_library/copy.const';
+import { PartnerBenefit } from '@/app/_investments/real-estate/prestige-partners/_library/copy.const';
 import React, { useRef, useState } from 'react';
 import ComponentTransition from './layout/ComponentTransition';
 import { MotionDiv } from './motion/MotionDiv';

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { sourceEvaluationMethods } from "@/app/investments/_library/copy";
+import { sourceEvaluationMethods } from "@/app/_investments/_library/copy";
 import SourceEvaluateMethodCard from "./SourceEvaluateMethodCard";
 import { Button } from "@mui/material";
 

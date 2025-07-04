@@ -23,7 +23,7 @@ const ContentManagerCard: React.FC<AdminSectionCardProps> = ({ section }) => {
         <ComponentTransition id={`${section.name}-transition-card`}>
             <MotionDiv
                 onClick={handleClick}
-                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[375px] max-h-[435px] cursor-pointer bg-(--background)  transition-transform hover:scale-[1.01]"
+                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[375px] max-h-[435px] cursor-pointer bg-(--foreground) text-(--background)  transition-transform hover:scale-[1.01]"
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 20 }}
                 exit={{ opacity: 0, y: 0 }}
@@ -34,10 +34,10 @@ const ContentManagerCard: React.FC<AdminSectionCardProps> = ({ section }) => {
                     boxShadow: "1px -6px 8px #17171747",
                 }}
             >
-                        <Typography component="div" variant="h3" className="text-xl font-semibold text-(--foreground)">
+                        <Typography component="div" variant="h4" fontSize={{sm:"2rem",lg:"2.75rem"}} className=" font-semibold text-(--background)">
                             {section.label}
                         </Typography>
-                        <Typography variant="subtitle1" fontSize={{sm:"1.5rem"}} className="text-sm text-(--foreground)">
+                        <Typography variant="subtitle1" fontSize={{sm:"1.5rem"}} className="text-sm text-(--background)">
                             {section.description}
                         </Typography >
 

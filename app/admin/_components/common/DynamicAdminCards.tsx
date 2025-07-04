@@ -27,7 +27,7 @@ const AdminActionCard: React.FC<AdminSectionCardProps> = ({ section }) => {
         <ComponentTransition id={`${section.name}-transition-card`}>
             <MotionDiv
                 onClick={handleClick}
-                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[375px] max-h-[435px] cursor-pointer bg-(--background) transition-transform hover:scale-[1.01]"
+                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[375px] max-h-[435px] cursor-pointer bg-(--foreground) transition-transform hover:scale-[1.01]"
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 20 }}
                 exit={{ opacity: 0, y: 0 }}

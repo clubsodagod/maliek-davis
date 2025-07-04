@@ -6,7 +6,7 @@ import DealSourcingAndEvaluation from './building-blocks/deal-sourcing-evaluatio
 import RealEstateInvestmentCriteria from './building-blocks/RealEstateInvestmentCriteria';
 import BlogModule from '@/components/blog-post-preview/BlogModule';
 import ChooseYourPathCTA from '@/components/contact-forms/ChooseYourPathCTA';
-import StrategiesInAction from '@/app/investments/_components/building-blocks/strategies-in-action/StrategiesInAction';
+import StrategiesInAction from '@/app/_investments/_components/building-blocks/strategies-in-action/StrategiesInAction';
 import { IBlogPost } from '@/database/models/blog-posts.model';
 
 type RealEstateMainModuleProps = {

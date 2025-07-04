@@ -1,6 +1,6 @@
 "use client";
 
-import { sourceEvaluationMethods } from '@/app/investments/_library/copy';
+import { sourceEvaluationMethods } from '@/app/_investments/_library/copy';
 import { MotionDiv } from '@/components/motion/MotionDiv';
 import React, { useEffect, useState } from 'react';
 import './backgroundUnderlay.css';

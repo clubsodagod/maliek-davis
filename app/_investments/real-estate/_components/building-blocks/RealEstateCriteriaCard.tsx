@@ -1,6 +1,6 @@
 "use client"
 
-import { RealEstateStrategy } from '@/app/investments/_library/copy'
+import { RealEstateStrategy } from '@/app/_investments/_library/copy'
 import ComponentTransition from '@/components/layout/ComponentTransition'
 import { MotionDiv } from '@/components/motion/MotionDiv'
 import { Typography, Button } from '@mui/material'

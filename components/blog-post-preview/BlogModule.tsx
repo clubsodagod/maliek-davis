@@ -11,7 +11,7 @@ import { Button, Grid2, Typography } from '@mui/material';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FtPostCard from './FtPostCard';
-import { allPostsMockRealEstate, ftPostsMockRealEstate } from '@/app/investments/_library/copy';
+import { allPostsMockRealEstate, ftPostsMockRealEstate } from '@/app/_investments/_library/copy';
 import SmallPostCard from './SmallPostCard';
 import { IBlogPost } from '@/database/models/blog-posts.model';
 

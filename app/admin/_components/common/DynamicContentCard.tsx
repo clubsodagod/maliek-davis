@@ -98,7 +98,7 @@ export const DynamicContentCard = <T extends CardTypes>({
     return (
         <ComponentTransition id={`${title}-dynamic-card`}>
             <MotionDiv
-                className="overflow-hidden rounded-4xl md:rounded-[100px] p-4 w-full h-full max-h-[158vh] bg-(--background)"
+                className="overflow-hidden rounded-4xl md:rounded-[100px] p-4 w-full h-full max-h-[158vh] bg-(--foreground) text-(--background)"
                 initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: open ? 1 : 1, y: open ? 20 : 20, scaleX: open ? 1 : 1.03 }}
                 exit={{ opacity: 0, y: 0 }}
