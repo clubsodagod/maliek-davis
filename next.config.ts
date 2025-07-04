@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     APP_NAME: "Maliek Davis",
     API_DEVELOPMENT: "http://localhost:3000/api",
     API_PRODUCTION: "https://maliek-davis.com/api",
-    PRODUCTION: false,
+    PRODUCTION: true,
     DOMAIN_DEVELOPMENT: "http://localhost:3000",
     DOMAIN_PRODUCTION: "https://maliek-davis.com",
   },
