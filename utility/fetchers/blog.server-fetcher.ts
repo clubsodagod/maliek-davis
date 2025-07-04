@@ -305,6 +305,7 @@ export async function clientBlogFetcher() {
     try {
         const { publicRuntimeConfig } = getConfig();
         const isProd = publicRuntimeConfig.PRODUCTION;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const baseUrl = isProd
             ? publicRuntimeConfig.DOMAIN_PRODUCTION
             : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
