@@ -8,10 +8,10 @@ import { IBlogPost } from '@/database/models/blog-posts.model';
 import { ICategory } from '@/database/models/category.model';
 import SellYourHomeFastSection from './_home-page/components/SellYourHomeFastSection';
 import { Metadata } from 'next';
-import { clientBlogFetcher } from '@/utility/fetchers/blog.server-fetcher';
+import { clientBlogFetcherNonstatic } from '@/utility/fetchers/blog.server-fetcher';
 
 export default async function HomePage() {
-  const posts = await clientBlogFetcher() as unknown as IBlogPost[];
+  const posts = await clientBlogFetcherNonstatic() as unknown as IBlogPost[];
   const categories = await getAllBlogPostCategories() as unknown as ICategory[];
   console.log(posts);
 
