@@ -346,4 +346,49 @@ export async function clientBlogFetcher() {
     }
 }
 
+export async function clientBlogFetcherNonstatic() {
+    try {
+        const { publicRuntimeConfig } = getConfig();
+        const isProd = publicRuntimeConfig.PRODUCTION;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const baseUrl = isProd
+            ? publicRuntimeConfig.DOMAIN_PRODUCTION
+            : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
+
+        const res = await fetch(`https://maliek-davis.com/api/content/blog/get-all-posts`, {
+            method: 'GET',
+            cache: 'no-store', // Disable caching for non-static fetch
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch blog posts: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+            return {
+                error: true,
+                message: 'No blog posts found',
+            };
+        }
+
+        if (data.error) {
+            return {
+                error: true,
+                message: data.message || 'An error occurred while fetching blog posts',
+            };
+        }
+
+        return data.posts.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+
+    } catch (error: unknown) {
+        return {
+            error: true,
+            message: `Error fetching blog posts: ${error instanceof Error ? error.message : String(error)}`,
+        };
+    }
+}
+
 

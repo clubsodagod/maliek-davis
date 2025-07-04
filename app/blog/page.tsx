@@ -4,13 +4,13 @@ import { IBlogPost } from '@/database/models/blog-posts.model';
 import { ICategory } from '@/database/models/category.model';
 import { getAllBlogPostCategories  } from '@/utility/fetchers/blog.fetcher';
 import { Metadata } from 'next';
-import { clientBlogFetcher  } from '@/utility/fetchers/blog.server-fetcher';
+import { clientBlogFetcherNonstatic  } from '@/utility/fetchers/blog.server-fetcher';
 
 export default async function BlogPage() {
 
     const categories = await getAllBlogPostCategories() as unknown as ICategory[];
 
-    const posts = await clientBlogFetcher() as unknown as IBlogPost[];
+    const posts = await clientBlogFetcherNonstatic() as unknown as IBlogPost[];
 
     return (
         <BlogPageMainModule posts={posts} categories={categories} />
