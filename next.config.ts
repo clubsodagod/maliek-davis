@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   publicRuntimeConfig: {
     APP_NAME: "Maliek Davis",
-    API_DEVELOPMENT: "http://localhost:7070/api",
+    API_DEVELOPMENT: "http://localhost:3000/api",
     API_PRODUCTION: "https://maliek-davis.com/api",
     PRODUCTION: false,
     DOMAIN_DEVELOPMENT: "http://localhost:3000",

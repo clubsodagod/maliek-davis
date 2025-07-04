@@ -2,7 +2,8 @@ import React from 'react'
 import { IBlogPost } from '@/database/models/blog-posts.model';
 import SlugPostModule from './_components/SlugPostModule';
 import { Metadata } from 'next';
-import { serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
+import { serverBlogFetcher, serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
+import { revalidatePath } from 'next/cache'
 
 
 export const dynamic = "force-static";
@@ -16,26 +17,12 @@ export const revalidate = 60;
 export const dynamicParams = true // or false, to 404 on unknown paths
 
 export async function generateStaticParams() {
-    const baseUrl ="https://maliek-davis.com";
+revalidatePath('/blog/posts/[slug]', 'page')
+    const posts = await serverBlogFetcher() as unknown as IBlogPost[];
 
-    const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        cache: 'no-store' // optional: skip cache if needed
-    });
-    console.log('Fetching blog posts for static params:', res);
-    
-    if (!res.ok) {
-        throw new Error("Failed to fetch blog posts for static params");
-    }
-
-    const { posts } = await res.json();
-
-    return posts.map((post: IBlogPost) => ({
+    return posts.map((post) => ({
         slug: post.slug,
-    }));
+    }))
 }
 
 
@@ -65,7 +52,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 
     const slug = (await params).slug;
-    const post: IBlogPost | null = await serverGetBlogPostBySlug(slug);
+    const post:IBlogPost|null = await serverGetBlogPostBySlug(slug);
 
     if (!post) {
         return {

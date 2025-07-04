@@ -44,7 +44,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
                     />
                 </div>
 
-                <div className='  text-(--background)  flex flex-col justify-end  pb-6 px-12 pl-12 '>
+                <div className='  text-(--background)  flex flex-col justify-end  pb-6 px-6  '>
                     <MotionDiv>
                         <Link href={`/blog/posts/${post?.slug}`}>
                             <Typography  variant='h6' fontWeight={"bold"}>
@@ -66,7 +66,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
 
                         <Image
                             alt={`something`}
-                            src={post?.featuredImg||""}
+                            src={post?.author.avatar||""}
                             sizes='100vw'
                             width={9}
                             height={16}

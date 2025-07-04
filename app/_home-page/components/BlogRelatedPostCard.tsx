@@ -22,9 +22,9 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
 
     const CardText = () => {
         return (
-            <MotionDiv className='flex flex-col   h-full justify-center'>
+            <MotionDiv className='flex flex-col justify-center'>
                 <MotionDiv
-                    className="w-full p-3 bg-cover bg-center bg-no-repeat cursor-pointer rounded-t-4xl"
+                    className="w-full grow p-3 bg-cover bg-center bg-no-repeat cursor-pointer rounded-t-4xl"
                     onClick={(e) => {
                         e.preventDefault();
                         router.push(`/blog/posts/${post?.slug}`);
@@ -73,7 +73,7 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
 
     return (
         <MotionDiv
-            className={` min-w-[300px] h-full flex rounded-4xl`}
+            className={` min-w-[300px] h-full flex rounded-4xl h-fit`}
             style={{
                 backdropFilter: "blur(25px)",
                 backgroundColor: "#fafafa45"

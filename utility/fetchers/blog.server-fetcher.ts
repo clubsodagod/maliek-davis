@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
+import getConfig from 'next/config';
 import connectToDB from "@/database/connect-to-db.database";
 import BlogPostModel, { IBlogPost } from "@/database/models/blog-posts.model";
 import CategoryModel, { ICategory } from "@/database/models/category.model";
 import SubcategoryModel from "@/database/models/subcategory.model";
 import UserModel from "@/database/models/user.model";
-import { revalidatePath } from "next/cache";
 
 function toStr(value: any) {
     return value?.toString?.() ?? null;
@@ -114,7 +114,7 @@ function serializeUserNoEx(user: any): any {
 
 
 function serializeCategory(category: any): any {
-    
+
 
     return {
         _id: toStr(category._id),
@@ -211,8 +211,8 @@ export async function serverGetBlogPostBySlug(blogSlug: string): Promise<IBlogPo
             .lean()
             .exec();
 
-            console.log(rawPost);
-            
+        console.log(rawPost);
+
 
         if (!rawPost) return null;
 
@@ -242,8 +242,8 @@ export async function paginatedServerBlogFetcher(skip: number, limit: number) {
             .limit(limit)
             .lean()
             .exec();
-        
-            const data = rawPosts.map(serializeBlogPost)
+
+        const data = rawPosts.map(serializeBlogPost)
         return data
     } catch (error: unknown) {
         return {
@@ -253,13 +253,20 @@ export async function paginatedServerBlogFetcher(skip: number, limit: number) {
     }
 }
 export async function serverBlogFetcher() {
-revalidatePath('/blog/posts/[slug]')
     try {
         await connectToDB();
         await UserModel.find()
-        const rawPosts = await BlogPostModel.find({});
+        const rawPosts = await BlogPostModel.find({})
+            .populate("author")
+            .populate("category")
+            .populate("subcategories")
+            .populate("relatedPosts")
+            .populate("favorites")
+            .populate("upVotes")
+            .populate("downVotes")
+            .sort({ createdAt: -1 });
         console.log(rawPosts);
-        
+
         return rawPosts.map(serializeBlogPost)
     } catch (error: unknown) {
         return {
@@ -268,4 +275,74 @@ revalidatePath('/blog/posts/[slug]')
         };
     }
 }
+
+export async function serverAPIBlogFetcher() {
+    try {
+        await connectToDB();
+        await UserModel.find()
+        const rawPosts = await BlogPostModel.find({})
+            // .sort({ createdAt: -1 })
+            .populate("author")
+            .populate("category")
+            .populate("subcategories")
+            .populate("relatedPosts")
+            .populate("favorites")
+            .populate("upVotes")
+            .populate("downVotes");
+        console.log(rawPosts);
+
+        return rawPosts.map(serializeBlogPost)
+    } catch (error: unknown) {
+        return {
+            error: true,
+            message: `Error fetching blog posts: ${error instanceof Error ? error.message : String(error)}`,
+        };
+    }
+}
+
+
+export async function clientBlogFetcher() {
+    try {
+        const { publicRuntimeConfig } = getConfig();
+        const isProd = publicRuntimeConfig.PRODUCTION;
+        const baseUrl = isProd
+            ? publicRuntimeConfig.DOMAIN_PRODUCTION
+            : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
+
+        const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
+            method: 'GET',
+            next: { revalidate: 60 }, // ISR
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch blog posts: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+            return {
+                error: true,
+                message: 'No blog posts found',
+            };
+        }
+
+        if (data.error) {
+            return {
+                error: true,
+                message: data.message || 'An error occurred while fetching blog posts',
+            };
+        }
+
+        return data.posts.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+
+    } catch (error: unknown) {
+        return {
+            error: true,
+            message: `Error fetching blog posts: ${error instanceof Error ? error.message : String(error)}`,
+        };
+    }
+}
+
 
