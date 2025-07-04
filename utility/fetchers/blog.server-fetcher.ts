@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import getConfig from 'next/config';
 import connectToDB from "@/database/connect-to-db.database";
 import BlogPostModel, { IBlogPost } from "@/database/models/blog-posts.model";
 import CategoryModel, { ICategory } from "@/database/models/category.model";
@@ -303,14 +302,11 @@ export async function serverAPIBlogFetcher() {
 
 export async function clientBlogFetcher() {
     try {
-        const { publicRuntimeConfig } = getConfig();
-        const isProd = publicRuntimeConfig.PRODUCTION;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const baseUrl = isProd
-            ? publicRuntimeConfig.DOMAIN_PRODUCTION
-            : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
+        const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
+            ? process.env.NEXT_PUBLIC_PRODUCTION_URL
+            : process.env.NEXT_PUBLIC_DEVELOPMENT_URL;
 
-        const res = await fetch(`https://maliek-davis.com/api/content/blog/get-all-posts`, {
+        const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
             method: 'GET',
             next: { revalidate: 60 }, // ISR
         });

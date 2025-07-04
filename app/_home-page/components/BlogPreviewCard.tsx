@@ -26,7 +26,7 @@ const BlogPreviewCard: React.FC<{ post: IBlogPost|undefined }> = ({
     return (
         <ComponentTransition>
             <MotionDiv
-                className='w-full  h-fit flex flex-col gap-6 relative  bg-(--foreground) rounded-4xl '
+                className='w-full  h-fit flex flex-col gap-6 relative  bg-(--foreground) rounded-4xl shadow-gray-400 shadow-md'
             >
                 <div
                 className='w-full md:w-full  xl:w-full'

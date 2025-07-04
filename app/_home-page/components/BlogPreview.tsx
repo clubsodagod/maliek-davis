@@ -112,7 +112,7 @@ console.log(posts);
 
                                 <AnimatePresence>
                                     <motion.div
-                                        className="pb-3 mt-3 min-h-[24vh] w-full absolute flex gap-18 overflow-x-auto pr-20"
+                                        className="py-6 mt-3 min-h-[24vh] w-full absolute flex gap-18 overflow-x-auto pl-5 pr-20 "
                                         variants={staggerContainer}
                                         initial="hidden"
                                         animate="visible"
@@ -123,7 +123,7 @@ console.log(posts);
                                             return (
                                                 <motion.div
                                                     key={`${p._id}`}
-                                                    className="overflow-x-visible"
+                                                    className="overflow-x-visible rounded-4xl h-full "
                                                     variants={slideInRight}
                                                     custom={i}
                                                     whileInView={"visible"}

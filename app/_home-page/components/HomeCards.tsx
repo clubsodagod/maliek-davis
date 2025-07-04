@@ -6,6 +6,7 @@ import { Typography } from '@mui/material';
 import Image from 'next/image';
 import React from 'react'
 import Link from 'next/link';
+import { wobbleAnimation } from '@/library/global.const';
 
 type HeroCardType = {
     label: string;
@@ -69,6 +70,7 @@ export const HomeCard: React.FC<{ item: HeroCardType }> = ({ item }) => {
     return (
         <MotionDiv className='flex flex-col gap-3 justify-center items-center mt-20'
             onClick={() => { }}
+            {...wobbleAnimation}
         >
             <Link
                 href={item.path}

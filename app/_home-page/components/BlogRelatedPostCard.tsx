@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useRouter } from 'next/navigation';
 import { IBlogPost } from '@/database/models/blog-posts.model';
+import { wobbleAnimation } from '@/library/global.const';
 
 // import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -73,11 +74,12 @@ const BlogRelatedPostCard: React.FC<{ post: IBlogPost | undefined }> = ({
 
     return (
         <MotionDiv
-            className={` min-w-[300px] h-full flex rounded-4xl h-fit`}
+            className={` min-w-[300px] flex rounded-4xl h-fit shadow-gray-400 shadow-md `}
             style={{
                 backdropFilter: "blur(25px)",
                 backgroundColor: "#fafafa45"
             }}
+            {...wobbleAnimation}
         >
 
             <CardText />
