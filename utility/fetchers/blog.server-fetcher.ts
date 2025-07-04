@@ -309,7 +309,7 @@ export async function clientBlogFetcher() {
             ? publicRuntimeConfig.DOMAIN_PRODUCTION
             : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
 
-        const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
+        const res = await fetch(`https://maliek-davis.com/api/content/blog/get-all-posts`, {
             method: 'GET',
             next: { revalidate: 60 }, // ISR
         });
