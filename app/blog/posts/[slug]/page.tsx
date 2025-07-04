@@ -2,13 +2,13 @@ import React from 'react'
 import { IBlogPost } from '@/database/models/blog-posts.model';
 import SlugPostModule from './_components/SlugPostModule';
 import { Metadata } from 'next';
-import { serverBlogFetcher, serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
+import { serverGetBlogPostBySlug } from '@/utility/fetchers/blog.server-fetcher';
 
 
 export const dynamic = "force-static";
 // Next.js will invalidate the cache when a
 // request comes in, at most once every 60 seconds.
-export const revalidate = 3600
+export const revalidate = 60;
 
 // We'll prerender only the params from `generateStaticParams` at build time.
 // If a request comes in for a path that hasn't been generated,
@@ -16,11 +16,26 @@ export const revalidate = 3600
 export const dynamicParams = true // or false, to 404 on unknown paths
 
 export async function generateStaticParams() {
-    const posts = await serverBlogFetcher() as unknown as IBlogPost[];
+    const baseUrl ="https://maliek-davis.com";
 
-    return posts.map((post) => ({
+    const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        cache: 'no-store' // optional: skip cache if needed
+    });
+    console.log('Fetching blog posts for static params:', res);
+    
+    if (!res.ok) {
+        throw new Error("Failed to fetch blog posts for static params");
+    }
+
+    const { posts } = await res.json();
+
+    return posts.map((post: IBlogPost) => ({
         slug: post.slug,
-    }))
+    }));
 }
 
 
@@ -50,7 +65,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 
     const slug = (await params).slug;
-    const post:IBlogPost|null = await serverGetBlogPostBySlug(slug);
+    const post: IBlogPost | null = await serverGetBlogPostBySlug(slug);
 
     if (!post) {
         return {
