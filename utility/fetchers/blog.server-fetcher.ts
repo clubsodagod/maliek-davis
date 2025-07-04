@@ -348,11 +348,9 @@ export async function clientBlogFetcher() {
 
 export async function clientBlogFetcherNonstatic() {
     try {
-        const { publicRuntimeConfig } = getConfig();
-        const isProd = publicRuntimeConfig.PRODUCTION;
-        const baseUrl = isProd
-            ? publicRuntimeConfig.DOMAIN_PRODUCTION
-            : publicRuntimeConfig.DOMAIN_DEVELOPMENT;
+        const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
+            ? process.env.NEXT_PUBLIC_PRODUCTION_URL
+            : process.env.NEXT_PUBLIC_DEVELOPMENT_URL;
 
         const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
             method: 'GET',
@@ -370,7 +368,7 @@ export async function clientBlogFetcherNonstatic() {
         }
 
         return data.posts.sort(
-            (a, b) =>
+            (a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) =>
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
         );
