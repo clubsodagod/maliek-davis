@@ -1,8 +1,23 @@
+import connectToDB from '@/database/connect-to-db.database';
+import BlogPostModel from '@/database/models/blog-posts.model';
 import type { MetadataRoute } from 'next'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const lastModified = new Date();
 
+    await connectToDB();
+
+    const blogPosts = await BlogPostModel.find({})
+        .sort({ updatedAt: -1 })
+        .skip(0)
+        .limit(50000 - 0);
+
+    const sitemap: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+        url: `https://maliek-davis.com/blog/posts/${post.slug}`,
+        lastModified: post.updatedAt,
+        changeFrequency: 'weekly',
+        priority: 0.6,
+    }));
     return [
         {
             url: 'https://maliek-davis.com',
@@ -52,5 +67,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.7,
         },
+        ...sitemap,
     ];
 }
