@@ -1,16 +1,15 @@
-// /app/blog/posts/sitemap/[id]/route.ts
-
 import connectToDB from '@/database/connect-to-db.database';
 import BlogPostModel from '@/database/models/blog-posts.model';
-import { type NextRequest } from 'next/server';
 import { type MetadataRoute } from 'next';
+import { type NextRequest } from 'next/server';
+// Define Params type locally since it's not exported by Next.js
+type Params = { [key: string]: string };
 
 export async function GET(
-    req: NextRequest,
-    context: { params: { id: string } }
+    _req: NextRequest,
+    { params }: { params: Params }
 ): Promise<Response> {
-    const { id } = await context.params;
-    const page = parseInt(id);
+    const page = parseInt(params.id);
 
     const start = page * 50000;
     const end = start + 50000;
@@ -31,4 +30,3 @@ export async function GET(
 
     return Response.json(sitemap);
 }
-
