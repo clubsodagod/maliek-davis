@@ -27,6 +27,7 @@ export default function RootLayout({
       <head>
         {/* ✅ Your verification meta tag */}
         <meta name="fo-verify" content="9566283a-6eb0-4d52-aa2f-b9a20e09e5d6" />
+        <meta name='impact-site-verification' content='fe757e82-3b15-4e97-862b-5cbe40ea8e28'/>
       </head>
       <body
         className={`${asap.variable} antialiased h-[100dvh] overflow-x-clip `}
