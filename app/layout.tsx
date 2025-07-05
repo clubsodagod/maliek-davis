@@ -24,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* ✅ Your verification meta tag */}
+        <meta name="fo-verify" content="9566283a-6eb0-4d52-aa2f-b9a20e09e5d6" />
+      </head>
       <body
         className={`${asap.variable} antialiased h-[100dvh] overflow-x-clip `}
       >
