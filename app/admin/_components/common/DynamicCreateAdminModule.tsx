@@ -50,11 +50,14 @@ const DynamicCreateModule: React.FC<DynamicCreateModuleProps> = ({ formType }) =
     };
 
     useEffect(() => {
-        const handleOptions = async() => {
+        const handleOptions = async () => {
             const res = await getSubcategoryOptions();
             setSubcategoryOptions(res);
         };
-        handleOptions(); 
+
+
+        handleOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

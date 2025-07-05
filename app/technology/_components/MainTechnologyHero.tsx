@@ -48,7 +48,7 @@ const MainTechnologyHero = ({ }) => {
 
 
             <div
-                className='w-full px-[12.5vw] '
+                className='w-full px-[12.5vw] xl:mt-10 '
             >
                 <MainHeroHeader
                     headerLabel={"The Future is Now: Build Scalable, Intelligent, and Secure Technology That Grows With You"}
@@ -59,9 +59,9 @@ const MainTechnologyHero = ({ }) => {
                 />
 
                 <div
-                    className='w-full flex gap-12'
+                    className='w-full flex gap-12 sm:min-h-[45vh]'
                 >
-                    <div
+                    {/* <div
                         className='w-full flex justify-center xl:justify-end grow xl:flex-1/2 2xl:flex-1/5'
                     >
                         <Image
@@ -77,10 +77,10 @@ const MainTechnologyHero = ({ }) => {
                                 height: '100%',
                             }}
                         />
-                    </div>
+                    </div> */}
 
                     <div
-                        className='hidden landscape:xl xl:flex flex-col gap-6 items-center grow justify-center ' 
+                        className='hidden landscape:xl xl:flex flex-col gap-6 items-center grow justify-end ' 
                     >
                         <MotionDiv
                             className='w-full flex gap-12 mt-12  justify-between '

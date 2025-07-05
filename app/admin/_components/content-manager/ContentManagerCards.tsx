@@ -4,7 +4,7 @@ import { AdminSection, adminSections } from '@/app/admin/_library/copy.const';
 import ComponentTransition from '@/components/layout/ComponentTransition';
 import { MotionDiv } from '@/components/motion/MotionDiv';
 import { Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React from 'react'
 
 
@@ -12,37 +12,40 @@ interface AdminSectionCardProps {
     section: AdminSection;
 }
 
-const ContentManagerCard: React.FC<AdminSectionCardProps> = ({ section }) => {
-    const router = useRouter();
+export const ContentManagerCard: React.FC<AdminSectionCardProps> = ({ section }) => {
+    const [hovered, setHovered] = React.useState(false);
 
-    const handleClick = () => {
-        router.push(section.path);
-    };
 
     return (
         <ComponentTransition id={`${section.name}-transition-card`}>
-            <MotionDiv
-                onClick={handleClick}
-                className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[375px] max-h-[435px] cursor-pointer bg-(--foreground) text-(--background)  transition-transform hover:scale-[1.01]"
-                initial={{ opacity: 0, y: 0 }}
-                animate={{ opacity: 1, y: 20 }}
-                exit={{ opacity: 0, y: 0 }}
-                transition={{ duration: 0.3, ease: "anticipate" }}
-                style={{
-                    backdropFilter: "blur(10px)",
-                    WebkitBackdropFilter: "blur(10px)",
-                    boxShadow: "1px -6px 8px #17171747",
-                }}
-            >
-                        <Typography component="div" variant="h4" fontSize={{sm:"2rem",lg:"2.75rem"}} className=" font-semibold text-(--background)">
-                            {section.label}
-                        </Typography>
-                        <Typography variant="subtitle1" fontSize={{sm:"1.5rem"}} className="text-sm text-(--background)">
-                            {section.description}
-                        </Typography >
+            <Link href={section.path} className="w-full h-full">
+                <MotionDiv
+                    className="investment-card overflow-hidden rounded-t-4xl md:rounded-4xl flex flex-col justify-between p-6 w-full md:max-w-[350px] min-h-[325px] max-h-[335px] cursor-pointer bg-(--foreground) text-(--background)  transition-transform hover:scale-[1.01]"
+                    initial={{ opacity: 0, y: 0 }}
+                    animate={{ opacity: 1, y: 20 }}
+                    exit={{ opacity: 0, y: 0 }}
+                    transition={{ duration: 0.3, ease: "anticipate" }}
+                    style={{
+                        backdropFilter: "blur(10px)",
+                        WebkitBackdropFilter: "blur(10px)",
+                        boxShadow: "1px -6px 8px #17171747",
+                    }}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+                >
+                    <Typography component="div" variant="h4" fontSize={{ sm: "2rem", lg: "2rem" }}
+                        className={`font-semibold text-[var(--background)] ${hovered ? "animate-gradient" : ""}`}
+                    >
+                        {section.label}
+                    </Typography>
+                    <Typography variant="subtitle1" fontSize={{ sm: "1.15rem" }} className="text-sm text-(--background)">
+                        {section.description}
+                    </Typography >
 
 
-            </MotionDiv>
+                </MotionDiv>
+            </Link>
+
         </ComponentTransition>
     );
 };

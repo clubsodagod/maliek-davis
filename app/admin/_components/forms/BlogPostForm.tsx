@@ -10,20 +10,23 @@ import FormMultiSelect from "@/components/FormMultiSelect";
 import RichTextInput from "@/components/tinyMCE/RichTextInput";
 import { IBlogPostClient } from "@/database/models/blog-posts.model";
 import { blogPostFormSections } from "../../_library/forms.const";
-import { submitBlogPost, getSubcategoryOptions, getCategoryOptions } from "@/utility/fetchers/content-manager.fetcher";
+import { submitBlogPost, getSubcategoryOptions, getCategoryOptions, getRelatedPostsLinks } from "@/utility/fetchers/content-manager.fetcher";
 import { Button } from "@mui/material";
+
+
 
 export function BlogPostForm() {
     const { data: session, status } = useSession();
     const [step, setStep] = useState(0);
     const [categoryOptions, setCategoryOptions] = useState<{ label: string; value: string }[]>([]);
     const [subcategoryOptions, setSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
-    console.log(session, 'session in blog post form');
+    const [relatedLinks, setRelatedLinks] = useState<{ title: string; slug: string }[]>([]);
 
     const {
         control,
         handleSubmit,
         setValue,
+        watch,
         reset,
     } = useForm<IBlogPostClient>({
         defaultValues: {
@@ -50,17 +53,28 @@ export function BlogPostForm() {
 
     }, []);
 
+        const category = watch("category");
 
-useEffect(() => {
-    if (status === "authenticated" && session?.user?._id) {
-        const userId =
-            typeof session.user._id === "string"
-                ? session.user._id
-                : "681fa586c53053e82efbdb00"; // Explicit BSON serialization
-        setValue("author", userId);
+    useEffect(() => {
+        if (status === "authenticated" && session?.user?._id) {
+            const userId =
+                typeof session.user._id === "string"
+                    ? session.user._id
+                    : "681fa586c53053e82efbdb00"; // Explicit BSON serialization
+            setValue("author", userId);
+
+        }
         
-    }
-}, [session, setValue, status]);
+
+        const fetchLinks = async () => {
+            if (category) {
+                const links = await getRelatedPostsLinks(category);
+                setRelatedLinks(links);
+            }
+        };
+
+        fetchLinks();
+    }, [session, setValue, status, category]);
 
 
 
@@ -83,7 +97,7 @@ useEffect(() => {
     const currentSection = blogPostFormSections[step];
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl mx-auto space-y-6">
             <h2 className="text-2xl font-bold">Create Blog Post</h2>
 
             <h3 className="text-lg font-semibold">{currentSection.title}</h3>
@@ -152,6 +166,7 @@ useEffect(() => {
                             name={field.name}
                             label={field.label}
                             control={control}
+                            relatedLinks={relatedLinks}
                         />
                     );
                 }

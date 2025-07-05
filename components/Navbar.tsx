@@ -19,6 +19,9 @@ import { navigationPaths } from '@/library/navbar-assets';
 import Slide from '@mui/material/Slide';
 import { useScrollTrigger } from '@mui/material';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { MotionDiv } from './motion/MotionDiv';
+import { wobbleAnimation } from '@/library/global.const';
 
 
 const drawerWidth = 240;
@@ -27,7 +30,7 @@ function HideOnScroll({ children }: { children: React.ReactElement }) {
     const trigger = useScrollTrigger();
 
     return (
-        <Slide appear={false} direction="down" in={!trigger}>
+        <Slide  appear={false} direction="down" in={!trigger}>
             {children}
         </Slide>
     );
@@ -36,12 +39,19 @@ function HideOnScroll({ children }: { children: React.ReactElement }) {
 const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
+    const pathname = usePathname();
+    console.log("Current Pathname:", pathname);
+
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
     };
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', minHeight: "100dvh" }} color="#fafafa"  >
+        <Box onClick={handleDrawerToggle}
+            sx={{
+                minHeight: "100dvh",
+                textAlign: 'center',
+            }}  >
             <div
                 className='flex items-center justify-center py-3'
             >
@@ -66,52 +76,90 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
             </div>
 
             <List>
-                {navigationPaths.map((item) => (
-                    <ListItem key={item.label} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton sx={{ textAlign: 'left', py: 0 }} href={item.path}>
-                            <ListItemText primary={item.label} />
-                        </ListItemButton>
-                        <List>
-                            {item.children && item.children.map((child) => {
-                                return (
-                                    <ListItem key={child.label} sx={{ py: 0, display: "block" }}>
-                                        <Link href={child.path}>
-                                            <ListItemButton sx={{ textAlign: 'left' }}>
-                                                <ListItemText primary={child.label} />
-                                            </ListItemButton>
-                                        </Link>
+                {navigationPaths.map((item) => {
 
-                                        {
-                                            child.children && child.children.length > 0 &&
-                                            <List>
-                                                {child.children.map((subChild) => (
-                                                    <ListItem key={subChild.label} sx={{ py: 0 }}>
-                                                        <Link href={subChild.path}>
-                                                            <ListItemButton sx={{ textAlign: 'left' }} >
-                                                                <ListItemText primary={subChild.label} />
-                                                            </ListItemButton>
-                                                        </Link>
-                                                    </ListItem>
-                                                ))}
-                                            </List>
-                                        }
-                                    </ListItem>
+                    const isActive = pathname === item.path;
+                    return (
+                        <ListItem key={item.label} disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton sx={{ textAlign: 'left', py: 0 }} href={item.path}>
+                                <ListItemText  >
 
-                                )
-                            })}
-                        </List>
-                    </ListItem>
-                ))}
+                                    <Typography variant='h6' fontWeight={600} fontSize={"1.35rem"}
+                                        className={isActive ? 'animate-gradient w-fit flex items-center' : ' w-fit flex items-center'}>
+                                        {item.label}
+                                    </Typography>
+                                </ListItemText>
+                            </ListItemButton>
+                            <List>
+                                {item.children && item.children.map((child) => {
+                                    const isActive = pathname === child.path;
+                                    return (
+                                        <ListItem key={child.label} sx={{ py: 0, display: "block" }}>
+                                            <Link href={child.path}>
+                                                <ListItemButton sx={{ textAlign: 'left' }}>
+                                                    <ListItemText
+                                                    >
+                                                        <Typography variant='subtitle2' fontSize={"1rem"}
+                                                            className={isActive ? 'animate-gradient w-fit flex items-center' : ' w-fit flex items-center'}>
+                                                            {child.label}
+                                                        </Typography>
+                                                    </ListItemText>
+                                                </ListItemButton>
+                                            </Link>
+
+                                            {
+                                                child.children && child.children.length > 0 &&
+                                                <List>
+                                                    {child.children.map((subChild) => {
+
+                                                        const isActive = pathname === subChild.path;
+                                                        return (<ListItem key={subChild.label} sx={{ py: 0 }}>
+                                                            <Link href={subChild.path}>
+                                                                <ListItemButton sx={{ textAlign: 'left' }} >
+                                                                    <ListItemText
+                                                                        className={isActive ? 'animate-gradient w-fit flex items-center' : ' w-fit flex items-center'}
+                                                                    >
+                                                                        <Typography variant='subtitle2' fontSize={"0.95rem"}
+                                                                            className={isActive ? 'animate-gradient w-fit flex items-center' : ' w-fit flex items-center'}>
+                                                                            {subChild.label}
+                                                                        </Typography>
+                                                                    </ListItemText>
+
+                                                                </ListItemButton>
+                                                            </Link>
+                                                        </ListItem>)
+                                                    })}
+                                                </List>
+                                            }
+                                        </ListItem>
+
+                                    )
+                                })}
+                            </List>
+                        </ListItem>
+                    )
+                })}
             </List>
         </Box>
     );
 
 
+
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', justifyContent: "center", width: "100%" }}>
             <CssBaseline />
             <HideOnScroll>
-                <AppBar component="nav" sx={{ bgcolor: "#60abe425", backdropFilter: "blur(25px)" }}>
+                <AppBar component="nav"
+                    sx={(theme) => ({
+                        backdropFilter: "blur(25px)",
+                        backgroundColor: theme.palette.mode === "dark" ? "#FAFAFA95" : "#2323239e",
+                        color: theme.palette.mode === "dark" ? "#232323" : "#232323",
+                        width: "97.5%",
+                        left: "1.25%",
+
+                    })}
+                        className={`rounded-[75px] mt-5 px-2 left-[1.25vw]`}
+                    >
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -131,7 +179,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                     height={16}
                                     sizes='100vw'
                                     style={{
-                                        objectFit: "cover", width: `${100}px`, height: `auto`
+                                        objectFit: "cover", width: `${85}px`, height: `auto`
                                     }}
                                     className='cursor-pointer'
                                 />
@@ -145,7 +193,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                 height={16}
                                 sizes='100vw'
                                 style={{
-                                    objectFit: "cover", width: `${75}px`, height: `auto`
+                                    objectFit: "cover", width: `${100}px`, height: `auto`
                                 }}
                                 className="cursor-pointer hidden sm:block "
                             />
@@ -158,11 +206,56 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
 
                         </Typography>
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            {navigationPaths.map((item) => (
-                                <Button key={`${item.label} alt`} sx={{ color: '#fff' }} href={item.path}>
-                                    {item.label}
-                                </Button>
-                            ))}
+                            {navigationPaths.map((item) => {
+
+                                const isActive = pathname === item.path;
+                                return (
+                                    <Link
+                                        key={`${item.label} alt`}
+                                        href={item.path}>
+                                        <MotionDiv
+                                            {...(isActive ? wobbleAnimation : {})}
+                                            className='inline-flex items-center justify-center px-4 py-2 rounded-lg'
+                                        ><Typography
+                                            sx={(theme) => ({
+                                                color: isActive
+                                                    ? 'transparent'
+                                                    : theme.palette.mode === 'dark'
+                                                        ? '#232323'
+                                                        : '#FAFAFA',
+                                                fontSize: '1.5rem',
+                                                fontWeight: isActive ? 700 : 100,
+                                                backgroundImage: isActive
+                                                    ? 'linear-gradient(47deg, #bf40ff 21%, #fafafa 67%, #69beff 81%)'
+                                                    : undefined,
+                                                backgroundSize: isActive ? '600% 600%' : undefined,
+                                                animation: isActive ? 'gradientShift 6s ease infinite' : undefined,
+                                                backgroundClip: isActive ? 'text' : undefined,
+                                                WebkitBackgroundClip: isActive ? 'text' : undefined,
+                                                WebkitTextFillColor: isActive ? 'transparent' : undefined,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                width: 'fit-content',
+                                                transition: 'color 0.3s ease',
+                                                '&:hover': {
+                                                    color:
+                                                        theme.palette.mode === 'dark'
+                                                            ? '#a855f7' // purple-600
+                                                            : '#2563eb', // blue-600
+                                                },
+                                            })}
+                                            variant="subtitle1"
+                                            component={Button}
+                                        >
+                                                {item.label}
+                                            </Typography>
+
+                                        </MotionDiv>
+
+
+                                    </Link>
+                                )
+                            })}
                         </Box>
                     </Toolbar>
                 </AppBar>
@@ -176,11 +269,15 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
-                    sx={{
+                    sx={(theme) => ({
                         display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: "#60abe425", },
+                        '& .MuiDrawer-paper': {
+                            boxSizing: 'border-box', width: drawerWidth,
+                            backgroundColor: theme.palette.mode === "dark" ? "#FAFAFA95" : "#2323239e",
+                            color: theme.palette.mode === "dark" ? "#232323" : "#FAFAFA",
+                        },
                         '& .MuiBackdrop-root': { backdropFilter: "blur(25px)" },
-                    }}
+                    })}
                 >
                     {drawer}
                 </Drawer>

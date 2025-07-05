@@ -88,7 +88,7 @@ console.log(posts);
 
 
                 <MotionDiv
-                    className='flex gap-12 2xl:pt-12'
+                    className='mt-20 flex gap-12 2xl:pt-12'
                 >
                     <div
                         className="md:w-1/3"

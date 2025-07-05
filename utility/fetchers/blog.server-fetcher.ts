@@ -308,7 +308,7 @@ export async function clientBlogFetcher() {
 
         const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
             method: 'GET',
-            next: { revalidate: 60 }, // ISR
+            next: { revalidate: 3600 }, // ISR
         });
 
         if (!res.ok) {
@@ -350,7 +350,7 @@ export async function clientBlogFetcherNonstatic() {
 
         const res = await fetch(`${baseUrl}/api/content/blog/get-all-posts`, {
             method: 'GET',
-            cache: 'no-store',
+            next: { revalidate: 3600 },
         });
 
         if (!res.ok) {

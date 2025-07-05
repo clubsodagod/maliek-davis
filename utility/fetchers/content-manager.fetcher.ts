@@ -617,3 +617,16 @@ export async function updateCategory(data: ICategoryForm): Promise<{ success: bo
         return { success: false, message: "Server error" };
     }
 }
+
+export async function getRelatedPostsLinks(category:string): Promise<{ title: string; slug: string }[]> {
+    await connectToDB();
+
+    const data = await BlogPostModel.find({category:category})
+        .select("title slug")
+        .lean();
+
+    return data.map(post => ({
+        title: post.title,
+        slug: post.slug,
+    }));
+}
