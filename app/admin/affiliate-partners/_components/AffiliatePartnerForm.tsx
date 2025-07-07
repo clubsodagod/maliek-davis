@@ -2,7 +2,7 @@
 
 import { useForm, useFieldArray } from "react-hook-form";
 import React, { useEffect, useState } from "react";
-import { IAffiliatePartner } from "@/database/models/affiliate-partner.model";
+import { IAffiliatePartner, IAffiliatePartnerForm } from "@/database/models/affiliate-partner.model";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import FormMultiSelect from "@/components/FormMultiSelect";
@@ -49,7 +49,7 @@ function AffiliatePartnerForm() {
             active: true,
         },
     });
-    
+
     const { fields, append, remove } = useFieldArray<IAffiliatePartnerForm, "customLinks", "id">({
         control,
         name: "customLinks",
@@ -105,7 +105,7 @@ function AffiliatePartnerForm() {
                                 name={field.name}
                                 label={field.label}
                                 control={control}
-                                type={field.inputType || "text"}
+                                type={field.type || "text"}
                                 multiline={field.type === "textarea"}
                                 rows={field.rows}
                             />
@@ -136,7 +136,7 @@ function AffiliatePartnerForm() {
                         );
                     }
 
-                    if (field.type === "repeater" && field.name === "customLinks") {
+                    if ( field.name === "customLinks") {
                         return (
                             <div key="customLinks" className="space-y-2">
                                 <h4 className="font-medium">Custom Links</h4>
@@ -189,3 +189,7 @@ function AffiliatePartnerForm() {
 
 
 export default AffiliatePartnerForm;
+
+export const submitAffiliatePartner = async (data: unknown) => {
+    return data
+}

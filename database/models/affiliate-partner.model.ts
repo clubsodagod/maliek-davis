@@ -95,5 +95,38 @@ const AffiliatePartnerSchema = new Schema<IAffiliatePartner>(
     { timestamps: true }
 );
 
+
+export interface IAffiliatePartnerForm {
+    name: string;
+    slug: string;
+    companyName?: string;
+    description: string;
+    tagline?: string;
+    websiteUrl?: string;
+    logoUrl?: string;
+    bannerUrl?: string;
+
+    email?: string;
+    contactName?: string;
+
+    categories: string[]; // Use ObjectId strings for selected categories
+
+    active: boolean;
+
+    customLinks?: {
+        label: string;
+        url: string;
+    }[];
+
+    affiliateCode?: string;
+    integrationType?: "api" | "manual" | "cj" | "shareasale" | "custom";
+
+    notes?: string;
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+
 export const AffiliatePartnerModel =
     models.AffiliatePartner || model<IAffiliatePartner>("AffiliatePartner", AffiliatePartnerSchema);

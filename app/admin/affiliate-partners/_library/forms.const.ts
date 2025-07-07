@@ -1,4 +1,30 @@
-import { FormSection } from "@/library/types/forms.types";
+import { IAffiliatePartnerForm } from "@/database/models/affiliate-partner.model";
+
+export type FormFieldType = "input" | "textarea" | "select" | "tag" | "tinyMCE" | "multi-select";
+
+export type ValidationRule = {
+    required?: boolean | string;
+    pattern?: {
+        value: RegExp;
+        message: string;
+    };
+};
+
+export type FormField = {
+    name: keyof IAffiliatePartnerForm;
+    label: string;
+    type: FormFieldType;
+    rows?: number;
+    placeholder?: string;
+    options?: { value: string; label: string }[];
+    validation?: ValidationRule;
+};
+
+
+export type FormSection = {
+    title: string;
+    fields: FormField[];
+};
 
 
 
@@ -97,41 +123,11 @@ export const affiliatePartnerFormSections: FormSection[] = [
         ],
     },
     {
-        title: "Performance Metrics",
-        fields: [
-            {
-                name: "performanceMetrics.clicks",
-                label: "Clicks",
-                type: "input",
-                inputType: "number",
-            },
-            {
-                name: "performanceMetrics.signups",
-                label: "Signups",
-                type: "input",
-                inputType: "number",
-            },
-            {
-                name: "performanceMetrics.conversions",
-                label: "Conversions",
-                type: "input",
-                inputType: "number",
-            },
-            {
-                name: "performanceMetrics.revenueGenerated",
-                label: "Revenue Generated",
-                type: "input",
-                inputType: "number",
-            },
-        ],
-    },
-    {
         title: "Custom Links & Notes",
         fields: [
             {
                 name: "customLinks",
                 label: "Custom Links",
-                type: "repeater", // You’ll implement this in the form logic
             },
             {
                 name: "notes",
