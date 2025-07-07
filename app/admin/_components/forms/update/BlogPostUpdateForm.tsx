@@ -14,7 +14,7 @@ import FormMultiSelect from "@/components/FormMultiSelect";
 import RichTextInput from "@/components/tinyMCE/RichTextInput";
 
 import { IBlogPost, IBlogPostClient } from "@/database/models/blog-posts.model";
-import { getSubcategoryOptions, getCategoryOptions, updateBlogPost } from "@/utility/fetchers/content-manager.fetcher";
+import { getSubcategoryOptions, getCategoryOptions, updateBlogPost, getRelatedPostsLinks } from "@/utility/fetchers/content-manager.fetcher";
 import { blogPostFormSections } from "@/app/admin/_library/forms.const";
 
 interface BlogPostUpdateFormProps {
@@ -29,6 +29,7 @@ export default function BlogPostUpdateForm({ content, onSuccess }: BlogPostUpdat
 
     const [categoryOptions, setCategoryOptions] = useState<{ label: string; value: string }[]>([]);
     const [subcategoryOptions, setSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
+    const [relatedLinks, setRelatedLinks] = useState<{ title: string; slug: string }[]>([]);
 
     const {
         control,
@@ -36,6 +37,7 @@ export default function BlogPostUpdateForm({ content, onSuccess }: BlogPostUpdat
         reset,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setValue,
+        watch,
     } = useForm<IBlogPostClient>({
         mode: "onSubmit",
     });
@@ -49,6 +51,20 @@ export default function BlogPostUpdateForm({ content, onSuccess }: BlogPostUpdat
         }
         fetchOptions();
     }, []);
+
+    useEffect(() => {
+
+        const category = watch("category");
+
+        const fetchLinks = async () => {
+            if (category) {
+                const links = await getRelatedPostsLinks(category);
+                setRelatedLinks(links);
+            }
+        };
+
+        fetchLinks();
+    }, [watch]);
 
     useEffect(() => {
         if (content) {
@@ -167,6 +183,7 @@ export default function BlogPostUpdateForm({ content, onSuccess }: BlogPostUpdat
                             name={field.name}
                             label={field.label}
                             control={control}
+                            relatedLinks={relatedLinks}
                         />
                     );
                 }

@@ -73,7 +73,6 @@ const AffiliatePartnerSchema = new Schema<IAffiliatePartner>(
         tagline: String,
         websiteUrl: String,
         logoUrl: String,
-        bannerUrl: String,
 
         email: String,
         contactName: String,
@@ -98,13 +97,11 @@ const AffiliatePartnerSchema = new Schema<IAffiliatePartner>(
 
 export interface IAffiliatePartnerForm {
     name: string;
-    slug: string;
     companyName?: string;
     description: string;
     tagline?: string;
     websiteUrl?: string;
     logoUrl?: string;
-    bannerUrl?: string;
 
     email?: string;
     contactName?: string;
@@ -123,8 +120,6 @@ export interface IAffiliatePartnerForm {
 
     notes?: string;
 
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 

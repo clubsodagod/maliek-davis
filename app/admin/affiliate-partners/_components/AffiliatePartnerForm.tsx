@@ -11,6 +11,8 @@ import { getCategoryOptions } from "@/utility/fetchers/content-manager.fetcher";
 import { Button } from "@mui/material";
 import { affiliatePartnerFormSections } from "../_library/forms.const";
 import AdminWrapper from "@/components/wrappers/AdminWrapper";
+import { submitAffiliatePartner } from "@/utility/fetchers/affiliate-partners.fetcher";
+import toast from "react-hot-toast";
 
 function AffiliatePartnerForm() {
 
@@ -26,7 +28,6 @@ function AffiliatePartnerForm() {
     } = useForm<IAffiliatePartnerForm>({
         defaultValues: {
             name: "",
-            slug: "",
             companyName: "",
             tagline: "",
             description: "",
@@ -34,7 +35,6 @@ function AffiliatePartnerForm() {
             contactName: "",
             websiteUrl: "",
             logoUrl: "",
-            bannerUrl: "",
             categories: [],
             affiliateCode: "",
             integrationType: "manual",
@@ -59,12 +59,28 @@ function AffiliatePartnerForm() {
         }
         fetchCategoryOptions();
     }, []);
-
     const onSubmit = async () => {
-        const data = getValues();
-        await submitAffiliatePartner(data);
-        reset();
-        setStep(0);
+        const rawData = getValues();
+
+        // Transform raw form data into IAffiliatePartnerForm
+        const data: IAffiliatePartnerForm = {
+            ...rawData,
+            customLinks: rawData.customLinks?.filter(
+                (link: { label: string; url: string }) => link.label && link.url
+            ) || [],
+        };
+
+        console.log("Submitting:", data);
+
+        const res = await submitAffiliatePartner(data);
+
+        if (res.success) {
+            reset();
+            setStep(0);
+            toast.success("Affiliate Partner created!");
+        } else {
+            toast.error(res.message);
+        }
     };
 
     const handleNext = () => setStep((prev) => prev + 1);
@@ -75,7 +91,7 @@ function AffiliatePartnerForm() {
             adminRef={adminRef}
             className=" p-6 pt-[15vh] "
         >
-            <form onSubmit={onSubmit} className="max-w-5xl mx-auto space-y-6">
+            <form onSubmit={(e) => {e.preventDefault(); onSubmit() }} className="max-w-5xl mx-auto space-y-6">
                 <h2 className="text-2xl font-bold">Create Affiliate Partner</h2>
 
                 <h3 className="text-lg font-semibold">{currentSection.title}</h3>
@@ -85,7 +101,7 @@ function AffiliatePartnerForm() {
                         return (
                             <FormMultiSelect
                                 key={field.name}
-                                name={field.name}
+                                name={field.name as keyof IAffiliatePartnerForm}
                                 label={field.label}
                                 control={control}
                                 options={categoryOptions}
@@ -97,10 +113,10 @@ function AffiliatePartnerForm() {
                         return (
                             <FormInput
                                 key={field.name}
-                                name={field.name}
+                                name={field.name as keyof IAffiliatePartnerForm}
                                 label={field.label}
                                 control={control}
-                                type={field.type || "text"}
+                                type={field.type || "input"}
                                 multiline={field.type === "textarea"}
                                 rows={field.rows}
                             />
@@ -111,7 +127,7 @@ function AffiliatePartnerForm() {
                         return (
                             <FormSelect
                                 key={field.name}
-                                name={field.name}
+                                name={field.name as keyof IAffiliatePartnerForm}
                                 label={field.label}
                                 control={control}
                                 options={field.options!}
@@ -123,7 +139,7 @@ function AffiliatePartnerForm() {
                         return (
                             <FormTagInput
                                 key={field.name}
-                                name={field.name}
+                                name={field.name as keyof IAffiliatePartnerForm}
                                 label={field.label}
                                 control={control}
                                 placeholder={field.placeholder}
@@ -131,7 +147,7 @@ function AffiliatePartnerForm() {
                         );
                     }
 
-                    if ( field.name === "customLinks") {
+                    if (field.name === "customLinks") {
                         return (
                             <div key="customLinks" className="space-y-2">
                                 <h4 className="font-medium">Custom Links</h4>
@@ -184,7 +200,3 @@ function AffiliatePartnerForm() {
 
 
 export default AffiliatePartnerForm;
-
-export const submitAffiliatePartner = async (data: unknown) => {
-    return data
-}

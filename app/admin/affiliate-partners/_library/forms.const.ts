@@ -1,6 +1,6 @@
 import { IAffiliatePartnerForm } from "@/database/models/affiliate-partner.model";
 
-export type FormFieldType = "input" | "textarea" | "select" | "tag" | "tinyMCE" | "multi-select";
+export type FormFieldType = "input" | "textarea" | "select" | "tag" | "tinyMCE" | "multi-select" | "checkbox" ;
 
 export type ValidationRule = {
     required?: boolean | string;
@@ -11,13 +11,16 @@ export type ValidationRule = {
 };
 
 export type FormField = {
-    name: keyof IAffiliatePartnerForm;
+    name: keyof IAffiliatePartnerForm | string; // Allow string for nested fields
     label: string;
     type: FormFieldType;
     rows?: number;
     placeholder?: string;
     options?: { value: string; label: string }[];
     validation?: ValidationRule;
+    fields?: FormField[]; // Allow nested fields for custom field types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    defaultValue?: any;   // Allow defaultValue for fields like checkbox
 };
 
 
@@ -42,17 +45,17 @@ export const affiliatePartnerFormSections: FormSection[] = [
                 },
             },
             {
-                name: "slug",
-                label: "Slug",
-                type: "input",
-                validation: {
-                    required: "Slug is required",
-                },
-            },
-            {
                 name: "companyName",
                 label: "Company Name",
                 type: "input",
+            },
+            {
+                name: "description",
+                label: "Description",
+                type: "textarea",
+                validation: {
+                    required: "Description is required",
+                },
             },
             {
                 name: "tagline",
@@ -84,21 +87,16 @@ export const affiliatePartnerFormSections: FormSection[] = [
                 label: "Logo URL",
                 type: "input",
             },
-            {
-                name: "bannerUrl",
-                label: "Banner URL",
-                type: "input",
-            },
         ],
     },
     {
-        title: "Categories & Setup",
+        title: "Setup & Status",
         fields: [
             {
                 name: "categories",
                 label: "Categories",
                 type: "multi-select",
-                options: [], // to be dynamically populated
+                options: [], // populate dynamically
                 validation: {
                     required: "At least one category is required",
                 },
@@ -120,6 +118,12 @@ export const affiliatePartnerFormSections: FormSection[] = [
                 label: "Affiliate Code",
                 type: "input",
             },
+            {
+                name: "active",
+                label: "Is Active?",
+                type: "checkbox",
+                defaultValue: true,
+            },
         ],
     },
     {
@@ -128,7 +132,19 @@ export const affiliatePartnerFormSections: FormSection[] = [
             {
                 name: "customLinks",
                 label: "Custom Links",
-                type: "input"
+                type: "multi-select",
+                fields: [
+                    {
+                        name: "label",
+                        label: "Label",
+                        type: "input",
+                    },
+                    {
+                        name: "url",
+                        label: "URL",
+                        type: "input",
+                    },
+                ],
             },
             {
                 name: "notes",
@@ -138,3 +154,4 @@ export const affiliatePartnerFormSections: FormSection[] = [
         ],
     },
 ];
+

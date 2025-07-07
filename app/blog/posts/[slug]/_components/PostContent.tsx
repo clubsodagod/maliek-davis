@@ -9,6 +9,7 @@ import { Button, CardMedia, Table, TableBody, TableCell, TableHead, TableRow, Ty
 import ComponentTransition from "@/components/layout/ComponentTransition";
 import { IBlogPostClient } from "@/library/types/blog.types";
 import parameterize from "parameterize";
+import Link from "next/link";
 
 type RehypePlugin = (options?: Options) => (tree: any, file: any) => any;
 
@@ -150,7 +151,7 @@ const PostContent: FC<{
                             <TableHead
                                 sx={{
                                     backgroundColor: "#1e1e1e",
-                                    color:"theme.palette.primary.main" // or use `theme.palette.primary.main` if using MUI theme
+                                    color: "theme.palette.primary.main" // or use `theme.palette.primary.main` if using MUI theme
                                 }}
                                 className=" uppercase tracking-wide"
                             >
@@ -184,7 +185,7 @@ const PostContent: FC<{
                                 scope="col"
                                 className="px-4 py-2 font-semibold text-left  bg-(--foreground) text-sm"
                                 sx={{
-                                    color:"#60abe4"
+                                    color: "#60abe4"
                                 }}
                             >
                                 {children}
@@ -201,6 +202,15 @@ const PostContent: FC<{
                             </TableCell>
                         );
                     },
+                    a: ({ children, href }) => {
+                        if (!href) return <>{children}</>;
+                        
+                        return (
+                            <Link href={href || " "} style={{ color: "#60abe4" }} className="underline">
+                                {children}
+                            </Link>
+                        )
+                    }
                 }}
             >
                 {content}

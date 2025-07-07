@@ -52,6 +52,7 @@ export default function RootLayout({
       <head>
         <meta name="fo-verify" content="9566283a-6eb0-4d52-aa2f-b9a20e09e5d6" />
         <meta name='impact-site-verification' content='fe757e82-3b15-4e97-862b-5cbe40ea8e28' />
+        <meta name='impact-site-verification' content='498a267f-4445-4b62-a557-6fa00bdb6847'/>
       </head>
       <body
         className={`${asap.variable} antialiased h-[100dvh] overflow-x-clip `}
