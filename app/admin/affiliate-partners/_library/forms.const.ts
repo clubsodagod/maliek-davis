@@ -128,6 +128,7 @@ export const affiliatePartnerFormSections: FormSection[] = [
             {
                 name: "customLinks",
                 label: "Custom Links",
+                type: "input"
             },
             {
                 name: "notes",

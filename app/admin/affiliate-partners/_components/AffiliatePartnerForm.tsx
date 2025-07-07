@@ -2,7 +2,7 @@
 
 import { useForm, useFieldArray } from "react-hook-form";
 import React, { useEffect, useState } from "react";
-import { IAffiliatePartner, IAffiliatePartnerForm } from "@/database/models/affiliate-partner.model";
+import { IAffiliatePartnerForm } from "@/database/models/affiliate-partner.model";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import FormMultiSelect from "@/components/FormMultiSelect";
@@ -21,9 +21,9 @@ function AffiliatePartnerForm() {
 
     const {
         control,
-        handleSubmit,
+        getValues,
         reset,
-    } = useForm<IAffiliatePartner>({
+    } = useForm<IAffiliatePartnerForm>({
         defaultValues: {
             name: "",
             slug: "",
@@ -38,12 +38,6 @@ function AffiliatePartnerForm() {
             categories: [],
             affiliateCode: "",
             integrationType: "manual",
-            performanceMetrics: {
-                clicks: 0,
-                signups: 0,
-                conversions: 0,
-                revenueGenerated: 0,
-            },
             customLinks: [],
             notes: "",
             active: true,
@@ -66,7 +60,8 @@ function AffiliatePartnerForm() {
         fetchCategoryOptions();
     }, []);
 
-    const onSubmit = async (data: IAffiliatePartner) => {
+    const onSubmit = async () => {
+        const data = getValues();
         await submitAffiliatePartner(data);
         reset();
         setStep(0);
@@ -80,7 +75,7 @@ function AffiliatePartnerForm() {
             adminRef={adminRef}
             className=" p-6 pt-[15vh] "
         >
-            <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl mx-auto space-y-6">
+            <form onSubmit={onSubmit} className="max-w-5xl mx-auto space-y-6">
                 <h2 className="text-2xl font-bold">Create Affiliate Partner</h2>
 
                 <h3 className="text-lg font-semibold">{currentSection.title}</h3>
