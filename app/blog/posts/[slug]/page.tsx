@@ -17,7 +17,7 @@ export const revalidate = 60;
 export const dynamicParams = true // or false, to 404 on unknown paths
 
 export async function generateStaticParams() {
-revalidatePath('/blog/posts/[slug]', 'page')
+    revalidatePath('/blog/posts/[slug]', 'page')
     const posts = await serverBlogFetcher() as unknown as IBlogPost[];
 
     return posts.map((post) => ({
@@ -52,7 +52,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 
     const slug = (await params).slug;
-    const post:IBlogPost|null = await serverGetBlogPostBySlug(slug);
+    const post: IBlogPost | null = await serverGetBlogPostBySlug(slug);
 
     if (!post) {
         return {
@@ -68,7 +68,7 @@ export async function generateMetadata({
         openGraph: {
             title: post.title,
             description: post.metaDescription || post.metaDescription || "",
-            url: `https://maliek-davis.com/blog/${post.slug}`,
+            url: `https://maliek-davis.com/blog/posts/${post.slug}`,
             type: "article",
             images: post.featuredImg
                 ? [{ url: post.featuredImg, alt: post.title }]
@@ -79,6 +79,9 @@ export async function generateMetadata({
             title: post.title,
             description: post.metaDescription || "",
             images: post.featuredImg ? [post.featuredImg] : [],
+        },
+        alternates: {
+            canonical: `/blog/posts/${post.slug}`,
         },
     };
 }

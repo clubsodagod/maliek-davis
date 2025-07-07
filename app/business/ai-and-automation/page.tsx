@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "ai-powered business tools",
         "ai for small business owners",
     ],
+    alternates: {
+        canonical: "/business/ai-and-automation",
+    },
     openGraph: {
         title: "Automate Like a Boss | AI & Automation with Maliek Davis",
         description:

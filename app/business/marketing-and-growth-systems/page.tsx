@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "entrepreneur marketing tools",
         "scalable growth systems",
     ],
+        alternates: {
+            canonical: "/business/marketing-and-growth-systems",
+        },
     openGraph: {
         title: "Marketing & Growth Systems That Scale | Maliek Davis",
         description:

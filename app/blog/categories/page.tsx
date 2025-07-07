@@ -30,11 +30,14 @@ export const metadata: Metadata = {
         "entrepreneur blog filter",
         "maliek davis categories",
     ],
+    alternates: {
+        canonical: "/blog/categories",
+    },
     openGraph: {
         title: "Categories | Maliek Davis Blog",
         description:
             "Choose your interest — browse categories for targeted insights in real estate, automation, growth, and more.",
-        url: "https://maliek-davis.com/categories",
+        url: "https://maliek-davis.com/blog/categories",
         siteName: "Maliek Davis",
         type: "website",
     },

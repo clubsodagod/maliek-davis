@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "small business branding",
         "run your business like a boss",
     ],
+    alternates: {
+        canonical: "/business",
+    },
     openGraph: {
         title: "Build & Scale Your Business | Maliek Davis",
         description:

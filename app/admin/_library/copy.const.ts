@@ -168,6 +168,22 @@ export const adminSections: AdminSection[] = [
         path: "/admin/affiliate-partners",
         description: "Manage affiliate relationships, track performance, and approve applications.",
         image: "/images/admin/affiliates.png",
+        subSections: [
+            {
+                name: "affiliatePartnersCreate",
+                label: "Create Affiliate Partner",
+                path: "/admin/affiliate-partners/create",
+                description: "Add a new affiliate partner to expand your network and grow your reach.",
+                image: "/images/admin/affiliate-partner.jpg",
+            },
+            {
+                name: "affiliatePartnersUpdate",
+                label: "Update Affiliate Partners",
+                path: "/admin/affiliate-partners/update",
+                description: "Edit existing affiliate partners to keep information accurate and up to date.",
+                image: "/images/admin/affiliate-partner.jpg",
+            }
+        ]
     },
 ];
 

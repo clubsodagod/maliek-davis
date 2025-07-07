@@ -33,6 +33,9 @@ export const metadata: Metadata = {
         "blog for founders",
         "startup technology blog",
     ],
+        alternates: {
+            canonical: "/blog",
+        },
     openGraph: {
         title: "Insights on Real Estate, Business, and Tech | Maliek Davis Blog",
         description:

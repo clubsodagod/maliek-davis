@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description =
         category.description || `Read the latest blog posts and insights on ${name}.`;
 
-    const url = `https://maliek-davis.com/categories/${category.slug}`;
+    const url = `https://maliek-davis.com/blog/categories/${category.slug}`;
 
     return {
         title: `${name} Articles | Maliek Davis`,
@@ -76,6 +76,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             `maliek davis ${category.slug}`,
             `${name.toLowerCase()} insights`,
         ],
+        alternates: {
+            canonical: `/blog/categories/${category.slug}`,
+        },
         openGraph: {
             title: `${name} Blog Posts | Maliek Davis`,
             description,

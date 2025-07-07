@@ -30,6 +30,9 @@ export const metadata: Metadata = {
         "contact software engineer",
         "technology strategy contact",
     ],
+        alternates: {
+            canonical: "/contact",
+        },
     openGraph: {
         title: "Let’s Talk Real Estate, Business & Tech | Contact Maliek Davis",
         description:

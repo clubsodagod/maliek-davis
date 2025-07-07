@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "brand voice",
         "startup branding services",
     ],
+    alternates: {
+        canonical: "/business/branding",
+    },
     openGraph: {
         title: "Small Business Branding That Hits Different | Maliek Davis",
         description:

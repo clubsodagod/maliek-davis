@@ -28,6 +28,9 @@ export const metadata: Metadata = {
         "Maliek Davis buyers",
         "exclusive property deals",
     ],
+    alternates: {
+        canonical: "/real-estate/prestige-partners",
+    },
     openGraph: {
         title: "Apply to Prestige Partners | Off-Market Deals for Buyers",
         description:

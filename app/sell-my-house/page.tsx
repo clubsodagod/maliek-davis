@@ -26,6 +26,9 @@ export const metadata: Metadata = {
         "motivated seller help",
         "fair cash offer house",
     ],
+        alternates: {
+            canonical: "/sell-my-house",
+        },
     openGraph: {
         title: "Sell Your House Fast | Trusted Michigan Buyer | Maliek Davis",
         description:

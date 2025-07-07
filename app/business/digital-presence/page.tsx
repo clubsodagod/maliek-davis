@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "professional web design",
         "entrepreneur web presence",
     ],
+    alternates: {
+        canonical: "/business/digital-presence",
+    },
     openGraph: {
         title: "Build Your Digital Presence | Maliek Davis",
         description:

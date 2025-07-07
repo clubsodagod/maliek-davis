@@ -19,6 +19,9 @@ export const metadata: Metadata = {
         "entrepreneur planning",
         "small business coaching",
     ],
+    alternates: {
+        canonical: "/business/business-planning",
+    },
     openGraph: {
         title: "Plan Like a CEO | Business Planning with Maliek Davis",
         description:

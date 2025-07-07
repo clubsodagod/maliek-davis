@@ -29,11 +29,14 @@ export const metadata: Metadata = {
         "blog for founders",
         "startup technology blog",
     ],
+    alternates: {
+        canonical: "/blog/posts",
+    },
     openGraph: {
         title: "Insights on Real Estate, Business, and Tech | Maliek Davis Blog",
         description:
             "Learn how to level up your business, build smarter systems, and navigate real estate with confidence. Weekly insights from Maliek Davis.",
-        url: "https://maliek-davis.com/blog",
+        url: "https://maliek-davis.com/blog/posts",
         siteName: "Maliek Davis",
         type: "website",
     },

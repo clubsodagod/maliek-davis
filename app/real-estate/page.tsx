@@ -37,6 +37,9 @@ export const metadata: Metadata = {
         "property acquisition",
         "real estate entrepreneur",
     ],
+    alternates: {
+        canonical: "/real-estate",
+    },
     openGraph: {
         title: "Real Estate by Maliek Davis",
         description:
