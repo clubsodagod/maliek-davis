@@ -30,7 +30,6 @@ export async function submitAffiliatePartner(form: IAffiliatePartnerForm): Promi
             tagline: form.tagline,
             websiteUrl: form.websiteUrl,
             logoUrl: form.logoUrl,
-            bannerUrl: form.bannerUrl,
 
             email: form.email,
             contactName: form.contactName,
@@ -45,8 +44,6 @@ export async function submitAffiliatePartner(form: IAffiliatePartnerForm): Promi
 
             notes: form.notes,
 
-            createdAt: form.createdAt || new Date(),
-            updatedAt: new Date(),
         });
 
         await newPartner.save();
