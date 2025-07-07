@@ -9,7 +9,6 @@ import ChooseYourPathCTA from '@/components/contact-forms/ChooseYourPathCTA'
 import type { Metadata } from "next";
 
 
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "My Approach to Technology & Systems Design | Maliek Davis",
