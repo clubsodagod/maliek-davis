@@ -5,6 +5,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Controller, Control, FieldValues, Path, PathValue } from "react-hook-form";
 import { MotionDiv } from "../motion/MotionDiv";
 import RelatedPostsList from "./RelatedPostsList";
+import AffiliatePartnerLinkList, { AffiliatePartner } from "./AffiliatePartnerLinkList";
 
 interface RichTextInputProps<T extends FieldValues = FieldValues> {
     name: Path<T>;
@@ -12,26 +13,26 @@ interface RichTextInputProps<T extends FieldValues = FieldValues> {
     control: Control<T>;
     defaultValue?: PathValue<T, Path<T>>;
     relatedLinks?: { title: string; slug: string }[];
+    affiliatePartners?: AffiliatePartner[];
 }
 
 export default function RichTextInput<T extends FieldValues>({
     name,
-    label,
     control,
     defaultValue,
     relatedLinks,
+    affiliatePartners
 }: RichTextInputProps<T>) {
 
     return (
         <MotionDiv className="flex flex-col gap-3 w-full  md:px-12">
-            {label && <label className="font-semibold text-lg">{label}</label>}
             <Controller
                 name={name}
                 control={control}
                 defaultValue={defaultValue}
                 render={({ field: { onChange, value } }) => (
                     <MotionDiv
-                        className={`w-full flex flex-col md:flex-row gap-3`}
+                        className={`w-full flex flex-col lg:flex-row gap-6`}
                     >
 
                         <MotionDiv
@@ -64,17 +65,33 @@ export default function RichTextInput<T extends FieldValues>({
                         </MotionDiv>
 
 
-                        {relatedLinks && relatedLinks.length > 0 && (
+                        <div
+                            className="lg:w-1/3 lg:min-w-1/3 w-full flex lg:flex-row flex-col  gap-3"
+                        >
                             <div
-                                className="w-1/3 min-w-1/3"
+                                className="lg:w-1/2"
                             >
                                 <RelatedPostsList
                                     posts={relatedLinks}
                                 />
                             </div>
 
-                        )
-                        }
+                            <div
+                                className="lg:w-1/2"
+                            >
+                                {
+                                    affiliatePartners && affiliatePartners.length > 0 && (
+                                            <AffiliatePartnerLinkList
+                                                partners={affiliatePartners}
+                                            />
+                                    )
+                                }
+                            </div>
+
+                        </div>
+
+
+
                     </MotionDiv>
                 )}
             />

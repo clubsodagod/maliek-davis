@@ -10,8 +10,10 @@ import FormMultiSelect from "@/components/FormMultiSelect";
 import RichTextInput from "@/components/tinyMCE/RichTextInput";
 import { IBlogPostClient } from "@/database/models/blog-posts.model";
 import { blogPostFormSections } from "../../_library/forms.const";
-import { submitBlogPost, getSubcategoryOptions, getCategoryOptions, getRelatedPostsLinks } from "@/utility/fetchers/content-manager.fetcher";
+import { submitBlogPost, getSubcategoryOptions, getCategoryOptions, getRelatedPostsLinks, getCategoryById } from "@/utility/fetchers/content-manager.fetcher";
 import { Button } from "@mui/material";
+import { AffiliatePartner } from "@/components/tinyMCE/AffiliatePartnerLinkList";
+import { getAffiliatePartnerOptions } from "@/utility/fetchers/affiliate-partners.fetcher";
 
 
 
@@ -21,6 +23,8 @@ export function BlogPostForm() {
     const [categoryOptions, setCategoryOptions] = useState<{ label: string; value: string }[]>([]);
     const [subcategoryOptions, setSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
     const [relatedLinks, setRelatedLinks] = useState<{ title: string; slug: string }[]>([]);
+    const [filteredSubcategoryOptions, setFilteredSubcategoryOptions] = useState<{ label: string; value: string }[]>([]);
+    const [affiliatePartners, setAffiliatePartners] = useState<AffiliatePartner[]>([]);
 
     const {
         control,
@@ -53,28 +57,53 @@ export function BlogPostForm() {
 
     }, []);
 
-        const category = watch("category");
+    const category = watch("category");
 
     useEffect(() => {
         if (status === "authenticated" && session?.user?._id) {
             const userId =
                 typeof session.user._id === "string"
                     ? session.user._id
-                    : "681fa586c53053e82efbdb00"; // Explicit BSON serialization
+                    : "681fa586c53053e82efbdb00";
             setValue("author", userId);
-
         }
-        
 
-        const fetchLinks = async () => {
+        const fetchLinksAndFilterSubs = async () => {
             if (category) {
                 const links = await getRelatedPostsLinks(category);
                 setRelatedLinks(links);
+                const affiliateRes = await getAffiliatePartnerOptions(category);
+                console.log("Affiliate Partners:", affiliateRes);
+                
+                setAffiliatePartners(affiliateRes);
+
+                const selectedCategory = categoryOptions.find(cat => cat.value === category);
+
+                if (selectedCategory) {
+                    // Assume you have a way to fetch the full category object with its subcategories
+                    const res = await getCategoryById(selectedCategory.value);
+                    let fullCategory = null;
+                    if (res) {
+                        fullCategory = await res;
+                    }
+
+                    if (fullCategory && Array.isArray(fullCategory.subcategories)) {
+                        const matchingSubcats = subcategoryOptions.filter(sub =>
+                            fullCategory.subcategories.includes(sub.value)
+                        );
+                        setFilteredSubcategoryOptions(matchingSubcats);
+                    } else {
+                        setFilteredSubcategoryOptions([]);
+                    }
+                } else {
+                    setFilteredSubcategoryOptions([]);
+                }
             }
         };
 
-        fetchLinks();
-    }, [session, setValue, status, category]);
+
+        fetchLinksAndFilterSubs();
+    }, [session, setValue, status, category, categoryOptions, subcategoryOptions]);
 
 
 
@@ -133,7 +162,8 @@ export function BlogPostForm() {
 
                 if (field.type === "multi-select") {
                     const options =
-                        field.name === "subcategories" ? subcategoryOptions : field.options!;
+                        field.name === "subcategories" ? filteredSubcategoryOptions : field.options!;
+
                     return options.length ? (
                         <FormMultiSelect
                             key={field.name}
@@ -167,6 +197,7 @@ export function BlogPostForm() {
                             label={field.label}
                             control={control}
                             relatedLinks={relatedLinks}
+                            affiliatePartners={affiliatePartners}
                         />
                     );
                 }

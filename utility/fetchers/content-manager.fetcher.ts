@@ -436,6 +436,29 @@ export async function getAllCategories() {
         updatedAt: cat.updatedAt?.toISOString?.(),
     }));
 }
+export async function getCategoryById(id: string) {
+    await connectToDB();
+
+    const catArr = await CategoryModel.find({ _id: id });
+
+    const cat = catArr[0];
+    if (!cat) return null;
+
+    return {
+        _id: cat._id.toString(),
+        name: cat.name,
+        slug: cat.slug,
+        tagline: cat.tagline,
+        description: cat.description,
+        subcategories: Array.isArray(cat.subcategories)
+            ? cat.subcategories.map((id) => id.toString())
+            : [],
+        photo: cat.photo,
+        video: cat.video,
+        createdAt: cat.createdAt?.toISOString?.(),
+        updatedAt: cat.updatedAt?.toISOString?.(),
+    }
+}
 
 
 export async function submitCategory(form: ICategoryForm): Promise<ResponseStatus> {

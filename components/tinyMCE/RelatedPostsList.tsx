@@ -13,7 +13,7 @@ interface RelatedPost {
 }
 
 interface RelatedPostListProps {
-    posts: RelatedPost[];
+    posts?: RelatedPost[]|null;
 }
 
 const MotionBox = motion(Box);
@@ -80,45 +80,49 @@ const RelatedPostList: React.FC<RelatedPostListProps> = ({ posts }) => {
                 </IconButton>
             </Box>
 
-            {/* Existing post list */}
-            <Box
-                sx={{
-                    maxHeight: 300,
-                    overflowY: "auto",
-                    border: "1px solid #ccc",
-                    borderRadius: 2,
-                    p: 2,
-                    width: "100%",
-                }}
-                className="bg-(--foreground) shadow-md shadow-gray-500/80"
-            >
-                {posts.map((post, index) => {
-                    const isWobble = copiedSlug === post.slug;
+            {
+                posts && posts?.length > 0 && (
+                    < Box
+                        sx={{
+                            maxHeight: 300,
+                            overflowY: "auto",
+                            border: "1px solid #ccc",
+                            borderRadius: 2,
+                            p: 2,
+                            width: "100%",
+                        }}
+                        className="bg-(--foreground) shadow-md shadow-gray-500/80"
+                    >
+                        {posts.map((post, index) => {
+                            const isWobble = copiedSlug === post.slug;
 
-                    return (
-                        <MotionBox
-                            key={post.slug}
-                            onClick={() => handleCopy(post.slug)}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            {...(isWobble ? wobbleAnimation : {})}
-                            sx={{
-                                cursor: "pointer",
-                                backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#e0e0e0",
-                                p: 2,
-                                borderRadius: 1,
-                                mb: 1,
-                                transition: "background-color 0.3s",
-                            }}
-                        >
-                            <Typography variant="body1" fontWeight={500} fontSize="0.8rem">
-                                {post.title}
-                            </Typography>
-                        </MotionBox>
-                    );
-                })}
-            </Box>
-        </Box>
+                            return (
+                                <MotionBox
+                                    key={post.slug}
+                                    onClick={() => handleCopy(post.slug)}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    {...(isWobble ? wobbleAnimation : {})}
+                                    sx={{
+                                        cursor: "pointer",
+                                        backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#e0e0e0",
+                                        p: 2,
+                                        borderRadius: 1,
+                                        mb: 1,
+                                        transition: "background-color 0.3s",
+                                    }}
+                                >
+                                    <Typography variant="body2" fontWeight={500} fontSize="0.6rem">
+                                        {post.title}
+                                    </Typography>
+                                </MotionBox>
+                            );
+                        })}
+                    </Box>
+                )
+            }
+
+        </Box >
     );
 };
 

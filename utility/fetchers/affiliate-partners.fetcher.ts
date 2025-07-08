@@ -63,3 +63,24 @@ export async function submitAffiliatePartner(form: IAffiliatePartnerForm): Promi
         };
     }
 }
+
+
+export async function getAffiliatePartnerOptions(category: string) {
+    await connectToDB();
+
+    const partners = await AffiliatePartnerModel.find({
+        categories: { $in: [category] }
+    })
+        .select("name affiliateCode logoUrl")
+        .lean();
+
+    if (!partners || partners.length === 0) {
+        return [];
+    }
+
+    return partners.map(partner => ({
+        name: partner.name,
+        link: partner.affiliateCode || "",
+        photo: partner.logoUrl || "",
+    }));
+}
