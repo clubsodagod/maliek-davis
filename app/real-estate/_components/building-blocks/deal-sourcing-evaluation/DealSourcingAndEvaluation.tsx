@@ -47,11 +47,11 @@ const DealSourcingAndEvaluation = () => {
 
     return (
         <div
-            className='relative'
+            className='relative max-w-full'
         >
             <BackgroundUnderlay visible={true} />
 
-            <div className="absolute top-0 max-h-screen">
+            <div className="absolute top-0 max-h-screen max-w-screen">
                 <SectionWrapper
                     id="investments-real-estate-deal-sourcing-and-evaluation-section"
                     ref={sectionRef}
@@ -61,7 +61,7 @@ const DealSourcingAndEvaluation = () => {
                     transition={transitionHeaderAnimation}
                     exit={{ opacity: 0, scaleY: 0 }}
                 >
-                    <div className="relative w-screen h-full -left-6 top-[-12vh] pt-[12vh] pb-[10vh] px-6 rounded-b-4xl shadow-2xl bg-(--background) ">
+                    <div className="relative w-screen h-full -left-6 top-[-15vh] pt-[12vh] pb-[10vh] px-6 rounded-b-4xl shadow-2xl bg-(--background) ">
 
 
 

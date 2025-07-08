@@ -7,48 +7,63 @@ import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
 import parameterize from 'parameterize';
-import { Box, Typography, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import {
+    Box,
+    Typography,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText
+} from '@mui/material';
+
+type TOCEntry = {
+    id: string;
+    title: string;
+    tag: 'h1' | 'h2' | 'h3';
+};
 
 const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
-    const toc: { id: string; title: any; }[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const content = unified()
-        .use(rehypeParse, {
-            fragment: true,
-        })
+    const toc: TOCEntry[] = [];
+
+    unified()
+        .use(rehypeParse, { fragment: true })
         .use(() => {
             return (tree) => {
-                visit(tree, 'element', function (node: any) {
-                    if (node.tagName === 'h3' && node.children?.[0]?.type === 'text' && typeof node.children[0].value === 'string') {
-                        const id = parameterize(node.children[0].value);
+                visit(tree, 'element', (node: any) => {
+                    const tag = node.tagName;
+                    if (!['h1', 'h2', 'h3'].includes(tag)) return;
 
-                        node.properties = node.properties || {};
-                        node.properties.id = id;
+                    const textNode = node.children?.[0];
+                    const isValid = textNode?.type === 'text' && typeof textNode.value === 'string';
+                    if (!isValid) return;
 
-                        toc.push({
-                            id,
-                            title: node.children[0].value,
-                        });
-                    }
+                    const title = textNode.value;
+                    const id = parameterize(title);
+
+                    node.properties = node.properties || {};
+                    node.properties.id = id;
+
+                    toc.push({ id, title, tag });
                 });
-                return;
             };
         })
-        .use(() => {
-            return (tree) => {
-                console.log('tree', tree);
-            }
-        })
         .use(rehypeStringify)
-        .processSync(payload)
-        .toString();
+        .processSync(payload);
+
+    const getIndentation = (tag: TOCEntry['tag']) => {
+        switch (tag) {
+            case 'h1': return 0;
+            case 'h2': return 2;
+            case 'h3': return 4;
+            default: return 0;
+        }
+    };
 
     return (
         <Box
             component="nav"
             sx={{
                 width: "100%",
-                maxWidth: 360,
                 borderRadius: 2,
                 p: 2,
             }}
@@ -57,8 +72,8 @@ const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
                 Table of Contents
             </Typography>
             <List dense>
-                {toc.map(({ id, title }) => (
-                    <ListItem key={id} disablePadding>
+                {toc.map(({ id, title, tag }) => (
+                    <ListItem key={id} disablePadding sx={{ pl: getIndentation(tag) }}>
                         <ListItemButton
                             component="a"
                             href={`#${id}`}
@@ -68,7 +83,7 @@ const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
                         >
                             <ListItemText
                                 primary={
-                                    <Typography variant="body2" color="">
+                                    <Typography variant="body2">
                                         - {title}
                                     </Typography>
                                 }
@@ -78,9 +93,7 @@ const TableOfContents: React.FC<{ payload: any }> = ({ payload }) => {
                 ))}
             </List>
         </Box>
-    )
-}
-
-
+    );
+};
 
 export default TableOfContents;

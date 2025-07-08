@@ -56,7 +56,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
             exit={{ opacity: 0, scaleY: 0 }}
         >
             <div
-                className='flex flex-col justify-between h-full grow  sm:px-[12.5vw]'
+                className='flex flex-col justify-between max-w-full h-full grow  sm:px-[12.5vw]'
             >
                 <MainHeroHeader
                     id={"blog-preview-header"}
@@ -78,7 +78,7 @@ const BlogModule: React.FC<BlogPreviewProps> = ({
                         <FtPostCard
                             post={ftPosts ? ftPosts[ftPost] : null}
                             cardImage={{
-                                className: "2xl:w-full ",
+                                className: "2xl:w-full w-max ",
                             }}
                             cardWrapper={{
                                 className: "w-full h-[400px] 2xl:h-full "

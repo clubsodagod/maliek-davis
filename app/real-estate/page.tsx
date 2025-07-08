@@ -1,8 +1,8 @@
 import React from 'react'
 import RealEstateMainModule from './_components/RealEstateMainModule'
 import { IBlogPost } from '@/database/models/blog-posts.model';
-import { paginatedBlogFetcher } from '@/utility/fetchers/blog.fetcher';
 import { Metadata } from 'next';
+import { clientBlogFetcherNonstatic } from '@/utility/fetchers/blog.server-fetcher';
 
 
 
@@ -10,7 +10,7 @@ import { Metadata } from 'next';
 const RealEstatePage = async () => {
 
 
-    const posts = await paginatedBlogFetcher(0, 0) as unknown as IBlogPost[];
+    const posts = await clientBlogFetcherNonstatic() as unknown as IBlogPost[];
 
     return (
         <>

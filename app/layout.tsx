@@ -38,6 +38,24 @@ export const metadata: Metadata = {
     description:
       "Follow Maliek Davis for insights on tech, real estate, and systems thinking — built to empower.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon-32x32.png",
+    other: [
+      {
+        rel: "android-chrome",
+        url: "/android-chrome-192x192.png",
+      },
+      {
+        rel: "android-chrome",
+        url: "/android-chrome-512x512.png",
+      },
+    ],
+  },
 };
 
 

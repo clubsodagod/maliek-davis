@@ -34,10 +34,10 @@ const FtPostCard: React.FC<PostCardProps> = ({
         <ComponentTransition id={post?._id?.toString() || 'ft-post-loading'}>
             <MotionDiv
                 {...cardWrapper}
-                className="relative cursor-pointer rounded-xl overflow-hidden shadow-md"
+                className="relative cursor-pointer rounded-xl min-w-full shadow-md"
                 onClick={() => setExpanded((prev) => !prev)}
             >
-                    <MotionDiv className="w-full h-[45vh] 2xl:h-full 2xl:w-fit aspect-video overflow-hidden rounded-lg relative group">
+                    <MotionDiv className="min-w-full h-[45vh] 2xl:h-full 2xl:w-fit  overflow-hidden rounded-lg relative group">
                     <div className=" w-full relative h-full">
                         {isLoading ? (
                             <Skeleton variant="rectangular" width="100%" height="100%" />

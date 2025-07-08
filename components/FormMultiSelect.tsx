@@ -36,6 +36,7 @@ function FormMultiSelect<T extends FieldValues>({
                 return (
                     <Autocomplete
                         multiple
+                        disableCloseOnSelect // <--- This keeps the dropdown open
                         options={options}
                         getOptionLabel={(option) => option.label}
                         value={selectedOptions}
