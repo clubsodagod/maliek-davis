@@ -91,7 +91,7 @@ export default function PowerWashingLandingPage() {
 
             {/* Footer */}
             <footer className="text-center py-6 text-sm text-gray-500">
-                Serving Metro Area • Licensed & Insured • © {new Date().getFullYear()} Your Business Name
+                Serving Metro Detroit & Greater Grand Rapids • Licensed & Insured • © {new Date().getFullYear()} Your Business Name
             </footer>
         </>
     );
