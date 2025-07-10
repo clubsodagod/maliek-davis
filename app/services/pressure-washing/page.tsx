@@ -1,9 +1,10 @@
 import LottieEmbed from "@/app/sell-my-house/_components/LottieEmbed";
 import PressureWashingModule from "./_components/PressureWashingModule";
+import { Button } from "@mui/material";
 
 export default function PowerWashingLandingPage() {
     return (
-        <main className="min-h-screen  text-gray-800">
+        <>
             {/* Hero Section */}
             <PressureWashingModule />
 
@@ -13,9 +14,9 @@ export default function PowerWashingLandingPage() {
                     <h2 className="text-4xl font-semibold mb-6 text-center">Services</h2>
 
 
-                    <div className="flex md:flex-wrap gap-10 gap-y-10 justify-center">
+                    <div className="flex flex-wrap gap-10 gap-y-10 justify-center">
                         {/* Residential */}
-                        <div className="bg-white p-6 rounded-xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
+                        <div className=" bg-(--foreground) text-(--background) p-6 rounded-4xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
                             <h3 className="text-xl font-bold mb-2 text-center">🏠 Residential</h3>
 
                             <LottieEmbed
@@ -33,7 +34,8 @@ export default function PowerWashingLandingPage() {
                         </div>
 
                         {/* Small Business */}
-                        <div className="bg-white p-6 rounded-xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
+                        <div className=" bg-(--foreground) text-(--background) p-6 rounded-4xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
+
                             <h3 className="text-xl font-bold mb-2 text-center">🏢 Small Business</h3>
 
                             <LottieEmbed
@@ -50,7 +52,8 @@ export default function PowerWashingLandingPage() {
                         </div>
 
                         {/* Add-Ons */}
-                        <div className=" bg-white p-6 rounded-xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
+                        <div className=" bg-(--foreground) text-(--background) p-6 rounded-4xl shadow sm:min-w-[400px] sm:max-w-[500px] w-full sm:w-full">
+
                             <h3 className="text-xl font-bold mb-2 text-center">🔧 Add-Ons</h3>
 
                             <LottieEmbed
@@ -74,14 +77,14 @@ export default function PowerWashingLandingPage() {
 
             {/* Lead Form Section */}
             <section className="py-12 px-6">
-                <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+                <div className="max-w-xl mx-auto  bg-(--foreground) text-(--background) p-6 rounded-4xl shadow">
                     <h2 className="text-2xl font-bold mb-4 text-center">Get a Free Estimate</h2>
                     <form className="space-y-4">
                         <input type="text" placeholder="Full Name" className="w-full border rounded px-4 py-2" />
                         <input type="tel" placeholder="Phone Number" className="w-full border rounded px-4 py-2" />
                         <input type="email" placeholder="Email Address" className="w-full border rounded px-4 py-2" />
                         <textarea placeholder="Services Needed or Notes" className="w-full border rounded px-4 py-2" rows={4}></textarea>
-                        <button type="submit" className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl">Request Estimate</button>
+                        <Button variant="contained" type="submit" className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl">Request Estimate</Button>
                     </form>
                 </div>
             </section>
@@ -90,6 +93,6 @@ export default function PowerWashingLandingPage() {
             <footer className="text-center py-6 text-sm text-gray-500">
                 Serving Metro Area • Licensed & Insured • © {new Date().getFullYear()} Your Business Name
             </footer>
-        </main>
+        </>
     );
 }

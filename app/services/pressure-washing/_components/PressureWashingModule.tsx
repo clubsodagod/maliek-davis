@@ -24,7 +24,7 @@ const PressureWashingModule = ({ }) => {
     else size = 'xs';
 
     return (
-        <div>
+        <div className='max-w-full'>
             {/* Background GIF */}
             <video
                 autoPlay
