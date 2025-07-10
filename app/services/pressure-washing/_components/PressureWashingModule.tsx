@@ -33,7 +33,7 @@ const PressureWashingModule = ({ }) => {
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-cover z-[-10]"
             >
-                <source src="https://lh3.googleusercontent.com/pw/AP1GczOcYmDSSMNv0nUMbkW4trMt3Yk9_85xvhQYHmQghaUKhLDfww6cTJbxVLL7QW5U2A6xi7Z0VOWsFLLWnIbPg-bRlkpBmVjcBo7VOq0DZq-AWSOcyZR7sViJYKkAUB3wU5ifP8M5g4ocxXzUBJYiMSwTkZmkAkMzOmiA5PWsos57pegXBKQCA6Tw-0nhL4G1eIbHQcZQOMUV8YPmUUJw0kTqWLafl_-yTO-zQ8Ap39ihPUAcduzlB1h8QWMc86YLfgxKxbGbDBZMvBpYosy5XnIgRjwOUikHbDqhzNmJy_-fm2ARa_3Q3MDVtj7_QXLa0a6dyICLm-jDD6tvc3BZIMICuIncANt9QnzlUN3cLPFLuwU0Gjwl4EO8MwQ9-MBnvL9FWLae6pIAPnG4Ovc_5vocB_KGPDoeYHEx-S_cO1bdBk2XwoVP8Un_hJstVySbiOee52ehPNqfkeQhR1dsKdI34CBaBsaV0Bh5GGH_oWjqF8aettb6UEkRk--32jS8lCwkcTFL-jKgDTVQTg-Ue2Dgl6ACt_Tj_FTq-sR8oAoMyHALstQM6W_JdVLgdPm_W0DkqA2vCz_1Mq5lvzoL3GVwMF5XlW6_Z3Od6hyufPbd41nBYMTw6O95k_c-sQJrunVw4p5DGirOAh0tw2_iUUHcr0Bu4aJ-rxoBJ4q3gq_SKmx5No_e6000rRmOCQPlTGLnJEw5UowuDnBWb1HD4XXy_J8IwfzcMUtbdoQGvbJCxAM3k4BXZ0XNuMVpc7qmjg3vbUKj-1YI1vDrZecCZBXRIUtZthMok-z948jQZX8wmpZlDd6-RFbSJ-HbSaN3jWHrKVcDAB_fmJzUmvsV57xtnryAaaMv93_BAVbgRT3xLTbC7i_49t_XiTANErcIDVQ=m15?authuser=0&cpn=UYwHrvn3iTQi_Okp&c=WEB_EMBEDDED_PLAYER&cver=1.20250707.21.00" type="video/mp4" />
+                <source src="https://res.cloudinary.com/dyfhsjtwo/video/upload/v1752107894/pw_1_xnfbad.mp4" type="video/mp4" />
                 Your browser does not support the video tag!
             </video>
 
