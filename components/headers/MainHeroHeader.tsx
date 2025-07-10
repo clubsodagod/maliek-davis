@@ -47,6 +47,7 @@ const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
         <ComponentTransition id={id} className={`h-fit ${textCenter}`}>
             <div>
                         <Typography
+                        fontSize={size === 'xs' ? '1.25rem' : size === 'sm' ? '1.5rem' : size === 'md' ? '1.75rem' : size === 'lg' ? '2rem' : size === 'xl' ? '3.75rem' : '3.75rem'}
                 variant={variant()}
                 color="primary"
                 component={MotionDiv}
@@ -64,6 +65,7 @@ const MainHeroHeader: React.FC<MainHeroHeaderProps> = ({
 
             {typeof tagline === 'string' ? (
                 <Typography
+                    fontSize={size === 'xs' ? '1rem' : size === 'sm' ? '1.25rem' : size === 'md' ? '1.5rem' : size === 'lg' ? '0.75rem' : size === 'xl' ? '1.25rem' : '1.25rem'}
                     className={taglineClassName}
                     variant="subtitle1"
                     component={MotionDiv}
