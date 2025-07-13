@@ -4,6 +4,7 @@ export type FormFieldType =
     | 'tel'
     | 'number'
     | 'select'
+    | 'multi-select'
     | 'textarea'
     | 'file'
     | 'multi-file'

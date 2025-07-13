@@ -170,6 +170,8 @@ export async function getAnnouncementBySlug(slug: string) {
 
 export async function submitBlogPost(form: IBlogPostClient): Promise<ResponseStatus> {
     try {
+        console.log('[submitBlogPost] form:', form);
+        
         await connectToDB();
 
         // Validate and convert category and subcategories to ObjectId
@@ -178,11 +180,7 @@ export async function submitBlogPost(form: IBlogPostClient): Promise<ResponseSta
             return { success: false, error: true, message: 'Invalid category selected.' };
         }
 
-        const subcategoryDocs = await CategoryModel.find({
-            _id: { $in: form.subcategories }
-        });
 
-        const subcategoryIds = subcategoryDocs.map(doc => doc._id);
         console.log(form.author, 'author');
 
         // Create blog post
@@ -197,7 +195,7 @@ export async function submitBlogPost(form: IBlogPostClient): Promise<ResponseSta
             featuredImg: form.featuredImg,
             content: form.content,
             category: categoryDoc._id,
-            subcategories: subcategoryIds,
+            subcategories: form.subcategories,
             tags: form.tags,
             author: form.author,
         });
@@ -597,14 +595,15 @@ export async function updateSubcategory(data: ISubcategoryForm): Promise<{ succe
 }
 
 
-export async function getAllSubcategories(): Promise<ISubcategoryForm[]> {
+export async function getAllSubcategories() {
     try {
         await connectToDB();
 
-        const subcategories = await SubcategoryModel.find({}).sort({ updatedAt: -1 }).lean();
+        const subcategories = await SubcategoryModel.find({}).sort({ updatedAt: -1 });
+        console.log(subcategories, 'subcategories');
 
         return subcategories.map((sub) => ({
-            _id: sub._id,
+            _id: sub._id.toString(),
             name: sub.name,
             slug: sub.slug,
             tagline: sub.tagline,
@@ -612,8 +611,8 @@ export async function getAllSubcategories(): Promise<ISubcategoryForm[]> {
             subcategories: sub.subcategories, // Optional: could be nested sub-subcategories
             photo: sub.photo,
             videoS: sub.video,
-            createdAt: sub.createdAt,
-            updatedAt: sub.updatedAt,
+            createdAt: sub.createdAt.toISOString(),
+            updatedAt: sub.updatedAt.toISOString(),
         }));
     } catch (error) {
         console.error('Failed to fetch subcategories:', error);
@@ -641,10 +640,10 @@ export async function updateCategory(data: ICategoryForm): Promise<{ success: bo
     }
 }
 
-export async function getRelatedPostsLinks(category:string): Promise<{ title: string; slug: string }[]> {
+export async function getRelatedPostsLinks(category: string): Promise<{ title: string; slug: string }[]> {
     await connectToDB();
 
-    const data = await BlogPostModel.find({category:category})
+    const data = await BlogPostModel.find({ category: category })
         .select("title slug")
         .lean();
 

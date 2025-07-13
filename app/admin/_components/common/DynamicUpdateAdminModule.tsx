@@ -16,6 +16,7 @@ import { DynamicContentCard } from "./DynamicContentCard";
 import { CategoryUpdateForm } from "../forms/update/CategoryUpdateForm";
 import { ContentItem, FormType } from "../../_library/admin.types";
 import { AnimatePresence } from "motion/react";
+import { SubcategoryUpdateForm } from "../forms/update/SubcategoryUpdateForm";
 
 
 
@@ -41,11 +42,11 @@ const DynamicUpdateModule: React.FC<DynamicUpdateModuleProps> = ({ formType }) =
     const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
+
     // Fetch subcategories once
     useEffect(() => {
         getSubcategoryOptions().then(setSubcategoryOptions);
     }, []);
-
     const reloadContent = async () => {
         const contentFetchers: Record<FormType, () => Promise<any[]>> = {
             "announcement": getAnnouncements,
@@ -105,9 +106,9 @@ const DynamicUpdateModule: React.FC<DynamicUpdateModuleProps> = ({ formType }) =
                 break;
 
             case "subcategory":
-                // if (selectedContent.type === "subcategory") {
-                //     return <SubcategoryUpdateForm {...commonProps} />;
-                // }
+                if (selectedContent.type === "subcategory") {
+                    return <SubcategoryUpdateForm content={selectedContent.payload} onSuccess={reloadContent} />;
+                }
                 break;
 
             case "blog-post":
@@ -190,7 +191,17 @@ const DynamicUpdateModule: React.FC<DynamicUpdateModuleProps> = ({ formType }) =
                 );
 
             case "subcategory":
-                return null;
+                return  (
+                    <DynamicContentCard
+                        type="category"
+                        content={{
+                            name: item.payload.name,
+                            tagline: item.payload.tagline,
+                            description: item.payload.description,
+                            photo: item.payload.photo,
+                        }}
+                    />
+                );
 
             default:
                 return null;
@@ -212,6 +223,7 @@ const DynamicUpdateModule: React.FC<DynamicUpdateModuleProps> = ({ formType }) =
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedContent])
+
     return (
         <AdminWrapper
             id={id}

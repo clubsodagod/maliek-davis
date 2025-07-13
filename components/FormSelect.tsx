@@ -7,7 +7,7 @@ interface FormSelectProps<T extends FieldValues> {
     options: { label: string; value: string | number | readonly string[] | undefined }[];
     control: Control<T>;
     defaultValue?: PathValue<T, Path<T>>;
-    error?: boolean|null;
+    error?: boolean | null;
 }
 
 export default function FormSelect<T extends FieldValues>({
@@ -23,18 +23,40 @@ export default function FormSelect<T extends FieldValues>({
             control={control}
             defaultValue={(defaultValue ?? "") as PathValue<T, Path<T>>}
             render={({ field }) => (
-                <FormControl fullWidth variant="filled">
+                <FormControl fullWidth variant="outlined">
                     <InputLabel
                         variant="outlined"
                         sx={{
-                            color: 'var(--label-color)',
+                            color: 'var(--label-light-white)',
+                            borderRadius: '34px',
                         }}
-                    >{label}</InputLabel>
+                    >
+                        {label}
+                    </InputLabel>
                     <Select
                         variant="outlined"
                         {...field}
                         value={field.value ?? ""}
                         label={label}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                borderRadius: '34px',
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'var(--label-light-white)',
+                                borderRadius: '34px',
+                                borderWidth: '2px',
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#8f11cc',
+                            },
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#60abe4',
+                            },
+                            '& .MuiSelect-select': {
+                                padding: '12px 16px',
+                            },
+                        }}
                     >
                         <MenuItem value="" disabled>
                             Select an option
@@ -50,3 +72,4 @@ export default function FormSelect<T extends FieldValues>({
         />
     );
 }
+

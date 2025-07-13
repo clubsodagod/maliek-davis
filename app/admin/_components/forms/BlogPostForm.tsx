@@ -11,7 +11,7 @@ import RichTextInput from "@/components/tinyMCE/RichTextInput";
 import { IBlogPostClient } from "@/database/models/blog-posts.model";
 import { blogPostFormSections } from "../../_library/forms.const";
 import { submitBlogPost, getSubcategoryOptions, getCategoryOptions, getRelatedPostsLinks, getCategoryById } from "@/utility/fetchers/content-manager.fetcher";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { AffiliatePartner } from "@/components/tinyMCE/AffiliatePartnerLinkList";
 import { getAffiliatePartnerOptions } from "@/utility/fetchers/affiliate-partners.fetcher";
 
@@ -111,7 +111,8 @@ export function BlogPostForm() {
 
 
     const onSubmit = async (data: IBlogPostClient) => {
-
+        console.log(data);
+        
         const result = await submitBlogPost(data);
         console.log("Blog post submitted:", result);
 
@@ -130,7 +131,8 @@ export function BlogPostForm() {
             <h2 className="text-2xl font-bold">Create Blog Post</h2>
 
             <h3 className="text-lg font-semibold">{currentSection.title}</h3>
-            {currentSection.fields.map((field) => {
+            <Box className="bg-[#171717a7] p-4 rounded-[50px] shadow-md">
+                            {currentSection.fields.map((field) => {
                 if (field.type === "input" || field.type === "textarea") {
                     return (
                         <FormInput
@@ -204,6 +206,8 @@ export function BlogPostForm() {
 
                 return null;
             })}
+            </Box>
+
 
             <div className="flex justify-between pt-4">
                 {step > 0 && (

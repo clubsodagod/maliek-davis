@@ -11,6 +11,7 @@ export default async function BlogPage() {
     const categories = await getAllBlogPostCategories() as unknown as ICategory[];
 
     const posts = await clientBlogFetcherNonstatic() as unknown as IBlogPost[];
+console.log('Fetched posts:', posts, 'categories:', categories.length);
 
     return (
         <BlogPageMainModule posts={posts} categories={categories} />

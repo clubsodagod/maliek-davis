@@ -166,7 +166,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                             aria-label="open drawer"
                             edge="start"
                             onClick={handleDrawerToggle}
-                            sx={{ mr: 2, display: { sm: 'none' } }}
+                            sx={{ mr: 2, display: { md: 'none' } }}
                         >
                             <div
                                 className='flex items-center justify-center py-3'
@@ -195,17 +195,17 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                                 style={{
                                     objectFit: "cover", width: `${100}px`, height: `auto`
                                 }}
-                                className="cursor-pointer hidden sm:block "
+                                className="cursor-pointer hidden md:block "
                             />
                         </Link>
                         <Typography
                             variant="h6"
                             component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                            sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}
                         >
 
                         </Typography>
-                        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                             {navigationPaths.map((item) => {
 
                                 const isActive = pathname === item.path;
@@ -270,7 +270,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = () => {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={(theme) => ({
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', md: 'none' },
                         '& .MuiDrawer-paper': {
                             boxSizing: 'border-box', width: drawerWidth,
                             backgroundColor: theme.palette.mode === "dark" ? "#FAFAFA95" : "#2323239e",

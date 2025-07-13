@@ -42,7 +42,27 @@ function FormMultiSelect<T extends FieldValues>({
                         value={selectedOptions}
                         onChange={(_, selected) => field.onChange(selected.map((opt) => opt.value))}
                         renderInput={(params) => (
-                            <TextField {...params} label={label} variant="filled" />
+                            <TextField {...params} label={label} variant="outlined" sx={{
+                                borderRadius: '34px',
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '34px',
+                                    borderColor: 'transparent',
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: 'var(--label-light-white)',
+                                    borderRadius: '34px',
+                                    borderWidth: '2px',
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#8f11cc',
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#60abe4',
+                                },
+                                '& .MuiSelect-select': {
+                                    padding: '12px 16px',
+                                },
+                            }} />
                         )}
                     />
                 );

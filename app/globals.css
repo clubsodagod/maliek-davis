@@ -3,8 +3,10 @@
 :root {
   --background: #fafafa;
   --foreground: #171717;
-  --textfield-border-color: #171717;
+  --textfield-border-color: #fafafa;
   --label-color: #171717;
+  --label-light-white: #FAFAFA;
+  --label-light-black: #171717;
   --font-asap: 'Asap', sans-serif;
 }
 
@@ -18,9 +20,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --label-light-white: #171717;
+    --label-light-black: #fafafa;
     --background: #232323;
     --foreground: #fafafa;
-    --textfield-border-color: #fafafa;
+    --textfield-border-color: #171717;
     /* light border in dark mode */
     --label-color: #fafafa;
   }
@@ -361,4 +365,8 @@ body {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+div.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.Mui-focused.MuiInputBase-formControl.MuiSelect-root.mui-unk85m-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+  border: none
 }

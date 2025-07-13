@@ -61,10 +61,10 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
 
 
             <div
-                className='flex md:flex-col lg:flex-row gap-20'
+                className='flex  md:flex-row gap-10'
             >
                 <MotionDiv
-                    className='flex flex-col gap-6 md:mt-12 w-full  lg:w-2/3'
+                    className='flex flex-col gap-6 md:mt-12 w-full sm:w-1/2  md:w-2/3'
                 >
 
                     <Typography variant="h4">
@@ -76,7 +76,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
                             className: "2xl:w-full ",
                         }}
                         cardWrapper={{
-                            className: "w-full h-[400px] 2xl:h-full "
+                            className: "w-full h-[400px] max-h-[400px] 2xl:h-[500px] 2xl:w-full",
                         }}
                         w={9} h={16}
                     />
@@ -84,7 +84,7 @@ const BlogPageMainModule: React.FC<BlogPageMainModuleProps> = ({
 
 
 
-                <MotionDiv className="hidden sm:flex flex-col gap-6 mt-12 w-full 2xl:w-1/3">
+                <MotionDiv className="hidden sm:flex flex-col gap-6 mt-12 w-full sm:w-1/2 md:w-1/3">
                     <Typography variant="h4"></Typography>
 
                     <Grid2 container spacing={4}

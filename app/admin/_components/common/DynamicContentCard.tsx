@@ -98,7 +98,7 @@ export const DynamicContentCard = <T extends CardTypes>({
     return (
         <ComponentTransition id={`${title}-dynamic-card`}>
             <MotionDiv
-                className="overflow-hidden rounded-4xl md:rounded-[100px] p-4 w-full h-full max-h-[158vh] bg-(--foreground) text-(--background)"
+                className="overflow-hidden rounded-4xl md:rounded-[100px]  w-full h-full max-h-[158vh] bg-(--foreground) text-(--background)"
                 initial={{ opacity: 1, y: 0 }}
                 animate={{ opacity: open ? 1 : 1, y: open ? 20 : 20, scaleX: open ? 1 : 1.03 }}
                 exit={{ opacity: 0, y: 0 }}
@@ -120,8 +120,8 @@ export const DynamicContentCard = <T extends CardTypes>({
                         transition={{ duration: 0.3, delay: 0.1 }}
                         className="gap-6"
                     >
-                        <MotionDiv className="flex justify-center my-4">
-                            <div className="w-[30vh] h-[30vh] md:w-[300px] md:h-[300px]">
+                        <MotionDiv className="flex justify-center ">
+                            <div className="w-full h-[30vh]  md:h-[300px]">
                                 {image && (
                                     <Image
                                         alt={`${title} preview image`}
@@ -131,15 +131,14 @@ export const DynamicContentCard = <T extends CardTypes>({
                                         height={16}
                                         style={{
                                             objectFit: "cover",
-                                            borderRadius: "25%",
                                         }}
-                                        className="w-full h-full"
+                                        className="w-full h-full rounded-t-4xl"
                                     />
                                 )}
                             </div>
                         </MotionDiv>
 
-                        <div className="flex flex-col justify-start text-center p-4">
+                        <div className="flex flex-col justify-start text-center p-4 px-2">
                             <Typography variant="h6" fontWeight="bold" className="pb-2">
                                 {title}
                             </Typography>

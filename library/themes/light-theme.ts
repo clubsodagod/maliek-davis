@@ -192,7 +192,7 @@ export const lightTheme: ThemeOptions = createTheme({
             styleOverrides: {
                 root: {
                     ".MuiInputLabel-formControl": {
-                        color: 'red',
+                        color: 'var(--textfield-border-color)',
                     },
                     ".MuiInputLabel-root": {
                         color: 'var(--textfield-border-color)',
@@ -205,7 +205,7 @@ export const lightTheme: ThemeOptions = createTheme({
             styleOverrides: {
                 root: {
                     ".MuiInputLabel-root": {
-                        color: 'var(--textfield-border-color)',
+                        color: '#fafafa',
                     },
                     ".MuiOutlinedInput-root": {
                         border: "1px solid var(--textfield-border-color)",
@@ -226,6 +226,23 @@ export const lightTheme: ThemeOptions = createTheme({
                     }
                 }
             }
+        },
+        MuiSelect: {
+            styleOverrides: {
+                root: {
+                    ".MuiSelect-select": {
+                        color: 'var(--textfield-border-color)',
+                        border: "none",
+                    },
+                    ".MuiSelect-outlined": {
+                        border: "none",
+                        color: "var(--textfield-border-color)",
+                    },
+                    ".MuiSelect-iconOutlined": {
+                        color: 'var(--textfield-border-color)',
+                    },
+                },
+            },
         },
         MuiList: {
             styleOverrides: {
