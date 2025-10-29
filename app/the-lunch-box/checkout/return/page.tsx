@@ -6,9 +6,22 @@ import { useSearchParams, useRouter } from "next/navigation";
 import CheckoutSuccess from "../../_components/CheckoutSuccess";
 import Link from "next/link";
 
-// Prevent prerender errors for query-param pages
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+
+// ---- Small loading UI reused as Suspense fallback and local loading state
+function FinalizingUI() {
+    return (
+        <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
+            <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
+                <h1 className="text-2xl font-semibold text-[#60abe4]">
+                    Finalizing your order…
+                </h1>
+                <p className="text-gray-600 mt-3">
+                    Please hold on while we confirm your payment.
+                </p>
+            </div>
+        </section>
+    );
+}
 
 type ApiResponse =
     | { status: "complete"; customer_email?: string | null }
@@ -121,18 +134,3 @@ function ReturnPageInner() {
     return null;
 }
 
-// ---- Small loading UI reused as Suspense fallback and local loading state
-function FinalizingUI() {
-    return (
-        <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
-            <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
-                <h1 className="text-2xl font-semibold text-[#60abe4]">
-                    Finalizing your order…
-                </h1>
-                <p className="text-gray-600 mt-3">
-                    Please hold on while we confirm your payment.
-                </p>
-            </div>
-        </section>
-    );
-}
