@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { submitAuditLead } from "./_utility/submitAuditLead";
 
 /**
  * Automation / Audit Lead Funnel — Single-file, drop-in React component (Next.js + Tailwind ready)
@@ -47,7 +48,7 @@ const BUDGETS = ["<$500/mo", "$500–$1.5k/mo", "$1.5k–$3k/mo", "$3k+/mo"] as 
 // ────────────────────────────────────────────────────────────────────────────────
 // Validation
 // ────────────────────────────────────────────────────────────────────────────────
-const schema = z
+export const auditLeadSchema = z
     .object({
         // Step 1 — Contact
         fullName: z.string().min(2, "Please enter your name"),
@@ -89,7 +90,7 @@ const schema = z
     })
     .refine((d) => !d.honey, { message: "Bot detected", path: ["honey"] });
 
-interface AuditLeadForm {
+export interface AuditLeadForm {
     fullName: string;
     email: string;
     phone?: string; // <- was required; make it optional to match schema
@@ -114,15 +115,15 @@ interface AuditLeadForm {
 // ────────────────────────────────────────────────────────────────────────────────
 // Helpers
 // ────────────────────────────────────────────────────────────────────────────────
+
 async function submitLead(payload: AuditLeadForm) {
-    const res = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
+    const res = await submitAuditLead(payload);
+    if (!res?.success) {
+        throw new Error(res?.message || "Failed to submit audit lead.");
+    }
+    return res;
 }
+
 
 const fadeUp = {
     initial: { opacity: 0, y: 16 },
@@ -145,11 +146,12 @@ export default function AutomationAuditLeadPage() {
 
     const {
         register,
-        handleSubmit,
         formState: { errors },
         watch,
+        getValues, 
+        handleSubmit
     } = useForm<AuditLeadForm>({
-        resolver: zodResolver(schema),
+        resolver: zodResolver(auditLeadSchema),
         defaultValues: {
             platforms: [],
             goals: [],
@@ -177,17 +179,19 @@ export default function AutomationAuditLeadPage() {
         }
     }, [step, watch]);
 
-    // const onSubmit = (data: AuditLeadForm) => {
-    //     setError(null);
-    //     startTransition(async () => {
-    //         try {
-    //             await submitLead(data);
-    //             setDone(true);
-    //         } catch (e: any) {
-    //             setError(e?.message || "Something went wrong");
-    //         }
-    //     });
-    // };
+    // Final submit handler (validates first, then uses getValues -> server action)
+    const onSubmit = () => {
+        setError(null);
+        startTransition(async () => {
+            try {
+                const data = getValues();           // <- per your requirement
+                await submitLead(data);             // <- uses server action under the hood
+                setDone(true);
+            } catch (e: any) {
+                setError(e?.message || "Something went wrong");
+            }
+        });
+    };
 
     if (done) {
         return (
@@ -248,7 +252,7 @@ export default function AutomationAuditLeadPage() {
                     {/* Form Card */}
                     <motion.div {...fadeUp} className={card}>
                         <Progress step={step} />
-                        <form className="mt-6">
+                        <form className="mt-6 text-black">
                             {step === 1 && (
                                 <div className="space-y-4">
                                     <Input label="Full name" required error={errors.fullName?.message} {...register("fullName")} />
@@ -272,7 +276,7 @@ export default function AutomationAuditLeadPage() {
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                             {PLATFORMS.map((p) => (
                                                 <label key={p} className="select-chip">
-                                                    <input type="checkbox" value={p} className="peer hidden" {...register("platforms")} />
+                                                    <input type="checkbox" value={p} className="peer mr-1" {...register("platforms")} />
                                                     <span className="chip-ui">{p}</span>
                                                 </label>
                                             ))}
@@ -304,7 +308,7 @@ export default function AutomationAuditLeadPage() {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                             {GOALS.map((g) => (
                                                 <label key={g} className="select-chip">
-                                                    <input type="checkbox" value={g} className="peer hidden" {...register("goals")} />
+                                                    <input type="checkbox" value={g} className="peer mr-1 text-black" {...register("goals")} />
                                                     <span className="chip-ui">{g}</span>
                                                 </label>
                                             ))}
@@ -348,9 +352,17 @@ export default function AutomationAuditLeadPage() {
 
                                     <div className="flex justify-between items-center">
                                         <button type="button" className="btn-ghost" onClick={() => setStep(2)}>Back</button>
-                                        <button type="submit" className="btn-primary" disabled={isPending}>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleSubmit(onSubmit)(); // RHF validate -> onSubmit -> getValues -> server action
+                                            }}
+                                            className="btn-primary"
+                                            disabled={isPending}
+                                        >
                                             {isPending ? "Submitting…" : "Get my audit"}
                                         </button>
+
                                     </div>
                                 </div>
                             )}
