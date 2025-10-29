@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import CheckoutSuccess from "../../_components/CheckoutSuccess";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export default function ReturnPage() {
 
                 const data: ApiResponse = await res.json();
                 console.log(data);
-                
+
 
                 if (cancelled) return;
 
@@ -90,35 +90,45 @@ export default function ReturnPage() {
 
     if (state.loading) {
         return (
-            <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
-                <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
-                    <h1 className="text-2xl font-semibold text-[#60abe4]">Finalizing your order…</h1>
-                    <p className="text-gray-600 mt-3">Please hold on while we confirm your payment.</p>
-                </div>
-            </section>
+            <Suspense>
+                <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
+                    <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
+                        <h1 className="text-2xl font-semibold text-[#60abe4]">Finalizing your order…</h1>
+                        <p className="text-gray-600 mt-3">Please hold on while we confirm your payment.</p>
+                    </div>
+                </section>
+            </Suspense>
+
         );
     }
 
     if (state.error) {
         return (
-            <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
-                <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
-                    <h1 className="text-2xl font-semibold text-red-600">Uh oh.</h1>
-                    <p className="text-gray-700 mt-3">{state.error}</p>
-                    <Link
-                        href="/"
-                        className="inline-block mt-6 bg-[#60abe4] text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-[#4a8ec7] transition-all"
-                    >
-                        Back to Home
-                    </Link>
-                </div>
-            </section>
+            <Suspense>
+                <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
+                    <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
+                        <h1 className="text-2xl font-semibold text-red-600">Uh oh.</h1>
+                        <p className="text-gray-700 mt-3">{state.error}</p>
+                        <Link
+                            href="/"
+                            className="inline-block mt-6 bg-[#60abe4] text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-[#4a8ec7] transition-all"
+                        >
+                            Back to Home
+                        </Link>
+                    </div>
+                </section>
+            </Suspense>
+
         );
     }
 
     if (state.done) {
-        return <CheckoutSuccess email={state.email} />;
+        return
+        <Suspense>
+            <CheckoutSuccess email={state.email} />
+        </Suspense>
+        
     }
 
-    return null;
+    return null
 }
