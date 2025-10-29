@@ -6,12 +6,26 @@ import { useSearchParams, useRouter } from "next/navigation";
 import CheckoutSuccess from "../../_components/CheckoutSuccess";
 import Link from "next/link";
 
+// Prevent prerender errors for query-param pages
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type ApiResponse =
     | { status: "complete"; customer_email?: string | null }
     | { status: "open" }
     | { status: "error"; message: string };
 
+// ---- Top-level page wraps the inner component with Suspense
 export default function ReturnPage() {
+    return (
+        <Suspense fallback={<FinalizingUI />}>
+            <ReturnPageInner />
+        </Suspense>
+    );
+}
+
+// ---- All hooks live inside the inner component
+function ReturnPageInner() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const sessionId = searchParams.get("session_id");
@@ -21,10 +35,7 @@ export default function ReturnPage() {
         error?: string;
         email?: string | null;
         done: boolean;
-    }>({
-        loading: true,
-        done: false,
-    });
+    }>({ loading: true, done: false });
 
     React.useEffect(() => {
         let cancelled = false;
@@ -37,20 +48,15 @@ export default function ReturnPage() {
 
             try {
                 const res = await fetch(
-                    `/api/stripe/checkout/return?session_id=${encodeURIComponent(
-                        sessionId
-                    )}`,
+                    `/api/stripe/checkout/return?session_id=${encodeURIComponent(sessionId)}`,
                     { method: "GET", cache: "no-store" }
                 );
 
                 const data: ApiResponse = await res.json();
-                console.log(data);
-
-
                 if (cancelled) return;
 
                 if (data.status === "open") {
-                    // Session not completed — go home
+                    // Session not completed — send them home
                     router.replace("/");
                     return;
                 }
@@ -88,47 +94,45 @@ export default function ReturnPage() {
         };
     }, [sessionId, router]);
 
-    if (state.loading) {
-        return (
-            <Suspense>
-                <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
-                    <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
-                        <h1 className="text-2xl font-semibold text-[#60abe4]">Finalizing your order…</h1>
-                        <p className="text-gray-600 mt-3">Please hold on while we confirm your payment.</p>
-                    </div>
-                </section>
-            </Suspense>
-
-        );
-    }
+    if (state.loading) return <FinalizingUI />;
 
     if (state.error) {
         return (
-            <Suspense>
-                <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
-                    <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
-                        <h1 className="text-2xl font-semibold text-red-600">Uh oh.</h1>
-                        <p className="text-gray-700 mt-3">{state.error}</p>
-                        <Link
-                            href="/"
-                            className="inline-block mt-6 bg-[#60abe4] text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-[#4a8ec7] transition-all"
-                        >
-                            Back to Home
-                        </Link>
-                    </div>
-                </section>
-            </Suspense>
-
+            <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
+                <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
+                    <h1 className="text-2xl font-semibold text-red-600">Uh oh.</h1>
+                    <p className="text-gray-700 mt-3">{state.error}</p>
+                    <Link
+                        href="/"
+                        className="inline-block mt-6 bg-[#60abe4] text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-[#4a8ec7] transition-all"
+                    >
+                        Back to Home
+                    </Link>
+                </div>
+            </section>
         );
     }
 
     if (state.done) {
-        return
-        <Suspense>
-            <CheckoutSuccess email={state.email} />
-        </Suspense>
-        
+        // IMPORTANT: no newline after return
+        return <CheckoutSuccess email={state.email} />;
     }
 
-    return null
+    return null;
+}
+
+// ---- Small loading UI reused as Suspense fallback and local loading state
+function FinalizingUI() {
+    return (
+        <section className="w-full h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f5] to-white">
+            <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-2xl px-8 py-12 text-center max-w-xl mx-4">
+                <h1 className="text-2xl font-semibold text-[#60abe4]">
+                    Finalizing your order…
+                </h1>
+                <p className="text-gray-600 mt-3">
+                    Please hold on while we confirm your payment.
+                </p>
+            </div>
+        </section>
+    );
 }
