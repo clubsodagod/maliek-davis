@@ -63,7 +63,7 @@ const nullableEnum = <T extends readonly [string, ...string[]]>(values: T) =>
 const PHONE_REGEX =
     /^(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
 
-export const auditLeadSchema = z
+const auditLeadSchema = z
     .object({
         // Step 1 — Contact
         fullName: z.string().min(2, "Please enter your name"),

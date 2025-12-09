@@ -14,10 +14,10 @@ export async function sendNewAutomationAuditEmail(
     to: string | string[],
     props: NewAutomationAuditEmailProps,
     opts?: {
-        cc?: string[];
-        bcc?: string[];
-        replyTo?: string | string[];
-        from?: string; // override default from
+        cc: string[];
+        bcc: string[];
+        replyTo: string | string[];
+        from: string; // override default from
         subject?: string; // override default subject
     }
 ): Promise<ResponseStatus> {

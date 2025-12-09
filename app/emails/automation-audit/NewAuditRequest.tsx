@@ -7,15 +7,15 @@ export interface NewAutomationAuditEmailProps {
     // Step 1 — Contact
     fullName: string;
     email: string;
-    phone?: string;
-    company?: string;
-    website?: string;
+    phone: string|null;
+    company: string|null;
+    website: string|null;
 
     // Step 2 — Audit Basics
     platforms: ("Instagram" | "Facebook" | "TikTok" | "LinkedIn" | "YouTube" | "Email" | "Website" | "Other")[];
-    avgPostsPerWeek?: string;
-    hasCRM?: "yes" | "no" | "not_sure";
-    tools?: string;
+    avgPostsPerWeek: string|null;
+    hasCRM: "yes" | "no" | "not_sure"|null;
+    tools: string|null;
 
     // Step 3 — Priorities
     goals: (
@@ -27,14 +27,14 @@ export interface NewAutomationAuditEmailProps {
         | "Reduce manual work"
     )[];
     timeline: "ASAP (this month)" | "30–60 days" | "90 days" | "Exploring";
-    budget?: "<$500/mo" | "$500–$1.5k/mo" | "$1.5k–$3k/mo" | "$3k+/mo";
-    notes?: string;
+    budget: "<$500/mo" | "$500–$1.5k/mo" | "$1.5k–$3k/mo" | "$3k+/mo"|null;
+    notes: string|null;
 
     // System
-    utm_source?: string;
-    utm_medium?: string;
-    utm_campaign?: string;
-    referrer?: string;
+    utm_source: string|null;
+    utm_medium: string|null;
+    utm_campaign: string|null;
+    referrer: string|null;
     submittedAt?: string | Date;
 }
 
