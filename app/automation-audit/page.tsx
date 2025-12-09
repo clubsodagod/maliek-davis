@@ -48,69 +48,122 @@ const BUDGETS = ["<$500/mo", "$500–$1.5k/mo", "$1.5k–$3k/mo", "$3k+/mo"] as 
 // ────────────────────────────────────────────────────────────────────────────────
 // Validation
 // ────────────────────────────────────────────────────────────────────────────────
+
+// Helpers
+const nullableTrimmedString = z
+    .string()
+    .nullable()
+    .transform((v) => (v ?? "").trim())
+    .transform((v) => (v === "" ? null : v));
+
+const nullableEnum = <T extends readonly [string, ...string[]]>(values: T) =>
+    z.enum(values).nullable().transform((v) => (v ?? null));
+
+// Phone regex
+const PHONE_REGEX =
+    /^(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+
 export const auditLeadSchema = z
     .object({
         // Step 1 — Contact
         fullName: z.string().min(2, "Please enter your name"),
         email: z.string().email("Add a valid email"),
+
         phone: z
             .string()
-            .optional()
-            .transform((v: any) => (v ?? "").trim())
-            .refine((v: string) => v === "" || /^(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(v), {
-                message: "Use a valid US phone (optional)",
-            }),
-        company: z.string().optional(),
-        website: z
-            .string()
-            .optional()
-            .refine((v: string | undefined) => !v || /^https?:\/\//i.test(v) || /\./.test(v), {
-                message: "Add a valid URL (optional)",
-            }),
+            .nullable()
+            .transform((v) => (v ?? "").trim())
+            .transform((v) => (v === "" ? null : v))
+            .refine(
+                (v) => v === null || PHONE_REGEX.test(v),
+                { message: "Use a valid US phone (optional)" }
+            ),
+
+        company: nullableTrimmedString,
+        website: nullableTrimmedString.refine(
+            (v) => {
+                if (v === null) return true;
+                return /^https?:\/\//i.test(v) || /\./.test(v);
+            },
+            { message: "Add a valid URL (optional)" }
+        ),
 
         // Step 2 — Audit Basics
         platforms: z.array(z.enum(PLATFORMS)).min(1, "Select at least 1 platform"),
-        avgPostsPerWeek: z.string().optional(),
-        hasCRM: z.enum(["yes", "no", "not_sure"]).optional(),
-        tools: z.string().optional(),
+        avgPostsPerWeek: nullableTrimmedString,
+        hasCRM: z
+            .enum(["yes", "no", "not_sure"])
+            .nullable()
+            .transform((v) => v ?? null),
+        tools: nullableTrimmedString,
 
         // Step 3 — Priorities
         goals: z.array(z.enum(GOALS)).min(1, "Pick at least one priority"),
         timeline: z.enum(TIMELINES),
-        budget: z.enum(BUDGETS).optional(),
-        notes: z.string().optional(),
+
+        budget: nullableEnum(BUDGETS),
+        notes: nullableTrimmedString,
 
         // System fields
-        utm_source: z.string().optional(),
-        utm_medium: z.string().optional(),
-        utm_campaign: z.string().optional(),
-        referrer: z.string().optional(),
-        honey: z.string().optional(),
-        privacyAccepted: z.boolean().refine((v: boolean) => v === true, "Please accept the privacy notice"),
+        utm_source: nullableTrimmedString,
+        utm_medium: nullableTrimmedString,
+        utm_campaign: nullableTrimmedString,
+        referrer: nullableTrimmedString,
+        honey: nullableTrimmedString,
+
+        privacyAccepted: z
+            .boolean()
+            .refine((v) => v === true, "Please accept the privacy notice"),
     })
-    .refine((d) => !d.honey, { message: "Bot detected", path: ["honey"] });
+    .refine((d) => !d.honey, {
+        message: "Bot detected",
+        path: ["honey"],
+    });
+
 
 export interface AuditLeadForm {
+    // Required / non-nullables
     fullName: string;
     email: string;
-    phone?: string; // <- was required; make it optional to match schema
-    platforms: ("Instagram" | "Facebook" | "TikTok" | "LinkedIn" | "YouTube" | "Email" | "Website" | "Other")[];
-    goals: ("More inbound leads" | "Consistent posting" | "Faster follow-up" | "Client onboarding automation" | "Reporting/analytics" | "Reduce manual work")[];
+    platforms: (
+        "Instagram" |
+        "Facebook" |
+        "TikTok" |
+        "LinkedIn" |
+        "YouTube" |
+        "Email" |
+        "Website" |
+        "Other"
+    )[];
+    goals: (
+        "More inbound leads" |
+        "Consistent posting" |
+        "Faster follow-up" |
+        "Client onboarding automation" |
+        "Reporting/analytics" |
+        "Reduce manual work"
+    )[];
     timeline: "ASAP (this month)" | "30–60 days" | "90 days" | "Exploring";
     privacyAccepted: boolean;
-    company?: string;
-    website?: string;
-    avgPostsPerWeek?: string;
-    hasCRM?: "yes" | "no" | "not_sure";
-    tools?: string;
-    budget?: typeof BUDGETS[number];
-    notes?: string;
-    utm_source?: string;
-    utm_medium?: string;
-    utm_campaign?: string;
-    referrer?: string;
-    honey?: string;
+
+    // Nullable instead of purely optional
+    phone: string | null;
+    company: string | null;
+    website: string | null;
+    avgPostsPerWeek: string | null;
+    hasCRM: "yes" | "no" | "not_sure" | null;
+    tools: string | null;
+    budget: (typeof BUDGETS)[number] | null;
+    notes: string | null;
+
+    // System / tracking fields
+    utm_source: string | null;
+    utm_medium: string | null;
+    utm_campaign: string | null;
+    referrer: string | null;
+    honey: string | null;
 }
+
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -144,26 +197,38 @@ export default function AutomationAuditLeadPage() {
 
     const urlParams = useMemo(() => new URLSearchParams(typeof window !== "undefined" ? window.location.search : ""), []);
 
-    const {
-        register,
-        formState: { errors },
-        watch,
-        getValues, 
-        handleSubmit
-    } = useForm<AuditLeadForm>({
-        resolver: zodResolver(auditLeadSchema),
-        defaultValues: {
-            platforms: [],
-            goals: [],
-            timeline: "Exploring",
-            privacyAccepted: false,
-            utm_source: urlParams.get("utm_source") || undefined,
-            utm_medium: urlParams.get("utm_medium") || undefined,
-            utm_campaign: urlParams.get("utm_campaign") || undefined,
-            referrer: typeof document !== "undefined" ? document.referrer : undefined,
-        },
-        mode: "onTouched",
-    });
+const {
+    register,
+    formState: { errors },
+    watch,
+    getValues,
+    handleSubmit,
+} = useForm<AuditLeadForm>({
+    resolver: zodResolver(auditLeadSchema),
+    defaultValues: {
+        fullName: "",
+        email: "",
+        phone: null,
+        company: null,
+        website: null,
+        platforms: [],
+        avgPostsPerWeek: null,
+        hasCRM: null,
+        tools: null,
+        goals: [],
+        timeline: "Exploring",
+        budget: null,
+        notes: null,
+        privacyAccepted: false,
+        utm_source: urlParams.get("utm_source") ?? null,
+        utm_medium: urlParams.get("utm_medium") ?? null,
+        utm_campaign: urlParams.get("utm_campaign") ?? null,
+        referrer: typeof document !== "undefined" ? document.referrer ?? null : null,
+        honey: null,
+    },
+    mode: "onTouched",
+});
+
 
     // Progressive step guarding
     useEffect(() => {
