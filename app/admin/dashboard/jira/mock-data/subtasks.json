@@ -1,0 +1,46 @@
+{
+  "subtasks": [
+    {
+      "ref": "company-profile-source-notes",
+      "taskRef": "company-profile",
+      "summary": "Collect source notes",
+      "description": "Gather existing business copy, service notes, and stakeholder input."
+    },
+    {
+      "ref": "company-profile-review",
+      "taskRef": "company-profile",
+      "summary": "Review company profile",
+      "description": "Confirm the profile is accurate and ready for Jira setup context."
+    },
+    {
+      "ref": "brand-guidelines-assets",
+      "taskRef": "brand-guidelines",
+      "summary": "Attach brand assets",
+      "description": "Collect logo files, color references, and typography notes."
+    },
+    {
+      "ref": "campaign-map-channels",
+      "taskRef": "campaign-map",
+      "summary": "List campaign channels",
+      "description": "Document launch channels and owners for each channel."
+    },
+    {
+      "ref": "crm-handoff-fields",
+      "taskRef": "crm-handoff",
+      "summary": "Confirm CRM fields",
+      "description": "Verify required CRM fields and handoff status values."
+    },
+    {
+      "ref": "qa-checklist-permissions",
+      "taskRef": "qa-checklist",
+      "summary": "Check permissions",
+      "description": "Confirm admin and collaborator access before launch."
+    },
+    {
+      "ref": "release-plan-rollback",
+      "taskRef": "release-plan",
+      "summary": "Write rollback notes",
+      "description": "Document rollback criteria and recovery steps."
+    }
+  ]
+}

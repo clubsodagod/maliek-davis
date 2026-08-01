@@ -1,0 +1,194 @@
+import { z } from "zod";
+import type { JiraAdminIdentity } from "./auth";
+import { JiraAppError } from "./errors";
+
+export type JiraUpstreamMethod = "GET" | "POST" | "PUT";
+
+export type JiraUpstreamRequest<T> = {
+  method: JiraUpstreamMethod;
+  path: string;
+  responseSchema: z.ZodType<T>;
+  body?: unknown;
+  requestId: string;
+  actor?: JiraAdminIdentity;
+  signal?: AbortSignal;
+  retrySafe?: boolean;
+  responseType?: "json" | "text";
+};
+
+function getJiraAutomationConfig() {
+  const baseUrl = process.env.JIRA_AUTOMATION_SERVER_URL;
+  const token = process.env.JIRA_AUTOMATION_SERVER_TOKEN;
+  const timeoutMs = Number(process.env.JIRA_REQUEST_TIMEOUT_MS ?? 15_000);
+
+  if (!baseUrl || !token) {
+    throw new JiraAppError(
+      "INTERNAL_ERROR",
+      "Jira automation server is not configured.",
+    );
+  }
+
+  const parsedBaseUrl = new URL(baseUrl);
+
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 1_000 || timeoutMs > 120_000) {
+    throw new JiraAppError(
+      "INTERNAL_ERROR",
+      "Jira request timeout is not configured correctly.",
+    );
+  }
+
+  return {
+    baseUrl: parsedBaseUrl,
+    token,
+    timeoutMs,
+  };
+}
+
+function resolveAllowedUrl(baseUrl: URL, path: string): URL {
+  if (!path.startsWith("/")) {
+    throw new JiraAppError("INTERNAL_ERROR", "Invalid Jira upstream path.");
+  }
+
+  const url = new URL(path, baseUrl);
+
+  if (url.origin !== baseUrl.origin) {
+    throw new JiraAppError("INTERNAL_ERROR", "Invalid Jira upstream origin.");
+  }
+
+  return url;
+}
+
+function mergeAbortSignals(signalA: AbortSignal, signalB?: AbortSignal): AbortSignal {
+  if (!signalB) return signalA;
+
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+
+  if (signalA.aborted || signalB.aborted) {
+    controller.abort();
+  } else {
+    signalA.addEventListener("abort", abort, { once: true });
+    signalB.addEventListener("abort", abort, { once: true });
+  }
+
+  return controller.signal;
+}
+
+async function parseResponse<T>(
+  response: Response,
+  request: JiraUpstreamRequest<T>,
+): Promise<T> {
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new JiraAppError(
+        "UPSTREAM_AUTH_FAILED",
+        "Jira automation server rejected application credentials.",
+      );
+    }
+
+    if (response.status === 404) {
+      throw new JiraAppError("NOT_FOUND", "Jira resource not found.");
+    }
+
+    if (response.status === 409) {
+      throw new JiraAppError("CONFLICT", "Jira setup status conflict.");
+    }
+
+    if (response.status === 422) {
+      throw new JiraAppError("VALIDATION_FAILED", "Jira setup data is invalid.");
+    }
+
+    throw new JiraAppError(
+      "UPSTREAM_UNAVAILABLE",
+      "Jira automation server request failed.",
+    );
+  }
+
+  const data =
+    request.responseType === "text" ? await response.text() : await response.json();
+  const parsed = request.responseSchema.safeParse(data);
+
+  if (!parsed.success) {
+    throw new JiraAppError(
+      "UPSTREAM_INVALID_RESPONSE",
+      "Jira automation server returned an unexpected response.",
+    );
+  }
+
+  return parsed.data;
+}
+
+async function sendOnce<T>(request: JiraUpstreamRequest<T>): Promise<T> {
+  const config = getJiraAutomationConfig();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), config.timeoutMs);
+  const signal = mergeAbortSignals(controller.signal, request.signal);
+
+  try {
+    const response = await fetch(resolveAllowedUrl(config.baseUrl, request.path), {
+      method: request.method,
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        "Content-Type": "application/json",
+        "X-Request-Id": request.requestId,
+        ...(request.actor
+          ? {
+              "X-App-User-Id": request.actor.userId,
+              "X-App-User-Role": request.actor.role,
+            }
+          : {}),
+      },
+      body:
+        request.method === "GET" || request.body === undefined
+          ? undefined
+          : JSON.stringify(request.body),
+      cache: "no-store",
+      signal,
+    });
+
+    return await parseResponse(response, request);
+  } catch (error) {
+    if (error instanceof JiraAppError) {
+      throw error;
+    }
+
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new JiraAppError(
+        "UPSTREAM_TIMEOUT",
+        "Jira automation server timed out.",
+      );
+    }
+
+    throw new JiraAppError(
+      "UPSTREAM_UNAVAILABLE",
+      "Jira automation server is unavailable.",
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+/**
+ * Sends an allowlisted Jira automation server request with timeout handling.
+ *
+ * Safe GET requests may be retried once; Jira mutations are never retried here
+ * because duplicate issue creation must be prevented by upstream state.
+ */
+export async function sendJiraUpstreamRequest<T>(
+  request: JiraUpstreamRequest<T>,
+): Promise<T> {
+  try {
+    return await sendOnce(request);
+  } catch (error) {
+    if (
+      request.retrySafe &&
+      request.method === "GET" &&
+      error instanceof JiraAppError &&
+      error.retryable
+    ) {
+      return await sendOnce(request);
+    }
+
+    throw error;
+  }
+}

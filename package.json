@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "node ./postinstall.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run"
   },
   "dependencies": {
     "@auth/core": "^0.39.0",
@@ -92,6 +93,7 @@
     "eslint-config-next": "15.2.2",
     "react-email": "4.0.11",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

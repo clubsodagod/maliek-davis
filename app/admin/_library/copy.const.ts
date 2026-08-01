@@ -134,6 +134,13 @@ export const adminSections: AdminSection[] = [
             }
         ]
     },
+    {
+        name: "jiraSetupStudio",
+        label: "Jira Setup Studio",
+        path: "/admin/dashboard/jira",
+        description: "Create, validate, preview, run, and review structured Jira project setup workflows.",
+        image: "/images/brand/logo_test.png",
+    },
     // {
     //     name: "sessions",
     //     label: "Sessions",

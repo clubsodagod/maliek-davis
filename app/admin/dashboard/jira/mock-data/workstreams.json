@@ -1,0 +1,19 @@
+{
+  "workstreams": [
+    {
+      "ref": "company-foundation",
+      "summary": "Company Foundation",
+      "description": "Define the core company operating context, brand position, and baseline admin setup."
+    },
+    {
+      "ref": "growth-engine",
+      "summary": "Growth Engine",
+      "description": "Plan acquisition, conversion, and retention systems for the new Jira space."
+    },
+    {
+      "ref": "delivery-operations",
+      "summary": "Delivery Operations",
+      "description": "Coordinate implementation tasks, QA checks, and release readiness."
+    }
+  ]
+}

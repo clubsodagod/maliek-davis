@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "ref": "company-profile",
+      "workstreamRef": "company-foundation",
+      "summary": "Draft company profile",
+      "description": "Collect the company overview, services, target customers, and internal ownership details."
+    },
+    {
+      "ref": "brand-guidelines",
+      "workstreamRef": "company-foundation",
+      "summary": "Document brand guidelines",
+      "description": "Capture tone, visual direction, logo usage, and content rules for implementation teams."
+    },
+    {
+      "ref": "campaign-map",
+      "workstreamRef": "growth-engine",
+      "summary": "Map launch campaign",
+      "description": "Outline campaign channels, landing pages, conversion events, and reporting requirements."
+    },
+    {
+      "ref": "crm-handoff",
+      "workstreamRef": "growth-engine",
+      "summary": "Define CRM handoff",
+      "description": "Specify how leads, contacts, and follow-up tasks should move through the CRM workflow."
+    },
+    {
+      "ref": "qa-checklist",
+      "workstreamRef": "delivery-operations",
+      "summary": "Create QA checklist",
+      "description": "Prepare acceptance checks for content, integrations, permissions, and launch readiness."
+    },
+    {
+      "ref": "release-plan",
+      "workstreamRef": "delivery-operations",
+      "summary": "Prepare release plan",
+      "description": "Define deployment order, rollback notes, launch owner, and post-launch verification."
+    }
+  ]
+}
