@@ -121,6 +121,14 @@ export const jiraHealthResultSchema = z.object({
   ok: z.boolean(),
 });
 
+export const jiraProjectSummarySchema = z.object({
+  key: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().optional(),
+});
+
+export const jiraProjectSummaryListSchema = z.array(jiraProjectSummarySchema);
+
 export const jiraIssueReferenceSchema = z.object({
   id: z.string(),
   key: z.string(),

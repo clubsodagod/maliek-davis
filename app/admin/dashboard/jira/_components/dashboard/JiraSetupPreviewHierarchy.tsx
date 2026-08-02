@@ -27,6 +27,7 @@ import type {
   JiraTaskInput,
   JiraWorkstreamInput,
 } from "../../_types";
+import { jiraClassNames } from "../../_theme";
 
 const INITIAL_WORKSTREAM_LIMIT = 3;
 
@@ -60,8 +61,6 @@ function RefChip({ refValue }: { refValue: string }) {
       variant="outlined"
       sx={{
         maxWidth: "100%",
-        color: "rgba(248, 247, 255, 0.76)",
-        borderColor: "rgba(255, 255, 255, 0.16)",
         "& .MuiChip-label": {
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -78,7 +77,6 @@ function Description({ value }: { value?: string }) {
     <Typography
       variant="body2"
       sx={{
-        color: "rgba(248, 247, 255, 0.66)",
         whiteSpace: "pre-wrap",
       }}
     >
@@ -94,7 +92,7 @@ function LinkList({ links }: { links?: JiraIssueLinkInput[] }) {
     <Stack spacing={1}>
       <Typography
         variant="overline"
-        sx={{ color: "rgba(248, 247, 255, 0.54)", lineHeight: 1.4 }}
+        sx={{ lineHeight: 1.4 }}
       >
         Links
       </Typography>
@@ -102,16 +100,14 @@ function LinkList({ links }: { links?: JiraIssueLinkInput[] }) {
         {links.map((link) => (
           <Box
             key={link.ref}
+            className={jiraClassNames.panelCompact}
             sx={{
               p: 1.25,
-              borderRadius: 1,
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              backgroundColor: "rgba(255, 255, 255, 0.04)",
             }}
           >
             <Stack spacing={1}>
               <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
-                <LinkIcon color="primary" fontSize="small" aria-hidden="true" />
+                <LinkIcon fontSize="small" aria-hidden="true" />
                 <Typography variant="body2" sx={{ fontWeight: 700 }}>
                   {link.type}
                 </Typography>
@@ -133,11 +129,8 @@ function SubtaskAccordion({ subtask }: { subtask: JiraSubtaskInput }) {
   return (
     <Accordion
       disableGutters
-      elevation={0}
+      className={jiraClassNames.accordion}
       sx={{
-        color: "inherit",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        backgroundColor: "rgba(8, 9, 16, 0.26)",
         "&::before": { display: "none" },
       }}
     >
@@ -148,7 +141,7 @@ function SubtaskAccordion({ subtask }: { subtask: JiraSubtaskInput }) {
           alignItems={{ xs: "flex-start", sm: "center" }}
           sx={{ width: "100%" }}
         >
-          <SubdirectoryArrowRight color="primary" fontSize="small" aria-hidden="true" />
+          <SubdirectoryArrowRight fontSize="small" aria-hidden="true" />
           <Typography variant="body2" sx={{ fontWeight: 700, flexGrow: 1 }}>
             {subtask.summary}
           </Typography>
@@ -168,11 +161,8 @@ function TaskAccordion({ task }: { task: JiraTaskInput }) {
   return (
     <Accordion
       disableGutters
-      elevation={0}
+      className={jiraClassNames.accordion}
       sx={{
-        color: "inherit",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.34)",
         "&::before": { display: "none" },
       }}
     >
@@ -183,7 +173,7 @@ function TaskAccordion({ task }: { task: JiraTaskInput }) {
             spacing={1}
             alignItems={{ xs: "flex-start", sm: "center" }}
           >
-            <TaskAlt color="primary" fontSize="small" aria-hidden="true" />
+            <TaskAlt fontSize="small" aria-hidden="true" />
             <Typography variant="body1" sx={{ fontWeight: 700, flexGrow: 1 }}>
               {task.summary}
             </Typography>
@@ -203,7 +193,7 @@ function TaskAccordion({ task }: { task: JiraTaskInput }) {
             <Stack spacing={1}>
               <Typography
                 variant="overline"
-                sx={{ color: "rgba(248, 247, 255, 0.54)", lineHeight: 1.4 }}
+                sx={{ lineHeight: 1.4 }}
               >
                 Subtasks
               </Typography>
@@ -212,7 +202,7 @@ function TaskAccordion({ task }: { task: JiraTaskInput }) {
               ))}
             </Stack>
           ) : (
-            <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.56)" }}>
+            <Typography variant="body2">
               No subtasks saved for this task.
             </Typography>
           )}
@@ -229,14 +219,9 @@ function WorkstreamCard({ workstream }: { workstream: JiraWorkstreamInput }) {
   return (
     <Paper
       component="article"
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         p: { xs: 2, md: 2.5 },
-        borderRadius: 2,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        background:
-          "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-        color: "inherit",
       }}
     >
       <Stack spacing={2.25}>
@@ -246,7 +231,7 @@ function WorkstreamCard({ workstream }: { workstream: JiraWorkstreamInput }) {
             spacing={1.25}
             alignItems={{ xs: "flex-start", md: "center" }}
           >
-            <AccountTree color="primary" aria-hidden="true" />
+            <AccountTree aria-hidden="true" />
             <Typography component="h3" variant="h5" sx={{ flexGrow: 1 }}>
               {workstream.summary}
             </Typography>
@@ -262,13 +247,13 @@ function WorkstreamCard({ workstream }: { workstream: JiraWorkstreamInput }) {
         <Description value={workstream.description} />
         <LinkList links={workstream.links} />
 
-        <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.08)" }} />
+        <Divider />
 
         {tasks.length > 0 ? (
           <Stack spacing={1.25}>
             <Typography
               variant="overline"
-              sx={{ color: "rgba(248, 247, 255, 0.54)", lineHeight: 1.4 }}
+              sx={{ lineHeight: 1.4 }}
             >
               Tasks
             </Typography>
@@ -277,7 +262,7 @@ function WorkstreamCard({ workstream }: { workstream: JiraWorkstreamInput }) {
             ))}
           </Stack>
         ) : (
-          <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.56)" }}>
+          <Typography variant="body2">
             No tasks saved for this workstream.
           </Typography>
         )}
@@ -299,16 +284,12 @@ export function JiraSetupPreviewHierarchy({
   if (workstreams.length === 0) {
     return (
       <Paper
-        elevation={0}
+        className={jiraClassNames.emptyState}
         sx={{
           p: 3,
-          borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          backgroundColor: "rgba(255, 255, 255, 0.045)",
-          color: "inherit",
         }}
       >
-        <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.68)" }}>
+        <Typography variant="body2">
           This setup does not include any saved workstreams yet.
         </Typography>
       </Paper>

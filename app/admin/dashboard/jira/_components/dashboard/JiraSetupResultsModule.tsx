@@ -35,6 +35,7 @@ import type {
 } from "../../_types";
 import { getJiraRunProgress } from "../../_utils/runProgress";
 import { getJiraResultsMetrics } from "../../_utils/resultsSummary";
+import { jiraClassNames } from "../../_theme";
 import {
   findJiraProjectTemplateByKey,
   formatJiraManagementStyle,
@@ -66,10 +67,6 @@ type ErrorResultsProps = {
 export type JiraSetupResultsModuleProps =
   | LoadedResultsProps
   | ErrorResultsProps;
-
-const mutedText = "rgba(248, 247, 255, 0.68)";
-const softText = "rgba(248, 247, 255, 0.86)";
-const borderColor = "rgba(255, 255, 255, 0.1)";
 
 function formatDateTime(value: string | undefined): string {
   if (!value) return "Not available";
@@ -107,7 +104,6 @@ function getRunTone(
   label: string;
   description: string;
   icon: ReactElement;
-  color: "default" | "primary" | "success" | "error" | "warning";
 } {
   if (!run) {
     return {
@@ -121,7 +117,6 @@ function getRunTone(
       ) : (
         <Schedule aria-hidden="true" />
       ),
-      color: runErrorMessage ? "error" : "warning",
     };
   }
 
@@ -132,7 +127,6 @@ function getRunTone(
       description:
         "The automation completed and persisted generated Jira records for this setup.",
       icon: <CheckCircle aria-hidden="true" />,
-      color: "success",
     };
   }
 
@@ -143,7 +137,6 @@ function getRunTone(
       description:
         "Some Jira setup work stopped before completion. Completed records remain available for retry planning.",
       icon: <ErrorOutline aria-hidden="true" />,
-      color: "error",
     };
   }
 
@@ -153,11 +146,10 @@ function getRunTone(
     description:
       "The latest persisted state is shown here. Return to the run screen for live polling.",
     icon: <RocketLaunch aria-hidden="true" />,
-    color: "primary",
   };
 }
 
-function GlassPanel({
+function ResultsPanel({
   title,
   icon,
   children,
@@ -168,16 +160,10 @@ function GlassPanel({
 }) {
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         height: "100%",
         p: { xs: 2.25, md: 3 },
-        borderRadius: 2,
-        border: `1px solid ${borderColor}`,
-        background:
-          "linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.032))",
-        color: "inherit",
-        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
       }}
     >
       <Stack spacing={2.25}>
@@ -206,39 +192,24 @@ function MetricTile({
 }) {
   return (
     <Box
+      className={jiraClassNames.metricTile}
       sx={{
-        minHeight: 128,
         p: 2,
-        borderRadius: 2,
-        border: `1px solid ${borderColor}`,
-        background:
-          "linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(13, 15, 28, 0.58))",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          inset: "auto -32px -44px auto",
-          width: 112,
-          height: 112,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(105, 224, 255, 0.2), transparent 62%)",
-        }}
-      />
       <Stack spacing={1.35} sx={{ position: "relative" }}>
         <Stack direction="row" justifyContent="space-between" spacing={1}>
-          <Typography variant="overline" sx={{ color: mutedText, lineHeight: 1.2 }}>
+          <Typography variant="overline" sx={{ lineHeight: 1.2 }}>
             {label}
           </Typography>
-          <Box sx={{ color: "primary.main", lineHeight: 0 }}>{icon}</Box>
+          <Box sx={{ lineHeight: 0 }}>{icon}</Box>
         </Stack>
         <Typography component="p" variant="h3" sx={{ lineHeight: 1 }}>
           {value}
         </Typography>
-        <Typography variant="body2" sx={{ color: mutedText }}>
+        <Typography variant="body2">
           {detail}
         </Typography>
       </Stack>
@@ -249,10 +220,10 @@ function MetricTile({
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <Stack spacing={0.5}>
-      <Typography variant="overline" sx={{ color: mutedText, lineHeight: 1.25 }}>
+      <Typography variant="overline" sx={{ lineHeight: 1.25 }}>
         {label}
       </Typography>
-      <Typography variant="body2" sx={{ color: softText }}>
+      <Typography variant="body2">
         {value}
       </Typography>
     </Stack>
@@ -288,11 +259,9 @@ function IssueRecordList({
           entries.slice(0, 8).map((issue) => (
             <Box
               key={issue.ref}
+              className={jiraClassNames.panelCompact}
               sx={{
                 p: 1.5,
-                borderRadius: 1,
-                border: `1px solid ${borderColor}`,
-                backgroundColor: "rgba(8, 9, 16, 0.34)",
               }}
             >
               <Stack spacing={0.6}>
@@ -302,24 +271,24 @@ function IssueRecordList({
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Chip label={issue.key} size="small" color="primary" />
-                  <Typography variant="caption" sx={{ color: mutedText }}>
+                  <Chip label={issue.key} size="small" />
+                  <Typography variant="caption">
                     {issue.ref}
                   </Typography>
                 </Stack>
-                <Typography variant="body2" sx={{ color: softText }}>
+                <Typography variant="body2">
                   {issue.summary}
                 </Typography>
               </Stack>
             </Box>
           ))
         ) : (
-          <Typography variant="body2" sx={{ color: mutedText }}>
+          <Typography variant="body2">
             No generated records captured yet.
           </Typography>
         )}
         {entries.length > 8 ? (
-          <Typography variant="caption" sx={{ color: mutedText }}>
+          <Typography variant="caption">
             Showing 8 of {entries.length} records.
           </Typography>
         ) : null}
@@ -344,30 +313,28 @@ function LinkRecordList({ links }: { links: JiraCompletedLink[] | undefined }) {
           entries.slice(0, 8).map((link) => (
             <Box
               key={link.id}
+              className={jiraClassNames.panelCompact}
               sx={{
                 p: 1.5,
-                borderRadius: 1,
-                border: `1px solid ${borderColor}`,
-                backgroundColor: "rgba(8, 9, 16, 0.34)",
               }}
             >
               <Stack spacing={0.6}>
-                <Typography variant="body2" sx={{ color: softText }}>
+                <Typography variant="body2">
                   {link.inwardIssueKey} to {link.outwardIssueKey}
                 </Typography>
-                <Typography variant="caption" sx={{ color: mutedText }}>
+                <Typography variant="caption">
                   {link.type} link, id {link.id}
                 </Typography>
               </Stack>
             </Box>
           ))
         ) : (
-          <Typography variant="body2" sx={{ color: mutedText }}>
+          <Typography variant="body2">
             No completed links captured yet.
           </Typography>
         )}
         {entries.length > 8 ? (
-          <Typography variant="caption" sx={{ color: mutedText }}>
+          <Typography variant="caption">
             Showing 8 of {entries.length} links.
           </Typography>
         ) : null}
@@ -390,14 +357,9 @@ function ResultsHero({
 
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         p: { xs: 2.5, md: 3.5 },
-        borderRadius: 2,
-        border: `1px solid ${borderColor}`,
-        background:
-          "radial-gradient(circle at 82% 20%, rgba(113, 94, 255, 0.28), transparent 30%), radial-gradient(circle at 12% 0%, rgba(74, 222, 128, 0.16), transparent 28%), linear-gradient(135deg, rgba(18, 19, 32, 0.98), rgba(9, 10, 18, 0.92))",
-        color: "inherit",
         overflow: "hidden",
       }}
     >
@@ -408,18 +370,18 @@ function ResultsHero({
       >
         <Stack spacing={2.25} sx={{ minWidth: 0, maxWidth: 760 }}>
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            <Chip label={setup.request.project.key} color="primary" />
-            <Chip label={tone.label} color={tone.color} icon={tone.icon} />
+            <Chip label={setup.request.project.key} />
+            <Chip label={tone.label} icon={tone.icon} />
             {run ? <Chip label={`Run ${run.id}`} /> : null}
           </Stack>
           <Stack spacing={1.25}>
             <Typography component="h2" variant="h2" sx={{ lineHeight: 0.96 }}>
               {tone.title}
             </Typography>
-            <Typography component="p" variant="h5" sx={{ color: softText }}>
+            <Typography component="p" variant="h5">
               {setup.request.project.name}
             </Typography>
-            <Typography variant="body2" sx={{ color: mutedText, maxWidth: 680 }}>
+            <Typography variant="body2" sx={{ maxWidth: 680 }}>
               {tone.description}
             </Typography>
           </Stack>
@@ -446,61 +408,31 @@ function ResultsHero({
         </Stack>
 
         <Box
+          className={jiraClassNames.panel}
           sx={{
             width: { xs: "100%", sm: 280 },
             alignSelf: { xs: "stretch", lg: "center" },
             p: 2,
-            borderRadius: 2,
-            border: `1px solid ${borderColor}`,
-            backgroundColor: "rgba(8, 9, 16, 0.4)",
           }}
         >
           <Stack spacing={2}>
-            <Box
-              sx={{
-                width: 180,
-                height: 180,
-                mx: "auto",
-                borderRadius: "50%",
-                display: "grid",
-                placeItems: "center",
-                background: `conic-gradient(from 210deg, #54f2a6 ${progress.percentage}%, rgba(255, 255, 255, 0.11) 0)`,
-                boxShadow: "0 0 52px rgba(84, 242, 166, 0.14)",
-              }}
-              aria-hidden="true"
-            >
-              <Box
-                sx={{
-                  width: 132,
-                  height: 132,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  backgroundColor: "rgba(10, 11, 19, 0.94)",
-                  border: `1px solid ${borderColor}`,
-                }}
-              >
-                <Stack spacing={0.35} alignItems="center">
-                  <Typography component="p" variant="h3" sx={{ lineHeight: 1 }}>
-                    {progress.percentage}%
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: mutedText }}>
-                    complete
-                  </Typography>
-                </Stack>
-              </Box>
-            </Box>
+            <Stack spacing={0.35} alignItems="center">
+              <Typography component="p" variant="h3" sx={{ lineHeight: 1 }}>
+                {progress.percentage}%
+              </Typography>
+              <Typography variant="caption">complete</Typography>
+            </Stack>
             <LinearProgress
+              className={jiraClassNames.progressRoomy}
               variant="determinate"
               value={progress.percentage}
               aria-label="Setup result completion"
-              sx={{ height: 8, borderRadius: 999 }}
             />
             <Stack direction="row" justifyContent="space-between" spacing={2}>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {progress.completedCount} of {progress.totalCount}
               </Typography>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {progress.currentOperation}
               </Typography>
             </Stack>
@@ -580,9 +512,9 @@ function LoadedResults({
           gap: 3,
         }}
       >
-        <GlassPanel
+        <ResultsPanel
           title="Created Registry"
-          icon={<QueryStats color="primary" aria-hidden="true" />}
+          icon={<QueryStats aria-hidden="true" />}
         >
           <Box
             sx={{
@@ -599,12 +531,12 @@ function LoadedResults({
             <IssueRecordList title="Subtasks" records={run?.state?.subtasks} />
             <LinkRecordList links={run?.state?.completedLinks} />
           </Box>
-        </GlassPanel>
+        </ResultsPanel>
 
         <Stack spacing={3}>
-          <GlassPanel
+          <ResultsPanel
             title="Project Summary"
-            icon={<Hub color="primary" aria-hidden="true" />}
+            icon={<Hub aria-hidden="true" />}
           >
             <Box
               sx={{
@@ -657,7 +589,7 @@ function LoadedResults({
 
             {workflowResult ? (
               <>
-                <Divider sx={{ borderColor }} />
+                <Divider />
                 <Stack spacing={1}>
                   <Typography component="h3" variant="subtitle1">
                     Workflow Result
@@ -685,11 +617,11 @@ function LoadedResults({
                 </Stack>
               </>
             ) : null}
-          </GlassPanel>
+          </ResultsPanel>
 
-          <GlassPanel
+          <ResultsPanel
             title="Final Report"
-            icon={<Notes color="primary" aria-hidden="true" />}
+            icon={<Notes aria-hidden="true" />}
           >
             {report?.trim() ? (
               <Typography
@@ -697,7 +629,6 @@ function LoadedResults({
                 variant="body2"
                 sx={{
                   m: 0,
-                  color: softText,
                   whiteSpace: "pre-wrap",
                   fontFamily: "inherit",
                   lineHeight: 1.7,
@@ -706,11 +637,11 @@ function LoadedResults({
                 {report}
               </Typography>
             ) : (
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 No final report text is available for this run yet.
               </Typography>
             )}
-          </GlassPanel>
+          </ResultsPanel>
         </Stack>
       </Box>
     </Stack>

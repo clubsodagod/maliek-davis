@@ -247,7 +247,7 @@ export const JIRA_WORKFLOW_OPTIONS = [
 ] as const satisfies readonly JiraWorkflowOption[];
 
 export const DEFAULT_JIRA_PROJECT_TEMPLATE_ID: JiraProjectTemplateId =
-  "business-process-control";
+  "business-project-management";
 export const DEFAULT_JIRA_WORKFLOW_SELECTION_ID: JiraWorkflowSelectionId =
   "jira-default";
 

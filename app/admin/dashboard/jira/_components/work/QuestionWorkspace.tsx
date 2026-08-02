@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { ArrowBack, ArrowForward, CheckCircle, Save } from "@mui/icons-material";
 import type { AnswerView, EvidenceLink, SubtaskQuestionView } from "../../_types";
+import { jiraClassNames } from "../../_theme";
 import {
   completeWorkAnswerAction,
   saveWorkAnswerAction,
@@ -24,7 +25,6 @@ import {
 } from "../../_services/work-actions";
 import { questionSearchParam, statusWorkPath } from "../../_utils/workRouting";
 
-const mutedText = "rgba(248, 247, 255, 0.68)";
 const AUTOSAVE_DELAY_MS = 900;
 
 export interface QuestionWorkspaceProps {
@@ -150,14 +150,9 @@ export function QuestionWorkspace({ question }: QuestionWorkspaceProps) {
 
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         p: { xs: 2.5, md: 3 },
-        borderRadius: 2,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        background:
-          "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-        color: "inherit",
       }}
     >
       <Stack spacing={2.5}>
@@ -168,14 +163,14 @@ export function QuestionWorkspace({ question }: QuestionWorkspaceProps) {
         >
           <Stack spacing={1}>
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <Chip label={question.issue.issueKey} color="primary" />
+              <Chip label={question.issue.issueKey} />
               <Chip label={answerView.status} />
               <Chip label={`${question.queue.position}/${question.queue.total}`} />
             </Stack>
             <Typography component="h2" variant="h4" sx={{ lineHeight: 1.08 }}>
               {question.issue.summary}
             </Typography>
-            <Typography variant="body2" sx={{ color: mutedText }}>
+            <Typography variant="body2">
               {question.parentTask.summary} | {question.workstream.summary}
             </Typography>
           </Stack>
@@ -205,28 +200,28 @@ export function QuestionWorkspace({ question }: QuestionWorkspaceProps) {
 
         <Stack spacing={0.75}>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Typography variant="caption" sx={{ color: mutedText }}>
+            <Typography variant="caption">
               {question.taskProgress.label}
             </Typography>
-            <Typography variant="caption" sx={{ color: mutedText }}>
+            <Typography variant="caption">
               {progressPercent(question)}%
             </Typography>
           </Stack>
           <LinearProgress
+            className={jiraClassNames.progressDense}
             variant="determinate"
             value={progressPercent(question)}
-            sx={{ height: 6, borderRadius: 1 }}
           />
         </Stack>
 
-        <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.08)" }} />
+        <Divider />
 
         <Stack spacing={1.5}>
           <Typography component="h3" variant="h5">
             {question.question.question}
           </Typography>
           {question.question.objective ? (
-            <Typography variant="body2" sx={{ color: mutedText }}>
+            <Typography variant="body2">
               {question.question.objective}
             </Typography>
           ) : null}
@@ -337,7 +332,6 @@ export function QuestionWorkspace({ question }: QuestionWorkspaceProps) {
                     ? "Save failed"
                     : "Not saved"
             }
-            color={saveStatus === "error" ? "error" : "default"}
           />
         </Stack>
       </Stack>
@@ -348,26 +342,22 @@ export function QuestionWorkspace({ question }: QuestionWorkspaceProps) {
 function GuidanceBlock({ title, values }: { title: string; values: string[] }) {
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panelCompact}
       sx={{
         p: 1.5,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.28)",
-        color: "inherit",
       }}
     >
       <Stack spacing={0.75}>
-        <Typography variant="overline" sx={{ color: "rgba(248, 247, 255, 0.52)" }}>
+        <Typography variant="overline">
           {title}
         </Typography>
         {values.length === 0 ? (
-          <Typography variant="body2" sx={{ color: mutedText }}>
+          <Typography variant="body2">
             None
           </Typography>
         ) : (
           values.map((value, index) => (
-            <Typography key={`${title}-${index}`} variant="body2" sx={{ color: mutedText }}>
+            <Typography key={`${title}-${index}`} variant="body2">
               {value}
             </Typography>
           ))

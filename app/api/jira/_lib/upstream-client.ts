@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { JiraAdminIdentity } from "./auth";
 import { JiraAppError } from "./errors";
 
-export type JiraUpstreamMethod = "GET" | "POST" | "PUT";
+export type JiraUpstreamMethod = "GET" | "POST" | "PUT" | "PATCH";
 
 export type JiraUpstreamRequest<T> = {
   method: JiraUpstreamMethod;
@@ -17,11 +17,18 @@ export type JiraUpstreamRequest<T> = {
 };
 
 function getJiraAutomationConfig() {
-  const baseUrl = process.env.JIRA_AUTOMATION_SERVER_URL;
+  const { value: baseUrl, selectedName } = resolveJiraAutomationServerUrl();
   const token = process.env.JIRA_AUTOMATION_SERVER_TOKEN;
   const timeoutMs = Number(process.env.JIRA_REQUEST_TIMEOUT_MS ?? 15_000);
 
-  if (!baseUrl || !token) {
+  if (!baseUrl) {
+    throw new JiraAppError(
+      "INTERNAL_ERROR",
+      `Jira automation server is not configured. Set ${selectedName}.`,
+    );
+  }
+
+  if (!token) {
     throw new JiraAppError(
       "INTERNAL_ERROR",
       "Jira automation server is not configured.",
@@ -42,6 +49,25 @@ function getJiraAutomationConfig() {
     token,
     timeoutMs,
   };
+}
+
+function resolveJiraAutomationServerUrl(): {
+  value: string | undefined;
+  selectedName: "JIRA_AUTOMATION_DEV_SERVER_URL" | "JIRA_AUTOMATION_PRODUCTION_SERVER_URL";
+} {
+  const selectedName = isProductionRuntime()
+    ? "JIRA_AUTOMATION_PRODUCTION_SERVER_URL"
+    : "JIRA_AUTOMATION_DEV_SERVER_URL";
+  const selectedValue = process.env[selectedName]?.trim();
+
+  return {
+    value: selectedValue || process.env.JIRA_AUTOMATION_SERVER_URL?.trim(),
+    selectedName,
+  };
+}
+
+function isProductionRuntime(): boolean {
+  return process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
 }
 
 function resolveAllowedUrl(baseUrl: URL, path: string): URL {
@@ -109,6 +135,7 @@ async function parseResponse<T>(
   const parsed = request.responseSchema.safeParse(data);
 
   if (!parsed.success) {
+    logInvalidUpstreamResponse(request, parsed.error);
     throw new JiraAppError(
       "UPSTREAM_INVALID_RESPONSE",
       "Jira automation server returned an unexpected response.",
@@ -116,6 +143,23 @@ async function parseResponse<T>(
   }
 
   return parsed.data;
+}
+
+function logInvalidUpstreamResponse<T>(
+  request: JiraUpstreamRequest<T>,
+  error: z.ZodError,
+): void {
+  console.error("[Jira API] Invalid upstream response", {
+    requestId: request.requestId,
+    method: request.method,
+    path: request.path,
+    issues: error.issues.slice(0, 12).map((issue) => ({
+      path: issue.path.length === 0 ? "(root)" : issue.path.map(String).join("."),
+      code: issue.code,
+      message: issue.message,
+    })),
+    issueCount: error.issues.length,
+  });
 }
 
 async function sendOnce<T>(request: JiraUpstreamRequest<T>): Promise<T> {

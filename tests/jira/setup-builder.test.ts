@@ -20,7 +20,10 @@ import {
   validateJiraGeneratedHierarchy,
   validateJiraProjectSetupRequestForBuilder,
 } from "@/app/admin/dashboard/jira/_utils/setupBuilder";
-import { getJiraProjectTemplateById } from "@/app/admin/dashboard/jira/_config/projectOptions";
+import {
+  DEFAULT_JIRA_PROJECT_TEMPLATE_ID,
+  getJiraProjectTemplateById,
+} from "@/app/admin/dashboard/jira/_config/projectOptions";
 import type { JiraWorkstreamInput } from "@/app/admin/dashboard/jira/_types";
 
 const generatedWorkstreams: JiraWorkstreamInput[] = [
@@ -55,6 +58,13 @@ const generatedWorkstreams: JiraWorkstreamInput[] = [
 ];
 
 describe("Jira setup builder helpers", () => {
+  it("uses project management as the default Jira project template", () => {
+    expect(DEFAULT_JIRA_PROJECT_TEMPLATE_ID).toBe("business-project-management");
+    expect(defaultJiraProjectSetupDraft.projectTemplateId).toBe(
+      "business-project-management",
+    );
+  });
+
   it("generates a project key from the first letter of each word", () => {
     expect(generateJiraProjectKeyFromName("Acme Growth Lab")).toBe("AGL");
     expect(generateJiraProjectKeyFromName("  Acme, growth -- lab! ")).toBe(

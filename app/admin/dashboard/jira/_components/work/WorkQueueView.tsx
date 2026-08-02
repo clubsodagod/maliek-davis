@@ -11,10 +11,9 @@ import {
 import { ArrowForward, SyncProblem } from "@mui/icons-material";
 import type { WorkQueueItem, WorkQueueView as WorkQueueViewModel } from "../../_types";
 import type { WorkStatusSlug } from "../../_config/workManagement";
+import { jiraClassNames } from "../../_theme";
 import { questionSearchParam, statusWorkPath } from "../../_utils/workRouting";
 import { WorkQueueToolbar } from "./WorkQueueToolbar";
-
-const mutedText = "rgba(248, 247, 255, 0.68)";
 
 export interface WorkQueueViewProps {
   projectKey: string;
@@ -47,66 +46,51 @@ function WorkItemCard({
     <Paper
       component={Link}
       href={itemHref(projectKey, item, statusSlug)}
-      elevation={0}
+      className={jiraClassNames.interactivePanel}
       sx={{
-        display: "block",
         p: 2,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.12)",
-        backgroundColor: "rgba(255, 255, 255, 0.05)",
-        color: "inherit",
-        textDecoration: "none",
-        transition: "border-color 160ms ease, background-color 160ms ease",
-        "&:hover, &:focus-visible": {
-          borderColor: "rgba(144, 202, 249, 0.58)",
-          backgroundColor: "rgba(144, 202, 249, 0.08)",
-        },
-        "&:focus-visible": {
-          outline: "2px solid rgba(144, 202, 249, 0.9)",
-          outlineOffset: 2,
-        },
       }}
     >
       <Stack spacing={1.5}>
         <Stack direction="row" spacing={1} justifyContent="space-between">
           <Stack spacing={0.75} minWidth={0}>
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              <Chip label={item.issueKey} size="small" color="primary" />
+              <Chip label={item.issueKey} size="small" />
               <Chip label={item.issueType} size="small" />
               <Chip label={item.status} size="small" />
-              {item.overdue ? <Chip label="Overdue" color="error" size="small" /> : null}
+              {item.overdue ? <Chip label="Overdue" size="small" /> : null}
               {item.scheduleRisk && !item.overdue ? (
-                <Chip label="Schedule risk" color="warning" size="small" />
+                <Chip label="Schedule risk" size="small" />
               ) : null}
             </Stack>
             <Typography component="h3" variant="h6" sx={{ lineHeight: 1.16 }}>
               {item.summary}
             </Typography>
-            <Typography variant="body2" sx={{ color: mutedText }}>
+            <Typography variant="body2">
               {item.workstream?.summary ?? item.parent?.summary ?? item.ref}
             </Typography>
           </Stack>
-          <ArrowForward color="primary" aria-hidden="true" />
+          <ArrowForward aria-hidden="true" />
         </Stack>
 
         <Stack spacing={0.75}>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Typography variant="caption" sx={{ color: mutedText }}>
+            <Typography variant="caption">
               {item.progress.label}
             </Typography>
-            <Typography variant="caption" sx={{ color: mutedText }}>
+            <Typography variant="caption">
               {item.recommendedAction.label}
             </Typography>
           </Stack>
           <LinearProgress
+            className={jiraClassNames.progressDense}
             variant="determinate"
             value={progressPercent(item)}
-            sx={{ height: 6, borderRadius: 1 }}
           />
         </Stack>
 
         {item.synchronizationHealth.jira !== "synced" ? (
-          <Typography variant="caption" sx={{ color: "warning.light" }}>
+          <Typography variant="caption">
             {item.synchronizationHealth.message ?? "Jira sync pending"}
           </Typography>
         ) : null}
@@ -133,14 +117,9 @@ export function WorkQueueView({ projectKey, queue }: WorkQueueViewProps) {
       ) : null}
 
       <Paper
-        elevation={0}
+        className={jiraClassNames.panel}
         sx={{
           p: { xs: 2.5, md: 3 },
-          borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          background:
-            "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-          color: "inherit",
         }}
       >
         <Stack spacing={2}>
@@ -151,7 +130,7 @@ export function WorkQueueView({ projectKey, queue }: WorkQueueViewProps) {
                   ? `${queue.filters.status} ${queue.filters.taskTypeSlug}`
                   : `${queue.filters.status} Work`}
               </Typography>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {queue.counts.total} items
               </Typography>
             </Stack>
@@ -164,14 +143,12 @@ export function WorkQueueView({ projectKey, queue }: WorkQueueViewProps) {
 
           {queue.items.length === 0 ? (
             <Box
+              className={jiraClassNames.emptyState}
               sx={{
                 p: 2,
-                borderRadius: 1,
-                border: "1px dashed rgba(255, 255, 255, 0.18)",
-                backgroundColor: "rgba(255, 255, 255, 0.04)",
               }}
             >
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 No work items match this queue.
               </Typography>
             </Box>

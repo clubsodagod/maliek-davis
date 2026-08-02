@@ -3,6 +3,7 @@ import type {
   ApiResult,
   JiraHealthResult,
   JiraProjectSetupRequest,
+  JiraProjectSummaryList,
   JiraRunRecord,
   JiraSetupList,
   JiraSetupRecord,
@@ -110,6 +111,19 @@ export async function getJiraHealth(
     method: "GET",
     signal: options.signal,
   });
+  return result;
+}
+
+export async function listJiraProjectSummariesRequest(
+  options: FetchOptions = {},
+): Promise<ApiResult<JiraProjectSummaryList>> {
+  const { result } = await fetchJiraApi<JiraProjectSummaryList>(
+    "/api/jira/projects/summary",
+    {
+      method: "GET",
+      signal: options.signal,
+    },
+  );
   return result;
 }
 

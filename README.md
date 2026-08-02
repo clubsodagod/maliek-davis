@@ -1,94 +1,99 @@
-# Personal Website - Rebranding Project
+# Maliek Davis Website
 
-Welcome to the repository for my personal website! This project represents a complete rebranding effort aimed at strengthening my brand messaging and better communicating value to my clients. The website is designed to showcase my professional expertise, personal interests, and provide a seamless user experience.
+Next.js application for the Maliek Davis personal website, admin dashboard, content tooling, and integrated business automations.
 
-## Features
+## What This App Includes
 
-- **Content Management System (CMS):**  
-    A robust CMS to easily manage and update website content without requiring technical expertise.
+- Public website and branded content experiences.
+- Protected admin dashboard surfaces.
+- Jira Setup Studio for creating, validating, previewing, running, and reviewing Jira project setup workflows.
+- Server-side integrations for authentication, MongoDB-backed data, email, media, Stripe, and Jira automation server calls.
 
-- **Automations:**  
-    Integrated automations to streamline workflows and enhance user engagement.
+For Jira Setup Studio implementation details, routes, environment variables, and testing notes, see `app/admin/dashboard/jira/README.md`.
 
-- **Financial and Investment Section:**  
-    A dedicated section to share insights, updates, and resources related to my financial and investment interests.
+## Tech Stack
 
-## Technologies Used
+- Next.js 15, React 19, and TypeScript.
+- Material UI, Tailwind CSS, Motion, and Three.js-related rendering packages.
+- MongoDB/Mongoose for persistence.
+- NextAuth/Auth.js for authentication.
+- Vitest for unit and integration tests.
+- Playwright for optional Jira E2E coverage.
 
-- **Frontend:** HTML, CSS, JavaScript (or specify framework/library, e.g., React, Vue)
-- **Backend:** Node.js, Express (or specify backend framework)
-- **Database:** MongoDB, PostgreSQL (or specify database)
-- **CMS:** (Specify CMS, e.g., Strapi, WordPress)
-- **Hosting:** (Specify hosting platform, e.g., Vercel, Netlify)
+## CSS Performance Case Study: Jira Setup Studio
 
-## Getting Started
+The Jira Setup Studio started with repeated `sx` objects inside each dashboard
+component. Those objects mixed layout with visual skinning: colors, gradients,
+glass panels, custom borders, and one-off text tones. That made the components
+harder to scan and encouraged Emotion to generate repeated CSS for the same
+surface patterns.
 
-### Prerequisites
+The refactor keeps component files focused on structure. Local `sx` should be
+reserved for layout decisions such as grid columns, gaps, spacing, flex
+behavior, sizing, overflow, and responsive alignment. Visual color decisions
+inherit from the application theme instead of being restated in Jira components.
 
-Ensure you have the following installed:
-- Node.js
-- npm or yarn
-- Git
+Reusable Jira structure lives in `app/admin/dashboard/jira/_theme`. The scoped
+theme exports a tiny semantic class vocabulary for panels, interactive panels,
+empty states, choice cards, accordions, drop zones, JSON previews, hierarchy
+branches, and progress density. These classes avoid a utility sprawl while
+letting common CSS be emitted once under the Jira route shell.
 
-### Installation
+Future UI refactors should follow this order:
 
-1. Clone the repository:
-     ```bash
-     git clone https://github.com/your-username/your-repo-name.git
-     ```
-2. Navigate to the project directory:
-     ```bash
-     cd your-repo-name
-     ```
-3. Install dependencies:
-     ```bash
-     npm install
-     ```
+1. Prefer MUI component props and the application theme.
+2. Keep route-specific layout close to the component that owns the layout.
+3. Promote only repeated structural styles to `_theme`.
+4. Avoid hardcoded colors, decorative gradients, and per-render dynamic CSS.
+5. Measure bundle, render, and CSS output before adding heavier abstractions.
 
-### Running the Project
+## Environment
 
-Start the development server:
+Copy `.env.example` for local development and fill in the values needed for the features you are running.
+
+Jira automation server values are server-only and must not use `NEXT_PUBLIC_`:
+
+```env
+JIRA_AUTOMATION_DEV_SERVER_URL=
+JIRA_AUTOMATION_PRODUCTION_SERVER_URL=
+JIRA_AUTOMATION_SERVER_TOKEN=
+JIRA_REQUEST_TIMEOUT_MS=15000
+```
+
+The OpenAI discovery provider is configured in the separate Jira automation server project with `OPENAI_GENERAL_IQ_MODEL` and `OPENAI_HIGH_IQ_MODEL`, not in this Next.js app.
+
+## Install
+
 ```bash
-npm start
-```
-The website will be available at `http://localhost:3000`.
-
-## Folder Structure
-
-```
-/src
-    /components
-    /pages
-    /styles
-    /utils
-/public
+npm install
 ```
 
-## Roadmap
+## Development
 
-- [ ] Finalize rebranding design and messaging.
-- [ ] Implement CMS and automations.
-- [ ] Develop financial and investment section.
-- [ ] Optimize for SEO and performance.
+```bash
+npm.cmd run dev
+```
 
-## Contributing
+On shells where `npm` is available directly, `npm run dev` is equivalent.
 
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m 'Add feature'`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a pull request.
+## Build And Run
 
-## License
+```bash
+npm.cmd run build
+npm.cmd run start
+```
 
-This project is licensed under the [MIT License](LICENSE).
+## Test
 
-## Contact
+```bash
+npm.cmd test
+npx.cmd tsc --noEmit
+```
 
-For questions or feedback, feel free to reach out:
-- **Email:** your-email@example.com
-- **LinkedIn:** [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
-- **Twitter:** [@yourhandle](https://twitter.com/yourhandle)
+Playwright E2E tests are available with:
 
-Thank you for visiting my project!
+```bash
+npm.cmd run test:e2e
+```
+
+The Jira E2E suite is skipped unless the required seeded setup and storage-state environment variables are provided.

@@ -155,3 +155,11 @@ export type JiraValidationResult = {
 export type JiraHealthResult = {
   ok: boolean;
 };
+
+export type JiraProjectSummary = {
+  key: string;
+  name: string;
+  description?: string;
+};
+
+export type JiraProjectSummaryList = JiraProjectSummary[];

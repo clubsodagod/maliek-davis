@@ -15,9 +15,16 @@ declare namespace NodeJS {
 
         MONGODB_URI: string;
 
-        JIRA_AUTOMATION_SERVER_URL: string;
+        JIRA_AUTOMATION_DEV_SERVER_URL: string;
+        JIRA_AUTOMATION_PRODUCTION_SERVER_URL: string;
+        JIRA_AUTOMATION_SERVER_URL?: string;
         JIRA_AUTOMATION_SERVER_TOKEN: string;
         JIRA_REQUEST_TIMEOUT_MS?: string;
+        JIRA_E2E_BASE_URL?: string;
+        JIRA_E2E_SETUP_ID?: string;
+        JIRA_E2E_STORAGE_STATE?: string;
+        JIRA_E2E_UNAUTHORIZED_SETUP_ID?: string;
+        PLAYWRIGHT_START_SERVER?: string;
 
         NEXT_PUBLIC_TINY_MCE_API_KEY: string;
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: string;

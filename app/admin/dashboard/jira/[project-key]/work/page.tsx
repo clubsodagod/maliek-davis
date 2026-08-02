@@ -2,6 +2,7 @@ import { Alert } from "@mui/material";
 import { notFound } from "next/navigation";
 import { ProjectJiraShell, WorkQueueView } from "../../_components/work";
 import { DEFAULT_WORK_STATUS_SLUG } from "../../_config/workManagement";
+import { ensureAutomaticJiraSetupDraft } from "../../_services/automatic-setup-draft";
 import { requireJiraDashboardAdmin } from "../../_utils/requireJiraDashboardAdmin";
 import { normalizeProjectKeySlug } from "../../_utils/workRouting";
 import { normalizeUnknownError } from "@/app/api/jira/_lib/errors";
@@ -43,6 +44,7 @@ export default async function ProjectWorkPage({
       requestId,
       actor,
     );
+    await ensureAutomaticJiraSetupDraft(queue.project.key, requestId, actor);
 
     return (
       <ProjectJiraShell
@@ -55,11 +57,34 @@ export default async function ProjectWorkPage({
       </ProjectJiraShell>
     );
   } catch (error) {
-    logJiraFailure(error, requestId);
     const appError = normalizeUnknownError(error);
     if (appError.code === "NOT_FOUND") {
-      notFound();
+      const draft = await ensureAutomaticJiraSetupDraft(
+        projectKey,
+        requestId,
+        actor,
+      );
+
+      if (draft.status === "not-found") {
+        notFound();
+      }
+
+      return (
+        <ProjectJiraShell
+          projectKey={draft.project.key}
+          title={`${draft.project.name} Work`}
+          description="Ready work across supported Jira issue types."
+          statusLabel="Unavailable"
+        >
+          <Alert severity="info">
+            A setup draft is ready for this Jira project, but the work module is
+            not initialized yet.
+          </Alert>
+        </ProjectJiraShell>
+      );
     }
+
+    logJiraFailure(error, requestId);
 
     return (
       <ProjectJiraShell

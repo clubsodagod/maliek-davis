@@ -1,6 +1,7 @@
 import {
   jiraHealthResultSchema,
   jiraProjectSetupRequestSchema,
+  jiraProjectSummaryListSchema,
   jiraReportSchema,
   jiraSetupListSchema,
   jiraRunRecordSchema,
@@ -10,6 +11,16 @@ import {
   workQueueViewSchema,
   subtaskQuestionViewSchema,
   answerViewSchema,
+  approveDiscoverySectionActionSchema,
+  approveFinalDiscoveryActionSchema,
+  chatDiscoveryPlanActionSchema,
+  discoveryFinalApprovalResponseSchema,
+  discoveryResponseSchema,
+  patchDiscoveryPlanActionSchema,
+  processDiscoverySectionActionSchema,
+  saveDiscoveryAnswerActionSchema,
+  skipDiscoveryActionSchema,
+  startDiscoveryActionSchema,
 } from "@/app/admin/dashboard/jira/_schemas";
 import type {
   AnswerCompletionRequest,
@@ -17,6 +28,7 @@ import type {
   AnswerValidationRequest,
   JiraHealthResult,
   JiraProjectSetupRequest,
+  JiraProjectSummaryList,
   JiraRunRecord,
   JiraSetupList,
   JiraSetupRecord,
@@ -24,6 +36,15 @@ import type {
   ProjectSummaryView,
   SubtaskQuestionView,
   WorkQueueView,
+  ApproveDiscoverySectionActionInput,
+  ApproveFinalDiscoveryActionInput,
+  ChatDiscoveryPlanActionInput,
+  DiscoveryFinalApprovalResponse,
+  DiscoveryResponse,
+  PatchDiscoveryPlanActionInput,
+  ProcessDiscoverySectionActionInput,
+  SaveDiscoveryAnswerActionInput,
+  StartDiscoveryActionInput,
 } from "@/app/admin/dashboard/jira/_types";
 import type { TaskTypeSlug, WorkStatusSlug } from "@/app/admin/dashboard/jira/_config/workManagement";
 import type { JiraAdminIdentity } from "./auth";
@@ -48,6 +69,22 @@ export async function getJiraAutomationHealth(
     method: "GET",
     path: "/health",
     responseSchema: jiraHealthResultSchema,
+    requestId,
+    actor,
+    signal,
+    retrySafe: true,
+  });
+}
+
+export async function listJiraProjectSummaries(
+  requestId: string,
+  actor: JiraAdminIdentity,
+  signal?: AbortSignal,
+): Promise<JiraProjectSummaryList> {
+  return sendJiraUpstreamRequest({
+    method: "GET",
+    path: "/api/projects/summary",
+    responseSchema: jiraProjectSummaryListSchema,
     requestId,
     actor,
     signal,
@@ -331,4 +368,192 @@ export async function completeJiraAnswer(
     requestId,
     actor,
   });
+}
+
+export async function getJiraDiscovery(
+  setupId: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+  signal?: AbortSignal,
+): Promise<DiscoveryResponse> {
+  const result = await sendJiraUpstreamRequest({
+    method: "GET",
+    path: `/api/project-setups/${setupId}/discovery`,
+    responseSchema: discoveryResponseSchema,
+    requestId,
+    actor,
+    signal,
+    retrySafe: true,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function startJiraDiscovery(
+  input: StartDiscoveryActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const body = startDiscoveryActionSchema.omit({ setupId: true }).parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${input.setupId}/discovery/start`,
+    responseSchema: discoveryResponseSchema,
+    body,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function skipJiraDiscovery(
+  setupId: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  skipDiscoveryActionSchema.parse({ setupId });
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${setupId}/discovery/skip`,
+    responseSchema: discoveryResponseSchema,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function saveJiraDiscoveryAnswer(
+  input: SaveDiscoveryAnswerActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const body = saveDiscoveryAnswerActionSchema.omit({ setupId: true }).parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "PUT",
+    path: `/api/project-setups/${input.setupId}/discovery/answers`,
+    responseSchema: discoveryResponseSchema,
+    body,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function processJiraDiscoverySection(
+  input: ProcessDiscoverySectionActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  processDiscoverySectionActionSchema.parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${input.setupId}/discovery/sections/${encodeURIComponent(input.sectionId)}/process`,
+    responseSchema: discoveryResponseSchema,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function approveJiraDiscoverySection(
+  input: ApproveDiscoverySectionActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const parsed = approveDiscoverySectionActionSchema.parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${parsed.setupId}/discovery/sections/${encodeURIComponent(parsed.sectionId)}/approve`,
+    responseSchema: discoveryResponseSchema,
+    body: { revision: parsed.revision },
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function generateJiraDiscoveryPlan(
+  setupId: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${setupId}/discovery/plan/generate`,
+    responseSchema: discoveryResponseSchema,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function patchJiraDiscoveryPlan(
+  input: PatchDiscoveryPlanActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const body = patchDiscoveryPlanActionSchema.omit({ setupId: true }).parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "PATCH",
+    path: `/api/project-setups/${input.setupId}/discovery/plan`,
+    responseSchema: discoveryResponseSchema,
+    body,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function chatJiraDiscoveryPlan(
+  input: ChatDiscoveryPlanActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryResponse> {
+  const body = chatDiscoveryPlanActionSchema.omit({ setupId: true }).parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${input.setupId}/discovery/plan/chat`,
+    responseSchema: discoveryResponseSchema,
+    body,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  return result;
+}
+
+export async function approveFinalJiraDiscovery(
+  input: ApproveFinalDiscoveryActionInput,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<DiscoveryFinalApprovalResponse> {
+  const body = approveFinalDiscoveryActionSchema.omit({ setupId: true }).parse(input);
+  const result = await sendJiraUpstreamRequest({
+    method: "POST",
+    path: `/api/project-setups/${input.setupId}/discovery/final-approval`,
+    responseSchema: discoveryFinalApprovalResponseSchema,
+    body,
+    requestId,
+    actor,
+  });
+
+  assertOwnedByCurrentUser(result.session.ownerUserId, actor);
+  assertOwnedByCurrentUser(result.setup.ownerUserId, actor);
+  return result;
 }

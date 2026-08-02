@@ -6,6 +6,7 @@ import {
   WorkQueueView,
 } from "../../../_components/work";
 import { DEFAULT_WORK_STATUS_SLUG } from "../../../_config/workManagement";
+import { ensureAutomaticJiraSetupDraft } from "../../../_services/automatic-setup-draft";
 import { requireJiraDashboardAdmin } from "../../../_utils/requireJiraDashboardAdmin";
 import {
   normalizeProjectKeySlug,
@@ -70,6 +71,7 @@ export default async function ProjectTaskTypeWorkPage({
           actor,
         )
       : undefined;
+    await ensureAutomaticJiraSetupDraft(queue.project.key, requestId, actor);
 
     return (
       <ProjectJiraShell
@@ -85,11 +87,34 @@ export default async function ProjectTaskTypeWorkPage({
       </ProjectJiraShell>
     );
   } catch (error) {
-    logJiraFailure(error, requestId);
     const appError = normalizeUnknownError(error);
     if (appError.code === "NOT_FOUND") {
-      notFound();
+      const draft = await ensureAutomaticJiraSetupDraft(
+        projectKey,
+        requestId,
+        actor,
+      );
+
+      if (draft.status === "not-found") {
+        notFound();
+      }
+
+      return (
+        <ProjectJiraShell
+          projectKey={draft.project.key}
+          title={`${draft.project.name} ${taskTypeSlug}`}
+          description="Focused Jira execution queue."
+          statusLabel="Unavailable"
+        >
+          <Alert severity="info">
+            A setup draft is ready for this Jira project, but the work module is
+            not initialized yet.
+          </Alert>
+        </ProjectJiraShell>
+      );
     }
+
+    logJiraFailure(error, requestId);
 
     return (
       <ProjectJiraShell

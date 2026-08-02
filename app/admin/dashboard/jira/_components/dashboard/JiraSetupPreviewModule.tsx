@@ -30,6 +30,7 @@ import {
 import { JiraRouteShell } from "./JiraRouteShell";
 import { JiraSetupPreviewHierarchy } from "./JiraSetupPreviewHierarchy";
 import { JiraSetupRouteNav } from "./JiraSetupRouteNav";
+import { jiraClassNames } from "../../_theme";
 
 type LoadedPreviewProps = {
   setup: JiraSetupRecord;
@@ -44,8 +45,6 @@ type ErrorPreviewProps = {
 };
 
 export type JiraSetupPreviewModuleProps = LoadedPreviewProps | ErrorPreviewProps;
-
-const mutedText = "rgba(248, 247, 255, 0.68)";
 
 function formatDateTime(value: string): string {
   const date = new Date(value);
@@ -83,14 +82,9 @@ function PreviewCard({
 }) {
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         p: { xs: 2.5, md: 3 },
-        borderRadius: 2,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        background:
-          "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-        color: "inherit",
       }}
     >
       <Stack spacing={2.25}>
@@ -111,11 +105,11 @@ function DetailItem({ label, value }: { label: string; value: string }) {
     <Stack spacing={0.5}>
       <Typography
         variant="overline"
-        sx={{ color: "rgba(248, 247, 255, 0.52)", lineHeight: 1.35 }}
+        sx={{ lineHeight: 1.35 }}
       >
         {label}
       </Typography>
-      <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.88)" }}>
+      <Typography variant="body2">
         {value}
       </Typography>
     </Stack>
@@ -125,18 +119,16 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 function StatItem({ label, value }: { label: string; value: number }) {
   return (
     <Box
+      className={jiraClassNames.panelCompact}
       sx={{
         p: 2,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.28)",
       }}
     >
       <Stack spacing={0.5}>
         <Typography component="p" variant="h4" sx={{ lineHeight: 1 }}>
           {value}
         </Typography>
-        <Typography variant="body2" sx={{ color: mutedText }}>
+        <Typography variant="body2">
           {label}
         </Typography>
       </Stack>
@@ -188,25 +180,25 @@ function LoadedPreview({ setup }: { setup: JiraSetupRecord }) {
         <Box sx={{ flex: 1.15, minWidth: 0 }}>
           <PreviewCard
             title="Summary"
-            icon={<FactCheck color="primary" aria-hidden="true" />}
+            icon={<FactCheck aria-hidden="true" />}
           >
             <Stack spacing={2.25}>
               <Stack spacing={1}>
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                  <Chip label={request.project.key} color="primary" />
+                  <Chip label={request.project.key} />
                   <Chip label={setup.status} />
                   <Chip label={formatWorkflowSelection(request.workflow.id)} />
                 </Stack>
                 <Typography component="h3" variant="h4" sx={{ lineHeight: 1.05 }}>
                   {request.project.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: mutedText }}>
+                <Typography variant="body2">
                   Saved setup draft owned by the current admin. Preview is read-only
                   and does not start Jira side effects.
                 </Typography>
               </Stack>
 
-              <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.08)" }} />
+              <Divider />
 
               <Box
                 sx={{
@@ -256,7 +248,7 @@ function LoadedPreview({ setup }: { setup: JiraSetupRecord }) {
         <Box sx={{ flex: 0.85, minWidth: 0 }}>
           <PreviewCard
             title="Stats"
-            icon={<QueryStats color="primary" aria-hidden="true" />}
+            icon={<QueryStats aria-hidden="true" />}
           >
             <Box
               sx={{
@@ -280,7 +272,7 @@ function LoadedPreview({ setup }: { setup: JiraSetupRecord }) {
 
       <PreviewCard
         title="Issue Hierarchy"
-        icon={<DataObject color="primary" aria-hidden="true" />}
+        icon={<DataObject aria-hidden="true" />}
       >
         <Stack spacing={2}>
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>

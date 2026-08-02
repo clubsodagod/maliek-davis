@@ -11,27 +11,22 @@ import {
 } from "@mui/material";
 import { ArrowForward, QueryStats, SyncProblem } from "@mui/icons-material";
 import type { ProjectSummaryView } from "../../_types";
+import { jiraClassNames } from "../../_theme";
 import { projectWorkPath, statusWorkPath } from "../../_utils/workRouting";
-
-const mutedText = "rgba(248, 247, 255, 0.68)";
 
 function MetricCard({ label, value }: { label: string; value: string | number }) {
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panelCompact}
       sx={{
         p: 2,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.28)",
-        color: "inherit",
       }}
     >
       <Stack spacing={0.5}>
         <Typography component="p" variant="h4" sx={{ lineHeight: 1 }}>
           {value}
         </Typography>
-        <Typography variant="body2" sx={{ color: mutedText }}>
+        <Typography variant="body2">
           {label}
         </Typography>
       </Stack>
@@ -72,19 +67,14 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
       </Box>
 
       <Paper
-        elevation={0}
+        className={jiraClassNames.panel}
         sx={{
           p: { xs: 2.5, md: 3 },
-          borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          background:
-            "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-          color: "inherit",
         }}
       >
         <Stack spacing={2.5}>
           <Stack direction="row" spacing={1.25} alignItems="center">
-            <QueryStats color="primary" aria-hidden="true" />
+            <QueryStats aria-hidden="true" />
             <Typography component="h2" variant="h5">
               Project Health
             </Typography>
@@ -92,17 +82,17 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
 
           <Stack spacing={1}>
             <Stack direction="row" justifyContent="space-between" spacing={2}>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {summary.overallCompletion.label}
               </Typography>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {completion}%
               </Typography>
             </Stack>
             <LinearProgress
+              className={jiraClassNames.progressRoomy}
               variant="determinate"
               value={completion}
-              sx={{ height: 8, borderRadius: 1 }}
             />
           </Stack>
 
@@ -115,10 +105,6 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
                 label={`${item.status}: ${item.count}`}
                 clickable
                 variant="outlined"
-                sx={{
-                  color: "rgba(248, 247, 255, 0.86)",
-                  borderColor: "rgba(255, 255, 255, 0.16)",
-                }}
               />
             ))}
           </Stack>
@@ -133,13 +119,9 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
         }}
       >
         <Paper
-          elevation={0}
+          className={jiraClassNames.panel}
           sx={{
             p: 2.5,
-            borderRadius: 2,
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            color: "inherit",
           }}
         >
           <Stack spacing={1.5}>
@@ -147,7 +129,7 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
               Workstreams
             </Typography>
             {summary.workstreamProgress.length === 0 ? (
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 No workstreams available.
               </Typography>
             ) : (
@@ -155,18 +137,18 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
                 <Stack key={item.ref} spacing={0.75}>
                   <Stack direction="row" justifyContent="space-between" spacing={2}>
                     <Typography variant="body2">{item.summary}</Typography>
-                    <Typography variant="caption" sx={{ color: mutedText }}>
+                    <Typography variant="caption">
                       {item.progress.label}
                     </Typography>
                   </Stack>
                   <LinearProgress
+                    className={jiraClassNames.progressDense}
                     variant="determinate"
                     value={
                       item.progress.total === 0
                         ? 0
                         : (item.progress.completed / item.progress.total) * 100
                     }
-                    sx={{ height: 6, borderRadius: 1 }}
                   />
                 </Stack>
               ))
@@ -175,13 +157,9 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
         </Paper>
 
         <Paper
-          elevation={0}
+          className={jiraClassNames.panel}
           sx={{
             p: 2.5,
-            borderRadius: 2,
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            color: "inherit",
           }}
         >
           <Stack spacing={1.5}>
@@ -189,7 +167,7 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
               Recommended Next Actions
             </Typography>
             {summary.recommendedNextActions.length === 0 ? (
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 No immediate actions.
               </Typography>
             ) : (
@@ -203,11 +181,11 @@ export function ProjectQuickView({ summary }: { summary: ProjectSummaryView }) {
                 >
                   <Stack spacing={0.25}>
                     <Typography variant="body2">{action.label}</Typography>
-                    <Typography variant="caption" sx={{ color: mutedText }}>
+                    <Typography variant="caption">
                       {action.priority} priority
                     </Typography>
                   </Stack>
-                  <ArrowForward color="primary" fontSize="small" aria-hidden="true" />
+                  <ArrowForward fontSize="small" aria-hidden="true" />
                 </Stack>
               ))
             )}

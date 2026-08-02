@@ -10,14 +10,22 @@ import {
 } from "@mui/material";
 import {
   Add,
+  Apps,
   ArrowForward,
   Dashboard,
+  FormatListBulleted,
   InfoOutlined,
   Visibility,
 } from "@mui/icons-material";
 import { JiraDashboardCardGrid } from "./JiraDashboardCardGrid";
 import { JiraRouteShell } from "./JiraRouteShell";
-import type { JiraSetupList, JiraSetupRecord } from "../../_types";
+import { jiraClassNames } from "../../_theme";
+import { projectJiraPath, projectWorkPath } from "../../_utils/workRouting";
+import type {
+  JiraProjectSummaryList,
+  JiraSetupList,
+  JiraSetupRecord,
+} from "../../_types";
 
 const jiraDashboardCards = [
   {
@@ -54,6 +62,8 @@ const jiraDashboardCards = [
 export interface JiraDashboardModuleProps {
   setups?: JiraSetupList;
   registryError?: string;
+  availableProjects?: JiraProjectSummaryList;
+  availableProjectsError?: string;
 }
 
 function formatUpdatedAt(value: string): string {
@@ -90,28 +100,13 @@ function renderCompactPreviewCards(setups: JiraSetupList) {
           key={setup.id}
           component={Link}
           href={`/admin/dashboard/jira/setups/${setup.id}/preview`}
-          elevation={0}
+          className={jiraClassNames.interactivePanel}
           sx={{
-            display: "block",
             p: 1.25,
-            borderRadius: 1,
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            color: "inherit",
-            textDecoration: "none",
-            transition: "border-color 160ms ease, background-color 160ms ease",
-            "&:hover, &:focus-visible": {
-              borderColor: "rgba(144, 202, 249, 0.58)",
-              backgroundColor: "rgba(144, 202, 249, 0.08)",
-            },
-            "&:focus-visible": {
-              outline: "2px solid rgba(144, 202, 249, 0.9)",
-              outlineOffset: 2,
-            },
           }}
         >
           <Stack direction="row" spacing={1} alignItems="center">
-            <Visibility fontSize="small" color="primary" aria-hidden="true" />
+            <Visibility fontSize="small" aria-hidden="true" />
             <Stack spacing={0.25} minWidth={0} flex={1}>
               <Typography
                 variant="body2"
@@ -127,13 +122,13 @@ function renderCompactPreviewCards(setups: JiraSetupList) {
               </Typography>
               <Typography
                 variant="caption"
-                sx={{ color: "rgba(248, 247, 255, 0.58)", lineHeight: 1.2 }}
+                sx={{ lineHeight: 1.2 }}
               >
                 {setup.request.project.key} | {countSetupWorkstreams(setup)}{" "}
                 workstreams
               </Typography>
             </Stack>
-            <ArrowForward fontSize="small" color="primary" aria-hidden="true" />
+            <ArrowForward fontSize="small" aria-hidden="true" />
           </Stack>
         </Paper>
       ))}
@@ -144,6 +139,8 @@ function renderCompactPreviewCards(setups: JiraSetupList) {
 export function JiraDashboardModule({
   setups = [],
   registryError,
+  availableProjects = [],
+  availableProjectsError,
 }: JiraDashboardModuleProps) {
   const dashboardCards = jiraDashboardCards.map((card) =>
     card.title === "Preview setup"
@@ -163,7 +160,7 @@ export function JiraDashboardModule({
   return (
     <JiraRouteShell
       title="Jira Setup Studio"
-      description="A protected admin workspace for creating, validating, previewing, executing, and reviewing structured Jira project setups."
+      description="A protected admin workspace for creating, validating, previewing, executing, reviewing, and working Jira projects."
       statusLabel="V1 scaffold"
       actions={
         <Button
@@ -179,26 +176,147 @@ export function JiraDashboardModule({
       <Stack spacing={2}>
         <Paper
           component="section"
-          elevation={0}
+          className={jiraClassNames.panel}
           sx={{
             p: 3,
-            borderRadius: 2,
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            backgroundColor: "rgba(255, 255, 255, 0.06)",
-            color: "inherit",
           }}
         >
           <Stack spacing={2.5}>
             <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-              <Dashboard color="primary" aria-hidden="true" />
+              <Apps aria-hidden="true" />
+              <Stack spacing={0.75}>
+                <Typography component="h2" variant="h5">
+                  Available Jira projects
+                </Typography>
+                <Typography variant="body2">
+                  Open Jira projects from the automation server and their work
+                  submodule, whether or not they have saved setup drafts here.
+                </Typography>
+              </Stack>
+            </Stack>
+
+            {availableProjectsError ? (
+              <Alert severity="warning" variant="outlined">
+                {availableProjectsError}
+              </Alert>
+            ) : null}
+
+            {availableProjects.length === 0 ? (
+              <Paper
+                className={jiraClassNames.emptyState}
+                sx={{
+                  p: 2.5,
+                }}
+              >
+                <Typography variant="body2">
+                  No Jira projects are available yet, or the automation server
+                  could not return the project list.
+                </Typography>
+              </Paper>
+            ) : (
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    lg: "repeat(2, minmax(0, 1fr))",
+                  },
+                  gap: 1.5,
+                }}
+              >
+                {availableProjects.map((project) => (
+                  <Paper
+                    key={project.key}
+                    component="article"
+                    className={jiraClassNames.panel}
+                    sx={{
+                      p: 2.5,
+                    }}
+                  >
+                    <Stack spacing={1.75}>
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        justifyContent="space-between"
+                        alignItems="flex-start"
+                      >
+                        <Stack spacing={0.75} minWidth={0}>
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            flexWrap="wrap"
+                            useFlexGap
+                          >
+                            <Chip
+                              label={project.key}
+                              size="small"
+                            />
+                            <Chip
+                              label="Jira project"
+                              size="small"
+                              variant="outlined"
+                            />
+                          </Stack>
+                          <Typography
+                            component="h3"
+                            variant="h6"
+                            sx={{ lineHeight: 1.15 }}
+                          >
+                            {project.name}
+                          </Typography>
+                          {project.description ? (
+                            <Typography
+                              className={jiraClassNames.clippedText}
+                              variant="body2"
+                            >
+                              {project.description}
+                            </Typography>
+                          ) : null}
+                        </Stack>
+                        <Dashboard aria-hidden="true" />
+                      </Stack>
+
+                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                        <Button
+                          component={Link}
+                          href={projectJiraPath(project.key)}
+                          variant="outlined"
+                          startIcon={<Dashboard aria-hidden="true" />}
+                        >
+                          Summary
+                        </Button>
+                        <Button
+                          component={Link}
+                          href={projectWorkPath(project.key)}
+                          variant="contained"
+                          startIcon={<FormatListBulleted aria-hidden="true" />}
+                        >
+                          Work
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </Paper>
+                ))}
+              </Box>
+            )}
+          </Stack>
+        </Paper>
+
+        <Paper
+          component="section"
+          className={jiraClassNames.panel}
+          sx={{
+            p: 3,
+          }}
+        >
+          <Stack spacing={2.5}>
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+              <Dashboard aria-hidden="true" />
               <Stack spacing={0.75}>
                 <Typography component="h2" variant="h5">
                   Saved setup registry
                 </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: "rgba(248, 247, 255, 0.68)" }}
-                >
+                <Typography variant="body2">
                   Resume saved Jira setup drafts and open their preview by
                   project name.
                 </Typography>
@@ -213,16 +331,12 @@ export function JiraDashboardModule({
 
             {!registryError && setups.length === 0 ? (
               <Paper
-                elevation={0}
+                className={jiraClassNames.emptyState}
                 sx={{
                   p: 2.5,
-                  borderRadius: 2,
-                  border: "1px dashed rgba(255, 255, 255, 0.18)",
-                  backgroundColor: "rgba(255, 255, 255, 0.04)",
-                  color: "inherit",
                 }}
               >
-                <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.68)" }}>
+                <Typography variant="body2">
                   No saved setup drafts are available yet. Configure a Jira
                   space to create the first preview-ready setup.
                 </Typography>
@@ -245,26 +359,9 @@ export function JiraDashboardModule({
                     key={setup.id}
                     component={Link}
                     href={`/admin/dashboard/jira/setups/${setup.id}/preview`}
-                    elevation={0}
+                    className={jiraClassNames.interactivePanel}
                     sx={{
-                      display: "block",
                       p: 2.5,
-                      borderRadius: 2,
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      backgroundColor: "rgba(255, 255, 255, 0.05)",
-                      color: "inherit",
-                      textDecoration: "none",
-                      transition:
-                        "border-color 160ms ease, background-color 160ms ease, transform 160ms ease",
-                      "&:hover, &:focus-visible": {
-                        borderColor: "rgba(144, 202, 249, 0.58)",
-                        backgroundColor: "rgba(144, 202, 249, 0.08)",
-                        transform: "translateY(-1px)",
-                      },
-                      "&:focus-visible": {
-                        outline: "2px solid rgba(144, 202, 249, 0.9)",
-                        outlineOffset: 3,
-                      },
                     }}
                   >
                     <Stack spacing={1.75}>
@@ -280,44 +377,36 @@ export function JiraDashboardModule({
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: "rgba(248, 247, 255, 0.62)" }}
                           >
                             Project {setup.request.project.key} |{" "}
                             {countSetupWorkstreams(setup)} workstreams |{" "}
                             {formatUpdatedAt(setup.updatedAt)}
                           </Typography>
                         </Stack>
-                        <Visibility color="primary" aria-hidden="true" />
+                        <Visibility aria-hidden="true" />
                       </Stack>
 
                       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                         <Chip
                           label={setup.status}
                           size="small"
-                          color="primary"
-                          sx={{ color: "#081018", fontWeight: 700 }}
                         />
                         <Chip
                           label="Preview available"
                           size="small"
                           variant="outlined"
-                          sx={{
-                            color: "rgba(248, 247, 255, 0.82)",
-                            borderColor: "rgba(255, 255, 255, 0.16)",
-                          }}
                         />
                       </Stack>
 
                       <Stack direction="row" spacing={0.75} alignItems="center">
                         <Typography
                           variant="button"
-                          sx={{ color: "primary.light", lineHeight: 1 }}
+                          sx={{ lineHeight: 1 }}
                         >
                           Open preview
                         </Typography>
                         <ArrowForward
                           fontSize="small"
-                          color="primary"
                           aria-hidden="true"
                         />
                       </Stack>
@@ -332,8 +421,8 @@ export function JiraDashboardModule({
         <JiraDashboardCardGrid cards={dashboardCards} />
 
         <Stack direction="row" spacing={1.25} alignItems="center">
-          <InfoOutlined fontSize="small" color="primary" aria-hidden="true" />
-          <Typography variant="caption" sx={{ color: "rgba(248, 247, 255, 0.6)" }}>
+          <InfoOutlined fontSize="small" aria-hidden="true" />
+          <Typography variant="caption">
             Privileged Jira operations remain behind protected server actions and API
             routes.
           </Typography>

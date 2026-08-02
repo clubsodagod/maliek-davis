@@ -31,7 +31,7 @@ const setupResponse = {
 
 describe("Jira service ownership", () => {
   beforeEach(() => {
-    vi.stubEnv("JIRA_AUTOMATION_SERVER_URL", "https://jira-server.test");
+    vi.stubEnv("JIRA_AUTOMATION_DEV_SERVER_URL", "https://jira-server.test");
     vi.stubEnv("JIRA_AUTOMATION_SERVER_TOKEN", "server-token");
     vi.stubEnv("JIRA_REQUEST_TIMEOUT_MS", "1000");
   });

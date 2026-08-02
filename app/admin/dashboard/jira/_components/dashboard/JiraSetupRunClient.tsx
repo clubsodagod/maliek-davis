@@ -29,6 +29,7 @@ import {
   type JiraRunProgressSummary,
 } from "../../_utils/runProgress";
 import { getJiraHierarchyStats } from "../../_utils/setupBuilder";
+import { jiraClassNames } from "../../_theme";
 
 export interface JiraSetupRunClientProps {
   setup: JiraSetupRecord;
@@ -36,8 +37,6 @@ export interface JiraSetupRunClientProps {
 }
 
 const INITIAL_POLL_DELAY_MS = 900;
-const mutedText = "rgba(248, 247, 255, 0.68)";
-
 function wait(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) {
@@ -70,31 +69,19 @@ function formatDateTime(value: string | undefined): string {
   }).format(date);
 }
 
-function statusColor(
-  progress: JiraRunProgressSummary,
-): "default" | "primary" | "success" | "error" | "warning" {
-  if (progress.stage === "completed") return "success";
-  if (progress.stage === "failed") return "error";
-  if (progress.stage === "queued") return "warning";
-  if (progress.stage === "idle") return "default";
-  return "primary";
-}
-
 function StatItem({ label, value }: { label: string; value: string | number }) {
   return (
     <Box
+      className={jiraClassNames.panelCompact}
       sx={{
         p: 2,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.28)",
       }}
     >
       <Stack spacing={0.5}>
         <Typography component="p" variant="h5" sx={{ lineHeight: 1 }}>
           {value}
         </Typography>
-        <Typography variant="body2" sx={{ color: mutedText }}>
+        <Typography variant="body2">
           {label}
         </Typography>
       </Stack>
@@ -207,14 +194,9 @@ export function JiraSetupRunClient({
   return (
     <Stack spacing={3}>
       <Paper
-        elevation={0}
+        className={jiraClassNames.panel}
         sx={{
           p: { xs: 2.5, md: 3 },
-          borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          background:
-            "linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032))",
-          color: "inherit",
         }}
       >
         <Stack spacing={2.5}>
@@ -225,14 +207,14 @@ export function JiraSetupRunClient({
           >
             <Stack spacing={1.25} sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                <Chip label={setup.request.project.key} color="primary" />
-                <Chip label={progress.statusLabel} color={statusColor(progress)} />
+                <Chip label={setup.request.project.key} />
+                <Chip label={progress.statusLabel} />
                 {activeRunId ? <Chip label={`Run ${activeRunId}`} /> : null}
               </Stack>
               <Typography component="h2" variant="h4" sx={{ lineHeight: 1.08 }}>
                 {setup.request.project.name}
               </Typography>
-              <Typography variant="body2" sx={{ color: mutedText, maxWidth: 720 }}>
+              <Typography variant="body2" sx={{ maxWidth: 720 }}>
                 Start the saved setup when ready. Progress is read from persisted
                 automation state through protected application routes.
               </Typography>
@@ -279,7 +261,7 @@ export function JiraSetupRunClient({
             </Alert>
           ) : null}
 
-          <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.08)" }} />
+          <Divider />
 
           <Stack spacing={1.5}>
             <Stack
@@ -289,28 +271,28 @@ export function JiraSetupRunClient({
             >
               <Stack direction="row" spacing={1} alignItems="center">
                 {progress.stage === "completed" ? (
-                  <CheckCircle color="success" aria-hidden="true" />
+                  <CheckCircle aria-hidden="true" />
                 ) : progress.stage === "failed" ? (
-                  <ErrorOutline color="error" aria-hidden="true" />
+                  <ErrorOutline aria-hidden="true" />
                 ) : (
-                  <Sync color="primary" aria-hidden="true" />
+                  <Sync aria-hidden="true" />
                 )}
                 <Typography component="h3" variant="h5">
                   {progress.currentOperation}
                 </Typography>
               </Stack>
-              <Typography variant="body2" sx={{ color: mutedText }}>
+              <Typography variant="body2">
                 {progress.completedCount} of {progress.totalCount} operations
               </Typography>
             </Stack>
 
             <LinearProgress
+              className={jiraClassNames.progressTall}
               variant="determinate"
               value={progress.percentage}
               aria-label="Setup run progress"
-              sx={{ height: 10, borderRadius: 999 }}
             />
-            <Typography variant="body2" sx={{ color: mutedText }}>
+            <Typography variant="body2">
               {isPolling ? "Polling automation progress..." : "Progress is current."}
             </Typography>
           </Stack>
@@ -318,18 +300,14 @@ export function JiraSetupRunClient({
       </Paper>
 
       <Paper
-        elevation={0}
+        className={jiraClassNames.panel}
         sx={{
           p: { xs: 2.5, md: 3 },
-          borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          backgroundColor: "rgba(255, 255, 255, 0.06)",
-          color: "inherit",
         }}
       >
         <Stack spacing={2.25}>
           <Stack direction="row" spacing={1.25} alignItems="center">
-            <QueryStats color="primary" aria-hidden="true" />
+            <QueryStats aria-hidden="true" />
             <Typography component="h2" variant="h5">
               Run Details
             </Typography>

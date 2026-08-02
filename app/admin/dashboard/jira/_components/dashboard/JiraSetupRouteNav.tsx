@@ -3,13 +3,14 @@ import { Button, Stack } from "@mui/material";
 
 export interface JiraSetupRouteNavProps {
   setupId: string;
-  activeRoute: "preview" | "run" | "results";
+  activeRoute: "discovery" | "preview" | "run" | "results";
 }
 
 const setupRouteItems: Array<{
   route: JiraSetupRouteNavProps["activeRoute"];
   label: string;
 }> = [
+  { route: "discovery", label: "Discovery" },
   { route: "preview", label: "Preview" },
   { route: "run", label: "Run" },
   { route: "results", label: "Results" },

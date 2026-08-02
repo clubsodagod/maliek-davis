@@ -9,6 +9,7 @@ import {
   useTransition,
 } from "react";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 import {
   Accordion,
   AccordionDetails,
@@ -29,6 +30,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  AutoFixHigh,
   CheckCircle,
   CloudUpload,
   ExpandMore,
@@ -81,6 +83,7 @@ import {
   type JiraProjectTemplateId,
   type JiraWorkflowSelectionId,
 } from "../../_config/projectOptions";
+import { jiraClassNames } from "../../_theme";
 
 type SaveStatus = "idle" | "waiting" | "saving" | "saved" | "error";
 type ValidationStatus = "idle" | "validating" | "valid" | "error";
@@ -232,11 +235,8 @@ function JsonPreviewAccordion({
   return (
     <Accordion
       disableGutters
+      className={jiraClassNames.accordion}
       sx={{
-        backgroundColor: "rgba(8, 9, 16, 0.34)",
-        color: "inherit",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        "&::before": { display: "none" },
         width: { xs: "100%", md: "50%" }
       }}
     >
@@ -249,21 +249,7 @@ function JsonPreviewAccordion({
       <AccordionDetails>
         <Box
           component="pre"
-          sx={{
-            m: 0,
-            p: 2,
-            maxHeight: 320,
-            overflow: "auto",
-            borderRadius: 1,
-            backgroundColor: "rgba(0, 0, 0, 0.32)",
-            color: "rgba(248, 247, 255, 0.86)",
-            fontFamily:
-              'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-            fontSize: "0.8125rem",
-            lineHeight: 1.55,
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-          }}
+          className={jiraClassNames.jsonPreview}
         >
           {JSON.stringify(data, null, 2)}
         </Box>
@@ -286,26 +272,13 @@ function TemplateSelectionCard({
       component="article"
       onClick={() => onSelect(template.id)}
       aria-pressed={selected}
+      className={clsx(
+        jiraClassNames.choiceCard,
+        selected && jiraClassNames.choiceCardSelected,
+      )}
       sx={{
         p: 2,
-        width: "100%",
         minHeight: 236,
-        alignItems: "stretch",
-        justifyContent: "flex-start",
-        textAlign: "left",
-        borderRadius: 1,
-        border: selected
-          ? "1px solid rgba(144, 202, 249, 0.74)"
-          : "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: selected
-          ? "rgba(144, 202, 249, 0.14)"
-          : "rgba(8, 9, 16, 0.34)",
-        color: "inherit",
-        transition: "border-color 160ms ease, background-color 160ms ease",
-        "&:focus-visible": {
-          outline: "2px solid rgba(144, 202, 249, 0.9)",
-          outlineOffset: 2,
-        },
       }}
     >
       <Stack spacing={1.35} sx={{ width: "100%" }}>
@@ -313,13 +286,13 @@ function TemplateSelectionCard({
           <Typography component="h3" variant="subtitle1" sx={{ fontWeight: 800 }}>
             {template.name}
           </Typography>
-          {selected ? <Chip size="small" color="primary" label="Selected" /> : null}
+          {selected ? <Chip size="small" label="Selected" /> : null}
           {template.pearlBoxRecommended ? (
             <Chip size="small" label="Recommended" />
           ) : null}
         </Stack>
 
-        <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.72)" }}>
+        <Typography variant="body2">
           {template.purpose}
         </Typography>
 
@@ -331,7 +304,7 @@ function TemplateSelectionCard({
         <Stack spacing={0.5}>
           <Typography
             variant="overline"
-            sx={{ color: "rgba(248, 247, 255, 0.52)", lineHeight: 1.3 }}
+            sx={{ lineHeight: 1.3 }}
           >
             Expected issue types
           </Typography>
@@ -342,7 +315,7 @@ function TemplateSelectionCard({
           </Stack>
         </Stack>
 
-        <Typography variant="caption" sx={{ color: "rgba(248, 247, 255, 0.62)" }}>
+        <Typography variant="caption">
           {template.recommendedUseCase}
         </Typography>
       </Stack>
@@ -357,13 +330,9 @@ function TemplateHierarchyPreview({
 }) {
   return (
     <Paper
-      elevation={0}
+      className={jiraClassNames.panelCompact}
       sx={{
         p: 2,
-        borderRadius: 1,
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(8, 9, 16, 0.3)",
-        color: "inherit",
       }}
     >
       <Stack spacing={1.5}>
@@ -375,7 +344,7 @@ function TemplateHierarchyPreview({
           <Chip label={`Task: ${template.hierarchyPreview.task}`} />
           <Chip label={`Subtask: ${template.hierarchyPreview.subtask}`} />
         </Stack>
-        <Typography variant="body2" sx={{ color: "rgba(248, 247, 255, 0.68)" }}>
+        <Typography variant="body2">
           Jira will still be queried after project creation for the actual issue types
           available in this project.
         </Typography>
@@ -522,7 +491,7 @@ export function JiraHybridSetupBuilder({
     (
       request: JiraProjectSetupRequest,
       signature: string,
-      navigateAfterSave: boolean,
+      navigateTo: "none" | "preview" | "discovery",
     ): void => {
       setSaveStatus("saving");
       setSaveError(null);
@@ -533,7 +502,7 @@ export function JiraHybridSetupBuilder({
           : await createJiraSetupAction(request);
 
         if (!result.success) {
-          if (!navigateAfterSave) {
+          if (navigateTo === "none") {
             lastFailedAutosaveSignatureRef.current = signature;
           }
           setSaveStatus("error");
@@ -545,8 +514,12 @@ export function JiraHybridSetupBuilder({
         setSetupId(result.data.id);
         setSaveStatus("saved");
 
-        if (navigateAfterSave) {
+        if (navigateTo === "preview") {
           router.push(`/admin/dashboard/jira/setups/${result.data.id}/preview`);
+        }
+
+        if (navigateTo === "discovery") {
+          router.push(`/admin/dashboard/jira/setups/${result.data.id}/discovery`);
         }
       });
     },
@@ -709,7 +682,31 @@ export function JiraHybridSetupBuilder({
       return;
     }
 
-    saveRequest(setupRequest, JSON.stringify(setupRequest), true);
+    saveRequest(setupRequest, JSON.stringify(setupRequest), "preview");
+  }
+
+  function handleStartDiscovery(): void {
+    if (!automationReady) {
+      setValidationFeedback({
+        severity: "error",
+        message: "Jira automation is unavailable.",
+      });
+      return;
+    }
+
+    if (!projectReady || localIssues.length > 0) {
+      setValidationFeedback({
+        severity: "error",
+        message:
+          localIssues.length > 0
+            ? firstIssueMessage(localIssues)
+            : "Choose a project name, template, and workflow before discovery.",
+        issues: localIssues,
+      });
+      return;
+    }
+
+    saveRequest(setupRequest, JSON.stringify(setupRequest), "discovery");
   }
 
   useEffect(() => {
@@ -760,7 +757,7 @@ export function JiraHybridSetupBuilder({
     setSaveStatus("waiting");
 
     const timeout = window.setTimeout(() => {
-      saveRequest(setupRequest, signature, false);
+      saveRequest(setupRequest, signature, "none");
     }, AUTOSAVE_DELAY_MS);
 
     return () => window.clearTimeout(timeout);
@@ -777,12 +774,9 @@ export function JiraHybridSetupBuilder({
   return (
     <Paper
       component="section"
-      elevation={0}
+      className={jiraClassNames.panel}
       sx={{
         p: { xs: 2.5, md: 3 },
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backgroundColor: "rgba(255, 255, 255, 0.06)",
-        color: "inherit",
       }}
     >
       <Stack spacing={3}>
@@ -798,7 +792,7 @@ export function JiraHybridSetupBuilder({
             <Chip label={projectKey ? `Key ${projectKey}` : "Key pending"} />
             <Chip label={formatSaveStatus(saveStatus, setupId)} />
             {validationStatus === "valid" ? (
-              <Chip label="Validated" color="success" icon={<CheckCircle />} />
+              <Chip label="Validated" icon={<CheckCircle />} />
             ) : null}
           </Stack>
         </Stack>
@@ -882,13 +876,9 @@ export function JiraHybridSetupBuilder({
             <TemplateHierarchyPreview template={selectedTemplate} />
 
             <Paper
-              elevation={0}
+              className={jiraClassNames.panelCompact}
               sx={{
                 p: 2,
-                borderRadius: 1,
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                backgroundColor: "rgba(8, 9, 16, 0.3)",
-                color: "inherit",
               }}
             >
               <FormControl component="fieldset" fullWidth>
@@ -914,13 +904,9 @@ export function JiraHybridSetupBuilder({
                         return (
                           <Paper
                             key={workflow.id}
-                            elevation={0}
+                            className={jiraClassNames.panelCompact}
                             sx={{
                               p: 1.25,
-                              borderRadius: 1,
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
-                              backgroundColor: "rgba(255, 255, 255, 0.04)",
-                              color: "inherit",
                             }}
                           >
                             <FormControlLabel
@@ -934,7 +920,6 @@ export function JiraHybridSetupBuilder({
                                   </Typography>
                                   <Typography
                                     variant="caption"
-                                    sx={{ color: "rgba(248, 247, 255, 0.62)" }}
                                   >
                                     {availability.reason ?? workflow.description}
                                   </Typography>
@@ -954,17 +939,12 @@ export function JiraHybridSetupBuilder({
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
               <Chip label={formatJiraProjectTypeKey(selectedTemplate.projectTypeKey)} />
               <Chip label={formatJiraManagementStyle(selectedTemplate.managementStyle)} />
-              <Chip label={selectedWorkflow.name} color="primary" />
+              <Chip label={selectedWorkflow.name} />
             </Stack>
 
             <Accordion
               disableGutters
-              sx={{
-                backgroundColor: "rgba(8, 9, 16, 0.34)",
-                color: "inherit",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                "&::before": { display: "none" },
-              }}
+              className={jiraClassNames.accordion}
             >
               <AccordionSummary expandIcon={<ExpandMore />}>
                 <Typography variant="body2">Advanced details</Typography>
@@ -1007,9 +987,20 @@ export function JiraHybridSetupBuilder({
                 </Stack>
               </AccordionDetails>
             </Accordion>
-            <Button type="button" variant="contained" onClick={() => continueToNextStep()}>
-              Continue
-            </Button>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              <Button
+                type="button"
+                variant="contained"
+                startIcon={<AutoFixHigh aria-hidden="true" />}
+                disabled={isPending || !projectReady || !automationReady}
+                onClick={() => handleStartDiscovery()}
+              >
+                Start Guided Discovery
+              </Button>
+              <Button type="button" variant="outlined" onClick={() => continueToNextStep()}>
+                Skip Discovery and Continue
+              </Button>
+            </Stack>
           </Stack>
         ) : null}
 
@@ -1035,6 +1026,7 @@ export function JiraHybridSetupBuilder({
             </Stack>
             <Stack direction={{xs:"column",md:"row"}} spacing={1}  useFlexGap>
               <Box
+                className={jiraClassNames.dropZone}
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.preventDefault();
@@ -1042,18 +1034,12 @@ export function JiraHybridSetupBuilder({
                   if (file) void importStageFile(currentStage.step, file);
                 }}
                 sx={{
-                  border: "1px dashed rgba(255, 255, 255, 0.28)",
                   p: 3,
-                  minHeight: 156,
-                  display: "grid",
-                  placeItems: "center",
-                  textAlign: "center",
-                  backgroundColor: "rgba(8, 9, 16, 0.36)",
                   width: { xs: "100%", md: "50%" },
                 }}
               >
                 <Stack spacing={1.25} alignItems="center">
-                  <CloudUpload color="primary" aria-hidden="true" />
+                  <CloudUpload aria-hidden="true" />
                   <Typography variant="body1">{currentStage.prompt}</Typography>
                   <Button
                     type="button"
@@ -1089,12 +1075,7 @@ export function JiraHybridSetupBuilder({
 
             <Accordion
               disableGutters
-              sx={{
-                backgroundColor: "rgba(8, 9, 16, 0.34)",
-                color: "inherit",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                "&::before": { display: "none" },
-              }}
+              className={jiraClassNames.accordion}
             >
               <AccordionSummary expandIcon={<ExpandMore />}>
                 <Typography variant="body2">Paste JSON instead</Typography>

@@ -6,9 +6,10 @@ The configure route includes a decision-tree builder for new Jira spaces: admins
 
 ## Routes
 
-- `/admin/dashboard/jira` - setup registry and Jira feature entry point
+- `/admin/dashboard/jira` - Jira project links, setup registry, and Jira feature entry point
 - `/admin/dashboard/jira/configure` - decision-tree setup flow for new Jira spaces
 - `/admin/dashboard/jira/new` - compatibility redirect to `/admin/dashboard/jira/configure`
+- `/admin/dashboard/jira/setups/[setupid]/discovery` - optional guided project discovery and editable discovery-plan preview
 - `/admin/dashboard/jira/setups/[setupid]/preview` - saved setup preview
 - `/admin/dashboard/jira/setups/[setupid]/run` - setup execution progress
 - `/admin/dashboard/jira/setups/[setupid]/results` - setup results and error review
@@ -30,6 +31,7 @@ app/admin/dashboard/jira/
 |   `-- page.tsx
 |-- setups/
 |   `-- [setupid]/
+|       |-- discovery/page.tsx
 |       |-- preview/page.tsx
 |       |-- run/page.tsx
 |       `-- results/page.tsx
@@ -63,7 +65,7 @@ app/admin/dashboard/jira/
 - `_utils` holds small pure helpers for reference resolution, progress calculation, link identity generation, and other deterministic transformations.
 - `configure` owns creating drafts, new-space project configuration, staged hierarchy imports, validation, preview, and confirmation.
 - `new` redirects to `configure` for compatibility.
-- `setups` owns saved setup detail views, execution, progress, retry, and results.
+- `setups` owns saved setup detail views, optional guided discovery, preview, execution, progress, retry, and results.
 - `[project-key]` owns the first work-management slice: project health,
   Ready queues, status queues, and Subtask answer completion.
 
@@ -120,6 +122,11 @@ Execution status should be modeled as typed states such as `draft`, `validating`
   `/api/jira/**` and `_services`.
 - The dashboard registry lists saved setup drafts by project name and links them
   to preview routes.
+- The dashboard lists Jira project summaries from the automation server with
+  Summary and Work links, independent of whether the project has a saved setup
+  draft in the registry.
+- Opening a Jira project creates a reuse-mode empty setup draft automatically
+  when the project exists in Jira but is not yet saved in the setup registry.
 - The saved setup preview renders project summary, hierarchy stats, workstream
   cards, expandable task/subtask sections, and link details from the persisted
   setup record.
@@ -194,6 +201,39 @@ Project template selection is centralized in `_config/projectOptions.ts` and gro
 - Process Control
 
 The saved request includes required `project.projectTypeKey`, `project.projectTemplateKey`, and `workflow.id` fields. The configure flow sets `existingProjectPolicy: "fail"` for new-space creation so a selected custom workflow is only applied during safe project creation.
+The default template for new setup drafts is `business-project-management`.
+Automatically created drafts for existing Jira projects use `createIfMissing:
+false`, `existingProjectPolicy: "reuse"`, `workflow.id: "jira-default"`, and
+empty `workstreams`.
+
+## Guided Discovery
+
+After project name, template, and workflow selection, configure presents:
+
+- `Start Guided Discovery`
+- `Skip Discovery and Continue`
+
+Skipping discovery keeps the staged JSON import flow unchanged. Starting discovery creates or updates the same setup draft and routes to `/admin/dashboard/jira/setups/[setupid]/discovery`.
+
+The discovery route loads state by setup ID from the automation server. It never passes generated plans through query parameters, local storage, or client-only state. The browser receives the pinned question-bank config and the resumable session state from the server.
+
+If the automation server returns JSON that no longer matches the application schema, the upstream client returns `UPSTREAM_INVALID_RESPONSE` and logs only sanitized schema issue paths, method, route, and request ID. It does not log answer text, generated plan content, tokens, or other sensitive response bodies.
+
+Discovery UI supports:
+
+- tier selection: `quick`, `standard`, `advanced`
+- section navigation and progress
+- required/optional labels and question guidance
+- answer state selection: draft, confirmed, assumption, unknown, not applicable, deferred, disputed
+- backend answer save and model normalization
+- clarifying-question cards
+- section processing, analysis summary, and approval
+- final discovery-plan generation
+- manual add operations for workstreams, tasks, and subtasks
+- chat change requests that return a structured patch preview before mutation
+- final approval, generated setup validation, saved setup update, and redirect to `/preview`
+
+Editing an approved answer invalidates that section approval and any generated plan. The final Jira setup preview remains the review gate before Jira publication.
 
 ## Application API Layer
 
@@ -204,6 +244,7 @@ Protected routes:
 
 ```text
 GET  /api/jira/health
+GET  /api/jira/projects/summary
 GET  /api/jira/setups
 POST /api/jira/setups/validate
 POST /api/jira/setups
@@ -219,6 +260,8 @@ PUT  /api/jira/workspaces/[projectKey]/answers/[issueId]
 POST /api/jira/workspaces/[projectKey]/answers/[issueId]/validate
 POST /api/jira/workspaces/[projectKey]/answers/[issueId]/complete
 ```
+
+Guided discovery currently uses server actions that call the upstream automation server directly through `app/api/jira/_lib/service.ts`; no duplicate same-origin API routes are exposed for these mutations.
 
 Every route returns:
 
@@ -254,6 +297,18 @@ Work-management actions live in `_services/work-actions.ts`:
 - `validateWorkAnswerAction({ projectKey, issueIdOrKey, version, answer?, evidence? })`
 - `completeWorkAnswerAction({ projectKey, issueIdOrKey, version })`
 
+Discovery actions live in `_services/discovery-actions.ts`:
+
+- `startJiraDiscoveryAction({ setupId, tier })`
+- `skipJiraDiscoveryAction({ setupId })`
+- `saveJiraDiscoveryAnswerAction({ setupId, questionId | clarificationId, rawAnswer, state, expectedVersion })`
+- `processJiraDiscoverySectionAction({ setupId, sectionId })`
+- `approveJiraDiscoverySectionAction({ setupId, sectionId, revision })`
+- `generateJiraDiscoveryPlanAction({ setupId })`
+- `patchJiraDiscoveryPlanAction({ setupId, operations })`
+- `chatJiraDiscoveryPlanAction({ setupId, prompt })`
+- `approveFinalJiraDiscoveryAction({ setupId, planRevisionId })`
+
 Actions apply the same auth, admin authorization, ownership checks, schemas,
 rate limits, upstream service calls, and safe error normalization as routes.
 
@@ -276,12 +331,50 @@ app/admin/dashboard/jira/UPSTREAM_SERVER_OWNERSHIP.md
 Server-only Jira automation configuration:
 
 ```env
-JIRA_AUTOMATION_SERVER_URL=
+JIRA_AUTOMATION_DEV_SERVER_URL=
+JIRA_AUTOMATION_PRODUCTION_SERVER_URL=
 JIRA_AUTOMATION_SERVER_TOKEN=
 JIRA_REQUEST_TIMEOUT_MS=15000
 ```
 
-Do not prefix these with `NEXT_PUBLIC_`.
+Do not prefix these with `NEXT_PUBLIC_`. Production is selected when
+`VERCEL_ENV=production` or `NODE_ENV=production`; all other runtimes use the
+development automation URL. `JIRA_AUTOMATION_SERVER_URL` remains supported only
+as a legacy fallback when the selected URL is missing.
+
+The OpenAI discovery provider is configured on the automation server with `OPENAI_GENERAL_IQ_MODEL` and `OPENAI_HIGH_IQ_MODEL`, not in this Next app. The browser never receives model credentials or backend prompts.
+
+## Testing
+
+Unit and integration tests:
+
+```bash
+npm.cmd test
+```
+
+Type check:
+
+```bash
+npx.cmd tsc --noEmit
+```
+
+Playwright E2E:
+
+```bash
+npm.cmd run test:e2e
+```
+
+Optional E2E environment:
+
+```env
+JIRA_E2E_BASE_URL=http://127.0.0.1:3000
+JIRA_E2E_SETUP_ID=
+JIRA_E2E_STORAGE_STATE=
+JIRA_E2E_UNAUTHORIZED_SETUP_ID=
+PLAYWRIGHT_START_SERVER=1
+```
+
+The E2E suite is environment-gated. Set `JIRA_E2E_SETUP_ID` and `JIRA_E2E_STORAGE_STATE` to run authenticated discovery flows against a seeded setup. Set `JIRA_E2E_UNAUTHORIZED_SETUP_ID` to verify ownership blocking. `JIRA_E2E_BASE_URL` defaults to `http://127.0.0.1:3000`, and `PLAYWRIGHT_START_SERVER=1` starts the local Next dev server before the tests.
 
 ## Rate Limiting
 
