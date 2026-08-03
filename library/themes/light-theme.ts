@@ -205,14 +205,15 @@ export const lightTheme: ThemeOptions = createTheme({
             styleOverrides: {
                 root: {
                     ".MuiInputLabel-root": {
-                        color: '#fafafa',
+                        color: "--foreground",
                     },
                     ".MuiOutlinedInput-root": {
                         border: "1px solid var(--textfield-border-color)",
-                        color: "var(--textfield-border-color)",
+                        color: "--foreground",
                     },
                     ".MuiTextField-root": {
                         border: "1px solid var(--textfield-border-color)",
+                        color: "--foreground",
                     }
                 },
             },

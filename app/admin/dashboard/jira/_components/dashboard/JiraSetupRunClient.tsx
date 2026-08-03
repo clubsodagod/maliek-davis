@@ -23,16 +23,22 @@ import {
 } from "@mui/icons-material";
 import { pollJiraRun } from "../../_services";
 import { startJiraSetupRunAction } from "../../_services/actions";
-import type { JiraRunRecord, JiraSetupRecord } from "../../_types";
+import type {
+  JiraCredentialStatus,
+  JiraRunRecord,
+  JiraSetupRecord,
+} from "../../_types";
 import {
   getJiraRunProgress,
   type JiraRunProgressSummary,
 } from "../../_utils/runProgress";
 import { getJiraHierarchyStats } from "../../_utils/setupBuilder";
 import { jiraClassNames } from "../../_theme";
+import { JiraCredentialDialog } from "./JiraCredentialDialog";
 
 export interface JiraSetupRunClientProps {
   setup: JiraSetupRecord;
+  initialCredentialStatus: JiraCredentialStatus;
   initialRunId?: string;
 }
 
@@ -102,6 +108,7 @@ function queuedProgress(
 
 export function JiraSetupRunClient({
   setup,
+  initialCredentialStatus,
   initialRunId,
 }: JiraSetupRunClientProps) {
   const router = useRouter();
@@ -113,6 +120,10 @@ export function JiraSetupRunClient({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPolling, setIsPolling] = useState(Boolean(initialRunId));
   const [isStarting, setIsStarting] = useState(false);
+  const [credentialStatus, setCredentialStatus] = useState(initialCredentialStatus);
+  const [credentialDialogOpen, setCredentialDialogOpen] = useState(false);
+  const [startAfterCredentialSave, setStartAfterCredentialSave] = useState(false);
+  const [credentialPromptDismissed, setCredentialPromptDismissed] = useState(false);
   const stats = useMemo(
     () => getJiraHierarchyStats(setup.request.workstreams),
     [setup.request.workstreams],
@@ -171,7 +182,20 @@ export function JiraSetupRunClient({
     };
   }, [activeRunId]);
 
-  async function handleStartRun() {
+  useEffect(() => {
+    if (!credentialStatus.configured && !activeRunId && !credentialPromptDismissed) {
+      setCredentialDialogOpen(true);
+    }
+  }, [activeRunId, credentialPromptDismissed, credentialStatus.configured]);
+
+  async function handleStartRun(status: JiraCredentialStatus = credentialStatus) {
+    if (!status.configured) {
+      setStartAfterCredentialSave(true);
+      setCredentialPromptDismissed(false);
+      setCredentialDialogOpen(true);
+      return;
+    }
+
     setErrorMessage(null);
     setIsStarting(true);
 
@@ -179,6 +203,11 @@ export function JiraSetupRunClient({
       const result = await startJiraSetupRunAction({ setupId: setup.id });
 
       if (!result.success) {
+        if (result.error.code === "JIRA_CREDENTIAL_REQUIRED") {
+          setStartAfterCredentialSave(true);
+          setCredentialPromptDismissed(false);
+          setCredentialDialogOpen(true);
+        }
         setErrorMessage(result.error.message);
         return;
       }
@@ -191,8 +220,28 @@ export function JiraSetupRunClient({
     }
   }
 
+  function handleCredentialSaved(nextStatus: JiraCredentialStatus) {
+    setCredentialStatus(nextStatus);
+    setCredentialDialogOpen(false);
+    setCredentialPromptDismissed(false);
+
+    if (startAfterCredentialSave) {
+      setStartAfterCredentialSave(false);
+      void handleStartRun(nextStatus);
+    }
+  }
+
   return (
     <Stack spacing={3}>
+      <JiraCredentialDialog
+        open={credentialDialogOpen}
+        onClose={() => {
+          setStartAfterCredentialSave(false);
+          setCredentialPromptDismissed(true);
+          setCredentialDialogOpen(false);
+        }}
+        onSaved={handleCredentialSaved}
+      />
       <Paper
         className={jiraClassNames.panel}
         sx={{

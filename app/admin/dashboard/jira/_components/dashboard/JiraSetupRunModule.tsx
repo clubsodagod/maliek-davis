@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Alert, Button } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import type { JiraSetupRecord } from "../../_types";
+import type { JiraCredentialStatus, JiraSetupRecord } from "../../_types";
 import { JiraRouteShell } from "./JiraRouteShell";
 import { JiraSetupRouteNav } from "./JiraSetupRouteNav";
 import { JiraSetupRunClient } from "./JiraSetupRunClient";
 
 type LoadedRunProps = {
   setup: JiraSetupRecord;
+  credentialStatus: JiraCredentialStatus;
   initialRunId?: string;
   setupId?: never;
   errorMessage?: never;
@@ -52,6 +53,7 @@ export function JiraSetupRunModule(props: JiraSetupRunModuleProps) {
         <JiraSetupRunClient
           setup={props.setup}
           initialRunId={props.initialRunId}
+          initialCredentialStatus={props.credentialStatus}
         />
       )}
     </JiraRouteShell>

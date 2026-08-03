@@ -24,6 +24,11 @@ export const jiraClassNames = {
 export function createJiraTheme(baseTheme: Theme): Theme {
   return createTheme(baseTheme, {
     components: {
+      MuiInputBase: {
+        root: {
+          color: "--foreground"
+        }
+      },
       MuiPaper: {
         defaultProps: {
           elevation: 0,

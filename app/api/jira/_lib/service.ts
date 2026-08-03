@@ -49,7 +49,9 @@ import type {
 import type { TaskTypeSlug, WorkStatusSlug } from "@/app/admin/dashboard/jira/_config/workManagement";
 import type { JiraAdminIdentity } from "./auth";
 import { JiraAppError } from "./errors";
+import { toAutomationProjectSetupRequest } from "./setup-request-mapper";
 import { sendJiraUpstreamRequest } from "./upstream-client";
+import { getRequiredJiraCredential } from "./user-credentials";
 
 function assertOwnedByCurrentUser(
   ownerUserId: string,
@@ -81,6 +83,8 @@ export async function listJiraProjectSummaries(
   actor: JiraAdminIdentity,
   signal?: AbortSignal,
 ): Promise<JiraProjectSummaryList> {
+  const jiraCredential = await getRequiredJiraCredential(actor);
+
   return sendJiraUpstreamRequest({
     method: "GET",
     path: "/api/projects/summary",
@@ -89,6 +93,7 @@ export async function listJiraProjectSummaries(
     actor,
     signal,
     retrySafe: true,
+    jiraCredential,
   });
 }
 
@@ -98,7 +103,9 @@ export async function validateJiraSetup(
   actor: JiraAdminIdentity,
   signal?: AbortSignal,
 ): Promise<JiraValidationResult> {
-  const body = jiraProjectSetupRequestSchema.parse(request);
+  const body = toAutomationProjectSetupRequest(
+    jiraProjectSetupRequestSchema.parse(request),
+  );
 
   return sendJiraUpstreamRequest({
     method: "POST",
@@ -116,7 +123,9 @@ export async function createJiraSetup(
   requestId: string,
   actor: JiraAdminIdentity,
 ): Promise<JiraSetupRecord> {
-  const body = jiraProjectSetupRequestSchema.parse(request);
+  const body = toAutomationProjectSetupRequest(
+    jiraProjectSetupRequestSchema.parse(request),
+  );
 
   const result = await sendJiraUpstreamRequest({
     method: "POST",
@@ -176,7 +185,9 @@ export async function updateJiraSetup(
   requestId: string,
   actor: JiraAdminIdentity,
 ): Promise<JiraSetupRecord> {
-  const body = jiraProjectSetupRequestSchema.parse(request);
+  const body = toAutomationProjectSetupRequest(
+    jiraProjectSetupRequestSchema.parse(request),
+  );
 
   await getJiraSetup(setupId, requestId, actor);
 
@@ -199,6 +210,7 @@ export async function startJiraSetupRun(
   actor: JiraAdminIdentity,
 ): Promise<JiraRunRecord> {
   await getJiraSetup(setupId, requestId, actor);
+  const jiraCredential = await getRequiredJiraCredential(actor);
 
   const result = await sendJiraUpstreamRequest({
     method: "POST",
@@ -206,6 +218,7 @@ export async function startJiraSetupRun(
     responseSchema: jiraRunRecordSchema,
     requestId,
     actor,
+    jiraCredential,
   });
 
   assertOwnedByCurrentUser(result.ownerUserId, actor);

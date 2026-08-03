@@ -116,7 +116,7 @@ export type JiraHybridSetupBuilderProps = {
   automationReadiness?: JiraAutomationReadiness;
 };
 
-const MAX_JSON_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const MAX_JSON_FILE_SIZE_BYTES = 15_000_000;
 const AUTOSAVE_DELAY_MS = 1_200;
 const STEPS: ConfigureStep[] = [
   "projectName",
@@ -632,7 +632,7 @@ export function JiraHybridSetupBuilder({
         ...current,
         [step]: {
           severity: "error",
-          message: "The JSON file must be 2 MB or smaller.",
+          message: "The JSON file must be 15 MB or smaller.",
         },
       }));
       return;

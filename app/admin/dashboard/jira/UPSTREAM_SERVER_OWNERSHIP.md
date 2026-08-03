@@ -22,11 +22,28 @@ Authorization: Bearer <APP_ADMIN_TOKEN>
 The automation server should never accept ownership from browser-provided JSON
 fields. Use `X-App-User-Id` as the owner only after validating the bearer token.
 
+Jira-backed upstream calls also include private credential headers assembled by
+the protected Next.js server layer:
+
+```text
+X-Jira-Base-Url: <https://example.atlassian.net>
+X-Jira-Email: <atlassian account email>
+X-Jira-Api-Token: <atlassian api token>
+```
+
+The browser must never receive or send these headers.
+
+The automation server does not need `JIRA_CREDENTIAL_ENCRYPTION_KEY`; that key
+is owned by the Next.js app for encrypting its MongoDB credential records.
+
 The app currently calls these upstream paths through the protected server layer:
 
 ```text
 GET  /health
+GET  /api/projects/summary
+POST /api/jira-credentials/verify
 POST /api/project-setups/validate
+GET  /api/project-setups
 POST /api/project-setups
 GET  /api/project-setups/:id
 PUT  /api/project-setups/:id
@@ -91,6 +108,10 @@ The browser does not call Jira or the automation server directly. The configure
 route checks `GET /health` on page load through the server layer and passes a
 safe readiness state into the client UI.
 
+Per-admin Jira credentials are stored in the Next.js app database, not in the
+automation server. The run page opens an admin-protected MUI credential dialog
+when the current admin does not have a verified credential record.
+
 The staged import UI is frontend-only. Before sending data upstream, the app
 merges staged imports into the existing normalized setup request shape:
 
@@ -152,13 +173,8 @@ Candidate response:
 ]
 ```
 
-Questions to resolve:
-
-- Should this list include all Jira projects visible to automation credentials,
-  or only projects created through this setup system?
-- Should archived/deleted Jira projects be included as key conflicts?
-- Should the endpoint cache Jira project summaries server-side to avoid slow
-  page loads?
+This endpoint requires the private Jira credential headers and should list the
+projects visible to that Jira account.
 
 ### Setup Registry Listing
 

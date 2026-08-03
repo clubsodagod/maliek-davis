@@ -7,12 +7,14 @@ import {
 } from "../_config/projectOptions";
 
 const MAX_REF_LENGTH = 120;
+const MAX_LINK_REF_LENGTH = 200;
 const MAX_SUMMARY_LENGTH = 255;
 const MAX_DESCRIPTION_LENGTH = 10_000;
 const MAX_WORKSTREAMS = 200;
 const MAX_TASKS_PER_WORKSTREAM = 500;
 const MAX_SUBTASKS_PER_TASK = 500;
-const MAX_LINKS_PER_ISSUE = 100;
+const MAX_LINKS_PER_ISSUE = 200;
+const MAX_LABEL_LENGTH = 80;
 
 const nonEmptyString = (max: number) => z.string().trim().min(1).max(max);
 export const jiraProjectTypeKeySchema = z.enum([
@@ -31,22 +33,34 @@ export const jiraRunIdParamSchema = z.object({
 });
 
 export const jiraIssueLinkSchema = z.object({
-  ref: nonEmptyString(MAX_REF_LENGTH),
+  ref: nonEmptyString(MAX_LINK_REF_LENGTH),
   type: nonEmptyString(80),
   inwardRef: nonEmptyString(MAX_REF_LENGTH),
   outwardRef: nonEmptyString(MAX_REF_LENGTH),
+  sourceRef: nonEmptyString(MAX_REF_LENGTH).optional(),
+  relationship: nonEmptyString(120).optional(),
+  reason: z.string().max(MAX_DESCRIPTION_LENGTH).optional(),
+  category: nonEmptyString(120).optional(),
 });
 
 export const jiraSubtaskSchema = z.object({
   ref: nonEmptyString(MAX_REF_LENGTH),
   summary: nonEmptyString(MAX_SUMMARY_LENGTH),
   description: z.string().max(MAX_DESCRIPTION_LENGTH).optional(),
+  issueType: nonEmptyString(80).optional(),
+  priority: nonEmptyString(80).optional(),
+  labels: z.array(nonEmptyString(MAX_LABEL_LENGTH)).optional(),
+  dueDate: nonEmptyString(32).optional(),
 });
 
 export const jiraTaskSchema = z.object({
   ref: nonEmptyString(MAX_REF_LENGTH),
   summary: nonEmptyString(MAX_SUMMARY_LENGTH),
   description: z.string().max(MAX_DESCRIPTION_LENGTH).optional(),
+  issueType: nonEmptyString(80).optional(),
+  priority: nonEmptyString(80).optional(),
+  labels: z.array(nonEmptyString(MAX_LABEL_LENGTH)).optional(),
+  dueDate: nonEmptyString(32).optional(),
   links: z.array(jiraIssueLinkSchema).max(MAX_LINKS_PER_ISSUE).optional(),
   subtasks: z.array(jiraSubtaskSchema).max(MAX_SUBTASKS_PER_TASK).optional(),
 });
@@ -55,6 +69,12 @@ export const jiraWorkstreamSchema = z.object({
   ref: nonEmptyString(MAX_REF_LENGTH),
   summary: nonEmptyString(MAX_SUMMARY_LENGTH),
   description: z.string().max(MAX_DESCRIPTION_LENGTH).optional(),
+  issueType: nonEmptyString(80).optional(),
+  priority: nonEmptyString(80).optional(),
+  labels: z.array(nonEmptyString(MAX_LABEL_LENGTH)).optional(),
+  targetStartDate: nonEmptyString(32).optional(),
+  targetEndDate: nonEmptyString(32).optional(),
+  dueDate: nonEmptyString(32).optional(),
   links: z.array(jiraIssueLinkSchema).max(MAX_LINKS_PER_ISSUE).optional(),
   tasks: z.array(jiraTaskSchema).max(MAX_TASKS_PER_WORKSTREAM).optional(),
 });
@@ -111,6 +131,28 @@ export const updateJiraSetupActionSchema = z.object({
 
 export const startJiraSetupRunActionSchema = z.object({
   setupId: z.uuid(),
+});
+
+export const jiraCredentialInputSchema = z.object({
+  siteUrl: z.string().trim().url().refine((value) => value.startsWith("https://"), {
+    message: "Jira site URL must use HTTPS.",
+  }),
+  email: z.string().trim().email().max(255),
+  apiToken: z.string().trim().min(1).max(4096),
+});
+
+export const jiraCredentialStatusSchema = z.object({
+  configured: z.boolean(),
+  accountId: z.string().optional(),
+  displayName: z.string().optional(),
+  verifiedAt: z.iso.datetime().optional(),
+  missingFields: z.array(z.enum(["siteUrl", "email", "apiToken", "accountId"])),
+});
+
+export const jiraCredentialVerificationSchema = z.object({
+  accountId: z.string().min(1),
+  displayName: z.string().optional(),
+  emailAddress: z.string().optional(),
 });
 
 export const jiraValidationResultSchema = z.object({

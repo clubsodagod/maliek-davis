@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import {
+  jiraCredentialInputSchema,
   jiraProjectSetupRequestSchema,
   startJiraSetupRunActionSchema,
   updateJiraSetupActionSchema,
@@ -9,12 +10,17 @@ import {
 import type {
   ApiFailure,
   ApiResult,
+  JiraCredentialStatus,
   JiraRunRecord,
   JiraSetupRecord,
   JiraValidationResult,
 } from "@/app/admin/dashboard/jira/_types";
 import { requireJiraAdmin, type JiraAdminIdentity } from "@/app/api/jira/_lib/auth";
 import { normalizeUnknownError, validationErrorFromZod } from "@/app/api/jira/_lib/errors";
+import {
+  getJiraCredentialStatus,
+  saveJiraCredential,
+} from "@/app/api/jira/_lib/user-credentials";
 import {
   enforceJiraRateLimit,
   type JiraRateLimitPolicyName,
@@ -81,6 +87,37 @@ export async function validateJiraSetupAction(
     }
 
     return validateJiraSetup(parsed.data, requestId, actor);
+  });
+}
+
+/**
+ * Reads the current admin's Jira credential readiness without returning secrets.
+ *
+ * @returns A serializable credential status for protected Jira dashboard UI.
+ */
+export async function getJiraCredentialStatusAction(): Promise<ApiResult<JiraCredentialStatus>> {
+  return runJiraAction("read", async (actor) => {
+    return getJiraCredentialStatus(actor);
+  });
+}
+
+/**
+ * Verifies and stores Jira credentials for the current admin.
+ *
+ * @param input - Untrusted Jira credential form input.
+ * @returns The updated credential status after successful verification.
+ */
+export async function saveJiraCredentialAction(
+  input: unknown,
+): Promise<ApiResult<JiraCredentialStatus>> {
+  return runJiraAction("mutation", async (actor, requestId) => {
+    const parsed = jiraCredentialInputSchema.safeParse(input);
+
+    if (!parsed.success) {
+      throw validationErrorFromZod(parsed.error);
+    }
+
+    return saveJiraCredential(actor, parsed.data, requestId);
   });
 }
 

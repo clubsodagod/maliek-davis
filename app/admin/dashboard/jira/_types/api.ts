@@ -55,18 +55,30 @@ export type JiraIssueLinkInput = {
   type: string;
   inwardRef: string;
   outwardRef: string;
+  sourceRef?: string;
+  relationship?: string;
+  reason?: string;
+  category?: string;
 };
 
 export type JiraSubtaskInput = {
   ref: string;
   summary: string;
   description?: string;
+  issueType?: string;
+  priority?: string;
+  labels?: string[];
+  dueDate?: string;
 };
 
 export type JiraTaskInput = {
   ref: string;
   summary: string;
   description?: string;
+  issueType?: string;
+  priority?: string;
+  labels?: string[];
+  dueDate?: string;
   links?: JiraIssueLinkInput[];
   subtasks?: JiraSubtaskInput[];
 };
@@ -75,6 +87,12 @@ export type JiraWorkstreamInput = {
   ref: string;
   summary: string;
   description?: string;
+  issueType?: string;
+  priority?: string;
+  labels?: string[];
+  targetStartDate?: string;
+  targetEndDate?: string;
+  dueDate?: string;
   links?: JiraIssueLinkInput[];
   tasks?: JiraTaskInput[];
 };
@@ -154,6 +172,26 @@ export type JiraValidationResult = {
 
 export type JiraHealthResult = {
   ok: boolean;
+};
+
+export type JiraCredentialStatus = {
+  configured: boolean;
+  accountId?: string;
+  displayName?: string;
+  verifiedAt?: string;
+  missingFields: ("siteUrl" | "email" | "apiToken" | "accountId")[];
+};
+
+export type JiraCredentialSaveInput = {
+  siteUrl: string;
+  email: string;
+  apiToken: string;
+};
+
+export type JiraCredentialVerification = {
+  accountId: string;
+  displayName?: string;
+  emailAddress?: string;
 };
 
 export type JiraProjectSummary = {

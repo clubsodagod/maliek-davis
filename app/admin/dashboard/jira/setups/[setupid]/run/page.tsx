@@ -4,6 +4,7 @@ import { requireJiraDashboardAdmin } from "../../../_utils/requireJiraDashboardA
 import { normalizeUnknownError } from "@/app/api/jira/_lib/errors";
 import { createRequestId, logJiraFailure } from "@/app/api/jira/_lib/responses";
 import { getJiraSetup } from "@/app/api/jira/_lib/service";
+import { getJiraCredentialStatus } from "@/app/api/jira/_lib/user-credentials";
 
 interface JiraRunPageProps {
   params: Promise<{
@@ -33,8 +34,15 @@ export default async function JiraRunPage({
 
   try {
     const setup = await getJiraSetup(setupid, requestId, actor);
+    const credentialStatus = await getJiraCredentialStatus(actor);
 
-    return <JiraSetupRunModule setup={setup} initialRunId={initialRunId} />;
+    return (
+      <JiraSetupRunModule
+        setup={setup}
+        initialRunId={initialRunId}
+        credentialStatus={credentialStatus}
+      />
+    );
   } catch (error) {
     logJiraFailure(error, requestId);
 

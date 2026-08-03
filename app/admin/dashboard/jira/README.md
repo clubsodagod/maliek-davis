@@ -133,14 +133,19 @@ Execution status should be modeled as typed states such as `draft`, `validating`
 - The saved setup run page renders execution progress, and the results page
   renders live project status, counts, generated Jira records, and final report
   output when a run id is available.
+- Setup runs require a per-admin Jira credential. If the current admin has not
+  provided one, the protected run page opens an MUI credential dialog before
+  starting Jira automation.
 - Project-key work routes render normalized execution views from the automation
   server: project summary, Ready queues, task-type/status queues, and a focused
   Subtask question workspace with answer save, validation, and completion.
 
 ## Configure Input
 
-The configure page accepts staged JSON imports. Each stage accepts either a raw
-array or an object wrapper with the matching property.
+The configure page accepts staged JSON imports up to 15 MB. Each stage accepts
+either the compact app-facing shape or the richer normalized planning exports
+used by the Pearl Box setup files. Rich description objects are converted to
+plain text for preview and persistence.
 
 Workstreams:
 
@@ -158,6 +163,22 @@ Workstream links:
 }
 ```
 
+Normalized relationship exports are also accepted with:
+
+```json
+{
+  "workstreams": [],
+  "relationships": [
+    {
+      "ref": "source--blocks--target",
+      "sourceWorkstreamRef": "source",
+      "targetWorkstreamRef": "target",
+      "linkType": "Blocks"
+    }
+  ]
+}
+```
+
 Tasks include the parent workstream ref:
 
 ```json
@@ -172,6 +193,19 @@ Tasks include the parent workstream ref:
 }
 ```
 
+Grouped normalized task exports are also accepted with:
+
+```json
+{
+  "taskGroups": [
+    {
+      "workstreamRef": "workstream-ref",
+      "issues": []
+    }
+  ]
+}
+```
+
 Task links:
 
 ```json
@@ -179,6 +213,11 @@ Task links:
   "taskLinks": []
 }
 ```
+
+Normalized task relationship exports are also accepted with `relationships`
+records that include `sourceTaskRef`, `targetTaskRef`, summaries, workstream
+refs, and `linkType`. `Informs` and `Implemented By` are mapped to Jira
+`Relates` before the automation server request is sent.
 
 Subtasks include the parent task ref:
 
@@ -193,6 +232,10 @@ Subtasks include the parent task ref:
   ]
 }
 ```
+
+Grouped normalized subtask exports are also accepted as a root array or
+`taskSubtasks` array whose records contain `parentTaskRef` and nested
+`subtasks`.
 
 Project template selection is centralized in `_config/projectOptions.ts` and grouped by:
 
@@ -240,6 +283,12 @@ Editing an approved answer invalidates that section approval and any generated p
 The browser must use the same-origin application API or server actions only.
 It must not call the privileged Jira automation server directly.
 
+Per-admin Jira credentials are stored in MongoDB in the `jira_credentials`
+collection. Secret values are encrypted with `JIRA_CREDENTIAL_ENCRYPTION_KEY`;
+hashes/fingerprints are stored only for comparison and audit. Raw, encrypted,
+or hashed Jira secrets are never returned to Client Components or Auth.js
+session payloads.
+
 Protected routes:
 
 ```text
@@ -286,6 +335,8 @@ All route responses use `Cache-Control: no-store`.
 
 Feature-local server actions live in `_services/actions.ts`:
 
+- `getJiraCredentialStatusAction()`
+- `saveJiraCredentialAction({ siteUrl, email, apiToken })`
 - `validateJiraSetupAction(input)`
 - `createJiraSetupAction(input)`
 - `updateJiraSetupAction({ setupId, request })`
@@ -320,6 +371,10 @@ The app forwards trusted identity to the automation server with
 `X-App-User-Id` and expects setup and run responses to include
 `ownerUserId`. The app returns `404` for records owned by another user.
 
+Credential status and save operations use the same admin protection layer:
+pages call `requireJiraDashboardAdmin`, and server actions/API routes call
+`requireJiraAdmin`. Non-admin users cannot read or update Jira credentials.
+
 Update the external Jira automation server using:
 
 ```text
@@ -333,16 +388,51 @@ Server-only Jira automation configuration:
 ```env
 JIRA_AUTOMATION_DEV_SERVER_URL=
 JIRA_AUTOMATION_PRODUCTION_SERVER_URL=
+# Legacy fallback only when the selected dev/prod URL is blank.
+# JIRA_AUTOMATION_SERVER_URL=
 JIRA_AUTOMATION_SERVER_TOKEN=
 JIRA_REQUEST_TIMEOUT_MS=15000
+JIRA_CREDENTIAL_ENCRYPTION_KEY=
 ```
 
 Do not prefix these with `NEXT_PUBLIC_`. Production is selected when
 `VERCEL_ENV=production` or `NODE_ENV=production`; all other runtimes use the
 development automation URL. `JIRA_AUTOMATION_SERVER_URL` remains supported only
-as a legacy fallback when the selected URL is missing.
+as a legacy fallback when the selected URL is missing. `JIRA_REQUEST_TIMEOUT_MS`
+defaults to `15000`.
 
 The OpenAI discovery provider is configured on the automation server with `OPENAI_GENERAL_IQ_MODEL` and `OPENAI_HIGH_IQ_MODEL`, not in this Next app. The browser never receives model credentials or backend prompts.
+
+`JIRA_CREDENTIAL_ENCRYPTION_KEY` belongs to this Next app only. It encrypts
+Jira credential values stored in MongoDB and is not sent to the automation
+server. The automation server receives decrypted Jira values only for a single
+server-to-server request through private `X-Jira-*` headers.
+
+`JIRA_CREDENTIAL_ENCRYPTION_KEY` must be a base64-encoded 32-byte key. Generate
+one locally or for each deployment environment with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Preview blank Jira credential records for existing users:
+
+```bash
+npm.cmd run jira:credentials:seed -- --dry-run
+```
+
+Seed blank Jira credential records for existing users. This writes MongoDB and
+is never run automatically:
+
+```bash
+npm.cmd run jira:credentials:seed
+```
+
+Generate encrypted MongoDB CLI update values for one user:
+
+```bash
+npm.cmd run jira:credentials:encrypt -- --user-id=<userId> --site-url=https://example.atlassian.net --email=admin@example.com --api-token=<token> --account-id=<accountId>
+```
 
 ## Testing
 

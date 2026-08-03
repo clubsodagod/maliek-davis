@@ -120,13 +120,23 @@ const jiraWorkstreamArraySchema = z.array(jiraWorkstreamSchema);
 const jiraIssueLinkArraySchema = z.array(jiraIssueLinkSchema);
 const stageRefSchema = z.string().trim().min(1).max(120);
 const stageSummarySchema = z.string().trim().min(1).max(255);
-const stageDescriptionSchema = z.string().max(10_000).optional();
+const STAGE_MAX_DESCRIPTION_LENGTH = 10_000;
+const TRUNCATED_DESCRIPTION_SUFFIX = "\n\n[truncated]";
+const stageDescriptionSchema = z.string().max(STAGE_MAX_DESCRIPTION_LENGTH).optional();
+const stageIssueTypeSchema = z.string().trim().min(1).max(80).optional();
+const stagePrioritySchema = z.string().trim().min(1).max(80).optional();
+const stageDateSchema = z.string().trim().min(1).max(32).optional();
+const stageLabelsSchema = z.array(z.string().trim().min(1).max(80)).optional();
 const jiraStagedTaskArraySchema = z.array(
   z.object({
     ref: stageRefSchema,
     workstreamRef: stageRefSchema,
     summary: stageSummarySchema,
     description: stageDescriptionSchema,
+    issueType: stageIssueTypeSchema,
+    priority: stagePrioritySchema,
+    labels: stageLabelsSchema,
+    dueDate: stageDateSchema,
   }),
 );
 const jiraStagedSubtaskArraySchema = z.array(
@@ -135,6 +145,10 @@ const jiraStagedSubtaskArraySchema = z.array(
     taskRef: stageRefSchema,
     summary: stageSummarySchema,
     description: stageDescriptionSchema,
+    issueType: stageIssueTypeSchema,
+    priority: stagePrioritySchema,
+    labels: stageLabelsSchema,
+    dueDate: stageDateSchema,
   }),
 );
 
@@ -174,6 +188,429 @@ function zodIssuesToBuilderIssues(
     path: formatPath(issue.path),
     message: issue.message,
   }));
+}
+
+function appendIfPresent(
+  sections: string[],
+  label: string,
+  value: unknown,
+): void {
+  if (typeof value === "string" && value.trim() !== "") {
+    sections.push(`${label}: ${value.trim()}`);
+  }
+}
+
+function appendStringList(
+  sections: string[],
+  label: string,
+  value: unknown,
+): void {
+  if (!Array.isArray(value)) return;
+
+  const items = value
+    .filter((item): item is string => typeof item === "string" && item.trim() !== "")
+    .map((item) => `- ${item.trim()}`);
+
+  if (items.length > 0) {
+    sections.push(`${label}:\n${items.join("\n")}`);
+  }
+}
+
+function truncateDescription(value: string): string {
+  if (value.length <= STAGE_MAX_DESCRIPTION_LENGTH) return value;
+
+  return `${value.slice(
+    0,
+    STAGE_MAX_DESCRIPTION_LENGTH - TRUNCATED_DESCRIPTION_SUFFIX.length,
+  ).trimEnd()}${TRUNCATED_DESCRIPTION_SUFFIX}`;
+}
+
+function renderEvidenceItem(value: unknown): string | undefined {
+  if (typeof value === "string" && value.trim() !== "") {
+    return value.trim();
+  }
+  if (!isRecord(value)) return undefined;
+
+  const claim = typeof value.claim === "string" ? value.claim.trim() : "";
+  const source = typeof value.source === "string" ? value.source.trim() : "";
+  const url = typeof value.url === "string" ? value.url.trim() : "";
+  const details = [source, url].filter(Boolean).join(" - ");
+
+  if (claim === "" && details === "") return undefined;
+  if (details === "") return claim;
+  if (claim === "") return details;
+  return `${claim} (${details})`;
+}
+
+function appendPlanningExample(
+  sections: string[],
+  value: unknown,
+): void {
+  if (!isRecord(value)) return;
+
+  const exampleSections: string[] = [];
+  appendIfPresent(exampleSections, "Status", value.status);
+  appendIfPresent(exampleSections, "Answer", value.answer);
+
+  if (Array.isArray(value.evidence)) {
+    const evidence = value.evidence
+      .map(renderEvidenceItem)
+      .filter((item): item is string => item !== undefined)
+      .map((item) => `- ${item}`);
+
+    if (evidence.length > 0) {
+      exampleSections.push(`Evidence:\n${evidence.join("\n")}`);
+    }
+  }
+
+  appendStringList(exampleSections, "Assumptions", value.assumptions);
+  appendStringList(
+    exampleSections,
+    "Unresolved Questions",
+    value.unresolvedQuestions,
+  );
+
+  if (exampleSections.length > 0) {
+    sections.push(`Example:\n${exampleSections.join("\n")}`);
+  }
+}
+
+function normalizeDescription(value: unknown): unknown {
+  if (value === undefined) return undefined;
+  if (typeof value === "string") return truncateDescription(value);
+  if (!isRecord(value)) return value;
+
+  const sections: string[] = [];
+  appendIfPresent(sections, "Objective", value.objective);
+  appendIfPresent(sections, "Question", value.question);
+  appendStringList(sections, "Scope", value.scope);
+  appendStringList(sections, "Guidance", value.guidance);
+  appendIfPresent(sections, "Deliverable", value.deliverable);
+  appendStringList(sections, "Acceptance Criteria", value.acceptanceCriteria);
+  appendStringList(sections, "Dependencies", value.dependencies);
+  appendPlanningExample(sections, value.example);
+  appendIfPresent(sections, "Business Outcome", value.businessOutcome);
+  appendStringList(sections, "Sections To Include", value.sectionsToInclude);
+  appendStringList(sections, "Required Information", value.requiredInformation);
+  appendIfPresent(sections, "Notes", value.notes);
+
+  return truncateDescription(sections.join("\n\n"));
+}
+
+function copyIfPresent(
+  output: Record<string, unknown>,
+  input: Record<string, unknown>,
+  field: string,
+): void {
+  if (input[field] !== undefined) {
+    output[field] = input[field];
+  }
+}
+
+function normalizeImportedIssueRecord(input: unknown): unknown {
+  if (!isRecord(input)) return input;
+
+  const output: Record<string, unknown> = {
+    ref: input.ref,
+    summary: input.summary,
+  };
+  const description = normalizeDescription(input.description);
+
+  if (description !== undefined) {
+    output.description = description;
+  }
+
+  copyIfPresent(output, input, "issueType");
+  copyIfPresent(output, input, "priority");
+  copyIfPresent(output, input, "labels");
+  copyIfPresent(output, input, "dueDate");
+  copyIfPresent(output, input, "targetStartDate");
+  copyIfPresent(output, input, "targetEndDate");
+  copyIfPresent(output, input, "workstreamRef");
+  copyIfPresent(output, input, "taskRef");
+
+  return output;
+}
+
+function normalizeImportedIssueRecords(input: unknown): unknown {
+  return Array.isArray(input)
+    ? input.map(normalizeImportedIssueRecord)
+    : input;
+}
+
+function normalizeImportedSubtaskHierarchyRecord(input: unknown): unknown {
+  return normalizeImportedIssueRecord(input);
+}
+
+function normalizeImportedTaskHierarchyRecord(input: unknown): unknown {
+  const normalized = normalizeImportedIssueRecord(input);
+  if (!isRecord(input) || !isRecord(normalized)) return normalized;
+
+  if (Array.isArray(input.links)) {
+    normalized.links = input.links;
+  }
+  if (Array.isArray(input.subtasks)) {
+    normalized.subtasks = input.subtasks.map(normalizeImportedSubtaskHierarchyRecord);
+  }
+
+  return normalized;
+}
+
+function normalizeImportedWorkstreamHierarchyRecord(input: unknown): unknown {
+  const normalized = normalizeImportedIssueRecord(input);
+  if (!isRecord(input) || !isRecord(normalized)) return normalized;
+
+  if (Array.isArray(input.links)) {
+    normalized.links = input.links;
+  }
+  if (Array.isArray(input.tasks)) {
+    normalized.tasks = input.tasks.map(normalizeImportedTaskHierarchyRecord);
+  }
+
+  return normalized;
+}
+
+function normalizeImportedWorkstreamHierarchyRecords(input: unknown): unknown {
+  return Array.isArray(input)
+    ? input.map(normalizeImportedWorkstreamHierarchyRecord)
+    : input;
+}
+
+function normalizeLookupText(value: string): string {
+  return value
+    .trim()
+    .replace(/^\d+\.\s*/u, "")
+    .replace(/&/gu, " and ")
+    .replace(/[^A-Za-z0-9]+/gu, "-")
+    .replace(/^-+|-+$/gu, "")
+    .toLowerCase();
+}
+
+function normalizeLooseTaskText(value: string): string {
+  return normalizeLookupText(value)
+    .split("-")
+    .filter((part) => part !== "brand" && part !== "company")
+    .join("-");
+}
+
+function normalizeRefAliasText(value: string): string {
+  return normalizeLookupText(value)
+    .split("-")
+    .filter((part) => part !== "and")
+    .join("-");
+}
+
+function setUnique(
+  map: Map<string, string | null>,
+  key: string,
+  value: string,
+): void {
+  if (key === "") return;
+
+  const current = map.get(key);
+  if (current === undefined) {
+    map.set(key, value);
+    return;
+  }
+
+  if (current !== value) {
+    map.set(key, null);
+  }
+}
+
+function getUnique(
+  map: ReadonlyMap<string, string | null>,
+  key: string,
+): string | undefined {
+  return map.get(key) ?? undefined;
+}
+
+function createWorkstreamRefResolver(
+  workstreams: readonly JiraWorkstreamInput[],
+  sourceWorkstreams: unknown,
+): (ref: unknown, summary?: unknown) => string | undefined {
+  const byRef = new Map<string, string>();
+  const byLookup = new Map<string, string | null>();
+  const aliases = new Map<string, string>();
+
+  workstreams.forEach((workstream) => {
+    const ref = workstream.ref.trim();
+    byRef.set(ref, ref);
+    setUnique(byLookup, normalizeLookupText(ref), ref);
+    setUnique(byLookup, normalizeLookupText(workstream.summary), ref);
+  });
+
+  if (Array.isArray(sourceWorkstreams)) {
+    sourceWorkstreams.forEach((source) => {
+      if (!isRecord(source) || typeof source.ref !== "string") return;
+
+      const resolved = typeof source.summary === "string"
+        ? getUnique(byLookup, normalizeLookupText(source.summary))
+        : undefined;
+
+      if (resolved !== undefined) {
+        aliases.set(source.ref.trim(), resolved);
+      }
+    });
+  }
+
+  return (ref, summary) => {
+    if (typeof ref === "string") {
+      const exact = byRef.get(ref.trim()) ?? aliases.get(ref.trim());
+      if (exact !== undefined) return exact;
+
+      const normalized = getUnique(byLookup, normalizeLookupText(ref));
+      if (normalized !== undefined) return normalized;
+    }
+
+    if (typeof summary === "string") {
+      return getUnique(byLookup, normalizeLookupText(summary));
+    }
+
+    return undefined;
+  };
+}
+
+function createTaskRefResolver(
+  tasks: readonly JiraStagedTaskInput[],
+): (ref: unknown, summary?: unknown, workstreamRef?: unknown) => string | undefined {
+  const byRef = new Map<string, string>();
+  const bySummary = new Map<string, string | null>();
+  const byLooseSummary = new Map<string, string | null>();
+  const byWorkstreamSummary = new Map<string, string | null>();
+  const byWorkstreamLooseSummary = new Map<string, string | null>();
+  const workstreamAliases = new Map<string, string | null>();
+
+  tasks.forEach((task) => {
+    const ref = task.ref.trim();
+    const workstreamRef = task.workstreamRef.trim();
+    byRef.set(ref, ref);
+    setUnique(bySummary, normalizeLookupText(task.summary), ref);
+    setUnique(byLooseSummary, normalizeLooseTaskText(task.summary), ref);
+    setUnique(
+      byWorkstreamSummary,
+      `${workstreamRef}\u0000${normalizeLookupText(task.summary)}`,
+      ref,
+    );
+    setUnique(
+      byWorkstreamLooseSummary,
+      `${workstreamRef}\u0000${normalizeLooseTaskText(task.summary)}`,
+      ref,
+    );
+    setUnique(workstreamAliases, workstreamRef, workstreamRef);
+    setUnique(workstreamAliases, normalizeRefAliasText(workstreamRef), workstreamRef);
+  });
+
+  return (ref, summary, workstreamRef) => {
+    if (typeof ref === "string") {
+      const exact = byRef.get(ref.trim());
+      if (exact !== undefined) return exact;
+    }
+
+    if (typeof summary === "string") {
+      if (typeof workstreamRef === "string") {
+        const resolvedWorkstreamRef =
+          getUnique(workstreamAliases, workstreamRef.trim())
+          ?? getUnique(workstreamAliases, normalizeRefAliasText(workstreamRef));
+
+        if (resolvedWorkstreamRef !== undefined) {
+          const workstreamSummary = getUnique(
+            byWorkstreamSummary,
+            `${resolvedWorkstreamRef}\u0000${normalizeLookupText(summary)}`,
+          );
+          if (workstreamSummary !== undefined) return workstreamSummary;
+
+          const looseWorkstreamSummary = getUnique(
+            byWorkstreamLooseSummary,
+            `${resolvedWorkstreamRef}\u0000${normalizeLooseTaskText(summary)}`,
+          );
+          if (looseWorkstreamSummary !== undefined) return looseWorkstreamSummary;
+        }
+      }
+
+      const exactSummary = getUnique(bySummary, normalizeLookupText(summary));
+      if (exactSummary !== undefined) return exactSummary;
+
+      return getUnique(byLooseSummary, normalizeLooseTaskText(summary));
+    }
+
+    return undefined;
+  };
+}
+
+function stringValue(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function normalizeRelationshipLink(
+  relationship: unknown,
+  sourceRef: string | undefined,
+  targetRef: string | undefined,
+): unknown {
+  if (!isRecord(relationship)) return relationship;
+
+  return {
+    ref: relationship.ref,
+    type: relationship.linkType,
+    sourceRef,
+    inwardRef: targetRef,
+    outwardRef: sourceRef,
+    relationship: relationship.relationship,
+    reason: relationship.reason,
+    category: relationship.category,
+  };
+}
+
+function extractRelationshipArray(value: unknown): readonly unknown[] | undefined {
+  return isRecord(value) && Array.isArray(value.relationships)
+    ? value.relationships
+    : undefined;
+}
+
+function extractTaskStageRecords(value: unknown): unknown {
+  const directTasks = extractStageArray(value, ["tasks"]);
+  if (Array.isArray(directTasks)) return directTasks;
+
+  if (!isRecord(value) || !Array.isArray(value.taskGroups)) return undefined;
+
+  return value.taskGroups.flatMap((taskGroup) => {
+    if (!isRecord(taskGroup) || !Array.isArray(taskGroup.issues)) {
+      return [taskGroup];
+    }
+
+    return taskGroup.issues.map((issue) =>
+      isRecord(issue)
+        ? {
+            ...issue,
+            workstreamRef: taskGroup.workstreamRef,
+          }
+        : issue,
+    );
+  });
+}
+
+function extractSubtaskStageRecords(value: unknown): unknown {
+  const directSubtasks = extractStageArray(value, ["subtasks", "taskSubtasks"]);
+  if (!Array.isArray(directSubtasks)) return directSubtasks;
+
+  return directSubtasks.flatMap((entry) => {
+    if (!isRecord(entry) || !Array.isArray(entry.subtasks)) {
+      return [entry];
+    }
+
+    return entry.subtasks.map((subtask) =>
+      isRecord(subtask)
+        ? {
+            ...subtask,
+            taskRef: entry.parentTaskRef,
+          }
+        : subtask,
+    );
+  });
+}
+
+function getLinkSourceRef(link: JiraIssueLinkInput): string {
+  return link.sourceRef?.trim() || link.inwardRef.trim();
 }
 
 export function buildJiraProjectSetupRequest(
@@ -356,7 +793,9 @@ export function parseJiraWorkstreamStageJson(
   if (!parsedJson.success) return parsedJson;
 
   const workstreams = extractStageArray(parsedJson.data, ["workstreams"]);
-  const parsedWorkstreams = jiraWorkstreamArraySchema.safeParse(workstreams);
+  const parsedWorkstreams = jiraWorkstreamArraySchema.safeParse(
+    normalizeImportedIssueRecords(workstreams),
+  );
 
   if (!parsedWorkstreams.success) {
     return {
@@ -366,10 +805,26 @@ export function parseJiraWorkstreamStageJson(
   }
 
   const stageWorkstreams = parsedWorkstreams.data.map(
-    ({ ref, summary, description }) => ({
+    ({
+      ref,
+      summary,
+      description,
+      issueType,
+      priority,
+      labels,
+      targetStartDate,
+      targetEndDate,
+      dueDate,
+    }) => ({
       ref,
       summary,
       ...(description === undefined ? {} : { description }),
+      ...(issueType === undefined ? {} : { issueType }),
+      ...(priority === undefined ? {} : { priority }),
+      ...(labels === undefined ? {} : { labels }),
+      ...(targetStartDate === undefined ? {} : { targetStartDate }),
+      ...(targetEndDate === undefined ? {} : { targetEndDate }),
+      ...(dueDate === undefined ? {} : { dueDate }),
     }),
   );
   const issues = validateJiraGeneratedHierarchy(stageWorkstreams);
@@ -394,7 +849,22 @@ export function parseJiraWorkstreamLinkStageJson(
   const parsedJson = parseStageJson(text);
   if (!parsedJson.success) return parsedJson;
 
-  const links = extractStageArray(parsedJson.data, ["workstreamLinks", "links"]);
+  const relationshipLinks = extractRelationshipArray(parsedJson.data)?.map((relationship) => {
+    if (!isRecord(relationship)) return relationship;
+
+    const resolveWorkstreamRef = createWorkstreamRefResolver(
+      workstreams,
+      isRecord(parsedJson.data) ? parsedJson.data.workstreams : undefined,
+    );
+    const sourceRef = resolveWorkstreamRef(relationship.sourceWorkstreamRef)
+      ?? stringValue(relationship.sourceWorkstreamRef);
+    const targetRef = resolveWorkstreamRef(relationship.targetWorkstreamRef)
+      ?? stringValue(relationship.targetWorkstreamRef);
+
+    return normalizeRelationshipLink(relationship, sourceRef, targetRef);
+  });
+  const links = relationshipLinks
+    ?? extractStageArray(parsedJson.data, ["workstreamLinks", "links"]);
   const parsedLinks = jiraIssueLinkArraySchema.safeParse(links);
 
   if (!parsedLinks.success) {
@@ -437,8 +907,10 @@ export function parseJiraTaskStageJson(
   const parsedJson = parseStageJson(text);
   if (!parsedJson.success) return parsedJson;
 
-  const tasks = extractStageArray(parsedJson.data, ["tasks"]);
-  const parsedTasks = jiraStagedTaskArraySchema.safeParse(tasks);
+  const tasks = extractTaskStageRecords(parsedJson.data);
+  const parsedTasks = jiraStagedTaskArraySchema.safeParse(
+    normalizeImportedIssueRecords(tasks),
+  );
 
   if (!parsedTasks.success) {
     return {
@@ -467,7 +939,25 @@ export function parseJiraTaskLinkStageJson(
   const parsedJson = parseStageJson(text);
   if (!parsedJson.success) return parsedJson;
 
-  const links = extractStageArray(parsedJson.data, ["taskLinks", "links"]);
+  const relationshipLinks = extractRelationshipArray(parsedJson.data)?.map((relationship) => {
+    if (!isRecord(relationship)) return relationship;
+
+    const resolveTaskRef = createTaskRefResolver(tasks);
+    const sourceRef = resolveTaskRef(
+      relationship.sourceTaskRef,
+      relationship.sourceSummary,
+      relationship.sourceWorkstreamRef,
+    ) ?? stringValue(relationship.sourceTaskRef);
+    const targetRef = resolveTaskRef(
+      relationship.targetTaskRef,
+      relationship.targetSummary,
+      relationship.targetWorkstreamRef,
+    ) ?? stringValue(relationship.targetTaskRef);
+
+    return normalizeRelationshipLink(relationship, sourceRef, targetRef);
+  });
+  const links = relationshipLinks
+    ?? extractStageArray(parsedJson.data, ["taskLinks", "links"]);
   const parsedLinks = jiraIssueLinkArraySchema.safeParse(links);
 
   if (!parsedLinks.success) {
@@ -510,8 +1000,10 @@ export function parseJiraSubtaskStageJson(
   const parsedJson = parseStageJson(text);
   if (!parsedJson.success) return parsedJson;
 
-  const subtasks = extractStageArray(parsedJson.data, ["subtasks"]);
-  const parsedSubtasks = jiraStagedSubtaskArraySchema.safeParse(subtasks);
+  const subtasks = extractSubtaskStageRecords(parsedJson.data);
+  const parsedSubtasks = jiraStagedSubtaskArraySchema.safeParse(
+    normalizeImportedIssueRecords(subtasks),
+  );
 
   if (!parsedSubtasks.success) {
     return {
@@ -546,13 +1038,23 @@ export function mergeJiraStagedSetupImports(
       ...(workstream.description === undefined
         ? {}
         : { description: workstream.description }),
+      ...(workstream.issueType === undefined ? {} : { issueType: workstream.issueType }),
+      ...(workstream.priority === undefined ? {} : { priority: workstream.priority }),
+      ...(workstream.labels === undefined ? {} : { labels: workstream.labels }),
+      ...(workstream.targetStartDate === undefined
+        ? {}
+        : { targetStartDate: workstream.targetStartDate }),
+      ...(workstream.targetEndDate === undefined
+        ? {}
+        : { targetEndDate: workstream.targetEndDate }),
+      ...(workstream.dueDate === undefined ? {} : { dueDate: workstream.dueDate }),
       links: [],
       tasks: [],
     });
   });
 
   imports.workstreamLinks.forEach((link) => {
-    workstreamMap.get(link.inwardRef.trim())?.links?.push(link);
+    workstreamMap.get(getLinkSourceRef(link))?.links?.push(link);
   });
 
   imports.tasks.forEach(({ workstreamRef, ...task }) => {
@@ -566,7 +1068,7 @@ export function mergeJiraStagedSetupImports(
   });
 
   imports.taskLinks.forEach((link) => {
-    taskMap.get(link.inwardRef.trim())?.links?.push(link);
+    taskMap.get(getLinkSourceRef(link))?.links?.push(link);
   });
 
   imports.subtasks.forEach(({ taskRef, ...subtask }) => {
@@ -683,7 +1185,9 @@ export function parseJiraGeneratedHierarchyJson(
   }
 
   const parsedWorkstreams =
-    jiraWorkstreamArraySchema.safeParse(extractedWorkstreams);
+    jiraWorkstreamArraySchema.safeParse(
+      normalizeImportedWorkstreamHierarchyRecords(extractedWorkstreams),
+    );
 
   if (!parsedWorkstreams.success) {
     return {

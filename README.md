@@ -49,18 +49,87 @@ Future UI refactors should follow this order:
 
 ## Environment
 
-Copy `.env.example` for local development and fill in the values needed for the features you are running.
+Copy `.env.example` for local development and fill in the values needed for
+the features you are running. Do not commit real `.env` files or generated
+secrets.
 
-Jira automation server values are server-only and must not use `NEXT_PUBLIC_`:
+Core app values:
+
+```env
+AUTH_SECRET=
+MONGODB_URI=
+```
+
+Public URL helpers read these values:
+
+```env
+NEXT_PUBLIC_NODE_ENV=development
+NEXT_PUBLIC_DEVELOPMENT_URL=http://localhost:3000
+NEXT_PUBLIC_PRODUCTION_TEST_URL=
+NEXT_PUBLIC_PRODUCTION_URL=
+NEXT_PUBLIC_DEVELOPMENT_API_URL=http://localhost:3000
+NEXT_PUBLIC_PRODUCTION_TEST_API_URL=
+NEXT_PUBLIC_PRODUCTION_API_URL=
+```
+
+Jira automation server values are server-only and must not use
+`NEXT_PUBLIC_`:
 
 ```env
 JIRA_AUTOMATION_DEV_SERVER_URL=
 JIRA_AUTOMATION_PRODUCTION_SERVER_URL=
+# JIRA_AUTOMATION_SERVER_URL=
 JIRA_AUTOMATION_SERVER_TOKEN=
 JIRA_REQUEST_TIMEOUT_MS=15000
+JIRA_CREDENTIAL_ENCRYPTION_KEY=
+```
+
+`JIRA_AUTOMATION_SERVER_URL` is a legacy fallback when the selected dev or
+production URL is blank. `JIRA_REQUEST_TIMEOUT_MS` defaults to `15000`.
+`JIRA_CREDENTIAL_ENCRYPTION_KEY` must be a base64-encoded 32-byte key for
+encrypting Jira credentials stored in MongoDB:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
 
 The OpenAI discovery provider is configured in the separate Jira automation server project with `OPENAI_GENERAL_IQ_MODEL` and `OPENAI_HIGH_IQ_MODEL`, not in this Next.js app.
+
+Jira setup runs use per-admin Jira credentials stored encrypted in MongoDB. Use
+`npm.cmd run jira:credentials:seed -- --dry-run` to preview blank records,
+`npm.cmd run jira:credentials:seed` to create blank records for existing users,
+and `npm.cmd run jira:credentials:encrypt -- --user-id=<userId> --site-url=<url> --email=<email> --api-token=<token> --account-id=<accountId>`
+to generate safe MongoDB CLI update values.
+
+Other integration values:
+
+```env
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_API_KEY=
+NEXT_PUBLIC_CLOUDINARY_API_SECRET=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+NEXT_PUBLIC_RESEND_API_KEY=
+NEXT_PUBLIC_TINY_MCE_API_KEY=
+```
+
+The current codebase still reads Resend and one Cloudinary secret through
+`NEXT_PUBLIC_` names for compatibility. Keep only placeholders in
+`.env.example`; moving those secrets behind server-only names should be handled
+as a separate hardening change.
+
+Optional Jira Playwright E2E values:
+
+```env
+JIRA_E2E_BASE_URL=http://127.0.0.1:3000
+JIRA_E2E_SETUP_ID=
+JIRA_E2E_STORAGE_STATE=
+JIRA_E2E_UNAUTHORIZED_SETUP_ID=
+PLAYWRIGHT_START_SERVER=1
+```
 
 ## Install
 

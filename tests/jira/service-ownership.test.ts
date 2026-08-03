@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getJiraSetup, listJiraSetups } from "@/app/api/jira/_lib/service";
+import { createJiraSetup, getJiraSetup, listJiraSetups } from "@/app/api/jira/_lib/service";
 import { getJiraProjectTemplateById } from "@/app/admin/dashboard/jira/_config/projectOptions";
 
 const setupTemplate = getJiraProjectTemplateById("business-process-control");
@@ -86,6 +86,95 @@ describe("Jira service ownership", () => {
         userId: "user-1",
         role: "admin",
       }),
+    ).resolves.toEqual({ ...setupResponse, ownerUserId: "user-1" });
+  });
+
+  it("sends canonical backend link payloads when creating setup drafts", async () => {
+    const fetchMock = vi.fn(
+      async (_url: URL | RequestInfo, init?: RequestInit) => {
+        const body = JSON.parse(String(init?.body)) as {
+          workstreams: {
+            links?: { targetRef: string; linkType: string }[];
+            tasks?: { links?: { targetRef: string; linkType: string; relationship?: string }[] }[];
+          }[];
+        };
+
+        expect(body.workstreams[0]?.links?.[0]).toEqual({
+          targetRef: "brand",
+          linkType: "Blocks",
+        });
+        expect(body.workstreams[0]?.tasks?.[0]?.links?.[0]).toEqual({
+          targetRef: "brand-task",
+          linkType: "Relates",
+          relationship: "informs",
+        });
+
+        return new Response(
+          JSON.stringify({ ...setupResponse, ownerUserId: "user-1" }),
+          {
+            status: 201,
+          },
+        );
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      createJiraSetup(
+        {
+          project: setupResponse.request.project,
+          issueHierarchy: setupResponse.request.issueHierarchy,
+          workflow: {
+            id: "jira-default",
+          },
+          workstreams: [
+            {
+              ref: "company",
+              summary: "Company",
+              links: [
+                {
+                  ref: "company-blocks-brand",
+                  type: "Blocks",
+                  sourceRef: "company",
+                  inwardRef: "brand",
+                  outwardRef: "company",
+                },
+              ],
+              tasks: [
+                {
+                  ref: "company-task",
+                  summary: "Company Task",
+                  links: [
+                    {
+                      ref: "company-task-informs-brand-task",
+                      type: "Informs",
+                      sourceRef: "company-task",
+                      inwardRef: "brand-task",
+                      outwardRef: "company-task",
+                      relationship: "informs",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              ref: "brand",
+              summary: "Brand",
+              tasks: [
+                {
+                  ref: "brand-task",
+                  summary: "Brand Task",
+                },
+              ],
+            },
+          ],
+        },
+        "request-1",
+        {
+          userId: "user-1",
+          role: "admin",
+        },
+      ),
     ).resolves.toEqual({ ...setupResponse, ownerUserId: "user-1" });
   });
 

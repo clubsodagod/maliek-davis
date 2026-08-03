@@ -103,6 +103,36 @@ describe("Jira upstream client", () => {
     });
   });
 
+  it("surfaces upstream validation messages on 422 responses", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              error:
+                'Issue "company": Invalid string at workstreams[0].links[0].targetRef.',
+            }),
+            { status: 422 },
+          ),
+      ),
+    );
+
+    await expect(
+      sendJiraUpstreamRequest({
+        method: "POST",
+        path: "/api/project-setups/validate",
+        responseSchema: z.object({ valid: z.literal(true) }),
+        requestId: "request-1",
+        actor,
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_FAILED",
+      message:
+        'Issue "company": Invalid string at workstreams[0].links[0].targetRef.',
+    });
+  });
+
   it("does not retry unsafe mutations", async () => {
     const fetchMock = vi.fn(
       async () => new Response(JSON.stringify({ error: "Down." }), { status: 503 }),
@@ -142,6 +172,34 @@ describe("Jira upstream client", () => {
         retrySafe: true,
       }),
     ).resolves.toEqual([]);
+  });
+
+  it("forwards private Jira credential headers when supplied", async () => {
+    const fetchMock = vi.fn(async (_url: URL | RequestInfo, init?: RequestInit) => {
+      expect(init?.headers).toMatchObject({
+        "X-Jira-Base-Url": "https://example.atlassian.net",
+        "X-Jira-Email": "person@example.com",
+        "X-Jira-Api-Token": "jira-token",
+      });
+
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      sendJiraUpstreamRequest({
+        method: "POST",
+        path: "/api/jira-credentials/verify",
+        responseSchema: z.object({ ok: z.boolean() }),
+        requestId: "request-1",
+        actor,
+        jiraCredential: {
+          baseUrl: "https://example.atlassian.net",
+          email: "person@example.com",
+          apiToken: "jira-token",
+        },
+      }),
+    ).resolves.toEqual({ ok: true });
   });
 
   it("uses the development automation URL in development", async () => {

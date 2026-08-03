@@ -4,6 +4,12 @@ import { JiraAppError } from "./errors";
 
 export type JiraUpstreamMethod = "GET" | "POST" | "PUT" | "PATCH";
 
+export type JiraUpstreamCredential = {
+  baseUrl: string;
+  email: string;
+  apiToken: string;
+};
+
 export type JiraUpstreamRequest<T> = {
   method: JiraUpstreamMethod;
   path: string;
@@ -14,6 +20,7 @@ export type JiraUpstreamRequest<T> = {
   signal?: AbortSignal;
   retrySafe?: boolean;
   responseType?: "json" | "text";
+  jiraCredential?: JiraUpstreamCredential;
 };
 
 function getJiraAutomationConfig() {
@@ -121,7 +128,10 @@ async function parseResponse<T>(
     }
 
     if (response.status === 422) {
-      throw new JiraAppError("VALIDATION_FAILED", "Jira setup data is invalid.");
+      throw new JiraAppError(
+        "VALIDATION_FAILED",
+        await readUpstreamErrorMessage(response) ?? "Jira setup data is invalid.",
+      );
     }
 
     throw new JiraAppError(
@@ -143,6 +153,28 @@ async function parseResponse<T>(
   }
 
   return parsed.data;
+}
+
+async function readUpstreamErrorMessage(response: Response): Promise<string | undefined> {
+  const text = await response.text();
+  if (text.trim() === "") return undefined;
+
+  try {
+    const body = JSON.parse(text) as unknown;
+    if (typeof body === "object" && body !== null) {
+      const record = body as Record<string, unknown>;
+      if (typeof record.error === "string" && record.error.trim() !== "") {
+        return record.error;
+      }
+      if (typeof record.message === "string" && record.message.trim() !== "") {
+        return record.message;
+      }
+    }
+  } catch {
+    return text;
+  }
+
+  return undefined;
 }
 
 function logInvalidUpstreamResponse<T>(
@@ -179,6 +211,13 @@ async function sendOnce<T>(request: JiraUpstreamRequest<T>): Promise<T> {
           ? {
               "X-App-User-Id": request.actor.userId,
               "X-App-User-Role": request.actor.role,
+            }
+          : {}),
+        ...(request.jiraCredential
+          ? {
+              "X-Jira-Base-Url": request.jiraCredential.baseUrl,
+              "X-Jira-Email": request.jiraCredential.email,
+              "X-Jira-Api-Token": request.jiraCredential.apiToken,
             }
           : {}),
       },

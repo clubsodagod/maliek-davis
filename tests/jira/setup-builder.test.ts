@@ -340,6 +340,192 @@ describe("Jira setup builder helpers", () => {
     }
   });
 
+  it("imports source-shaped staged planning files at Pearl Box scale", () => {
+    const source = sourceShapedPlanningFiles();
+    const workstreams = parseJiraWorkstreamStageJson(
+      JSON.stringify(source.workstreams),
+    );
+
+    expect(workstreams.success).toBe(true);
+    if (!workstreams.success) return;
+
+    expect(workstreams.data).toHaveLength(15);
+    expect(workstreams.data[0]?.description).toContain(
+      "Question: What should Workstream 1 establish?",
+    );
+    expect(workstreams.data[0]).toMatchObject({
+      issueType: "Workstream",
+      priority: "High",
+      labels: ["launch"],
+      targetStartDate: "2026-08-03",
+      targetEndDate: "2026-08-07",
+      dueDate: "2026-08-07",
+    });
+
+    const workstreamLinks = parseJiraWorkstreamLinkStageJson(
+      JSON.stringify(source.workstreamRelationships),
+      workstreams.data,
+    );
+
+    expect(workstreamLinks.success).toBe(true);
+    if (!workstreamLinks.success) return;
+    expect(workstreamLinks.data).toHaveLength(41);
+    expect(workstreamLinks.data[0]).toMatchObject({
+      type: "Blocks",
+      sourceRef: "workstream-and-1",
+      inwardRef: "workstream-and-2",
+      outwardRef: "workstream-and-1",
+      relationship: "blocks",
+    });
+
+    const tasks = parseJiraTaskStageJson(
+      JSON.stringify(source.tasks),
+      workstreams.data,
+    );
+
+    expect(tasks.success).toBe(true);
+    if (!tasks.success) return;
+    expect(tasks.data).toHaveLength(265);
+    expect(tasks.data[0]).toMatchObject({
+      workstreamRef: "workstream-and-1",
+      issueType: "Task",
+      priority: "Medium",
+      labels: ["task"],
+      dueDate: "2026-08-08",
+    });
+    expect(tasks.data[0]?.description).toContain(
+      "Question: What must Task 1 prove?",
+    );
+
+    const taskLinks = parseJiraTaskLinkStageJson(
+      JSON.stringify(source.taskRelationships),
+      tasks.data,
+    );
+
+    expect(taskLinks.success).toBe(true);
+    if (!taskLinks.success) return;
+    expect(taskLinks.data).toHaveLength(501);
+    expect(taskLinks.data.some((link) => link.type === "Informs")).toBe(true);
+
+    const subtasks = parseJiraSubtaskStageJson(
+      JSON.stringify(source.subtasks),
+      tasks.data,
+    );
+
+    expect(subtasks.success).toBe(true);
+    if (!subtasks.success) return;
+    expect(subtasks.data).toHaveLength(2240);
+    expect(subtasks.data[0]).toMatchObject({
+      taskRef: "workstream-and-1--task-1",
+      issueType: "Sub-task",
+      priority: "Low",
+      labels: ["subtask"],
+      dueDate: "2026-08-09",
+    });
+    expect(subtasks.data[0]?.description).toContain(
+      "Question: Which evidence is needed for subtask 1?",
+    );
+
+    const merged = mergeJiraStagedSetupImports({
+      workstreams: workstreams.data,
+      workstreamLinks: workstreamLinks.data,
+      tasks: tasks.data,
+      taskLinks: taskLinks.data,
+      subtasks: subtasks.data,
+    });
+
+    expect(getJiraHierarchyStats(merged)).toEqual({
+      workstreams: 15,
+      tasks: 265,
+      subtasks: 2240,
+      links: 542,
+    });
+    expect(validateJiraGeneratedHierarchy(merged)).toEqual([]);
+
+    const request = buildJiraProjectSetupRequest(
+      {
+        ...defaultJiraProjectSetupDraft,
+        projectKey: "PBML",
+        projectName: "Pearl Box Market Launch",
+      },
+      merged,
+    );
+
+    expect(validateJiraProjectSetupRequestForBuilder(request)).toEqual([]);
+    expect(Buffer.byteLength(JSON.stringify(request), "utf8")).toBeLessThan(
+      15_000_000,
+    );
+  });
+
+  it("reports unresolved source-shaped relationship refs clearly", () => {
+    const result = parseJiraWorkstreamLinkStageJson(
+      JSON.stringify({
+        relationships: [
+          {
+            ref: "missing-link",
+            sourceWorkstreamRef: "company",
+            targetWorkstreamRef: "missing",
+            linkType: "Relates",
+          },
+        ],
+      }),
+      [{ ref: "company", summary: "Company" }],
+    );
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.issues[0]?.message).toBe(
+        'Workstream link target "missing" cannot be resolved.',
+      );
+    }
+  });
+
+  it("resolves stale generic task relationship names within the referenced workstream", () => {
+    const tasks = [
+      {
+        ref: "brand-strategy-and-identity--create-brand-mission-vision-and-values",
+        workstreamRef: "brand-strategy-and-identity",
+        summary: "Create Brand Mission, Vision, and Values",
+      },
+      {
+        ref: "company-overview--create-company-mission-vision-and-values",
+        workstreamRef: "company-overview",
+        summary: "Create Company Mission, Vision, and Values",
+      },
+      {
+        ref: "company-overview--create-company-summary",
+        workstreamRef: "company-overview",
+        summary: "Create Company Summary",
+      },
+    ];
+    const result = parseJiraTaskLinkStageJson(
+      JSON.stringify({
+        relationships: [
+          {
+            ref: "company-overview--create-mission-vision-and-values--informs--company-overview--create-company-summary",
+            sourceTaskRef: "company-overview--create-mission-vision-and-values",
+            targetTaskRef: "company-overview--create-company-summary",
+            sourceSummary: "Create Mission, Vision, and Values",
+            targetSummary: "Create Company Summary",
+            sourceWorkstreamRef: "company-overview",
+            targetWorkstreamRef: "company-overview",
+            linkType: "Informs",
+          },
+        ],
+      }),
+      tasks,
+    );
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data[0]).toMatchObject({
+        sourceRef: "company-overview--create-company-mission-vision-and-values",
+        outwardRef: "company-overview--create-company-mission-vision-and-values",
+        inwardRef: "company-overview--create-company-summary",
+      });
+    }
+  });
+
   it("rejects staged tasks with missing parent workstreams", () => {
     const result = parseJiraTaskStageJson(
       JSON.stringify({
@@ -618,3 +804,186 @@ describe("Jira setup builder helpers", () => {
     });
   });
 });
+
+function sourceShapedPlanningFiles() {
+  const workstreams = Array.from({ length: 15 }, (_, index) => {
+    const sequence = index + 1;
+
+    return {
+      ref: `workstream-and-${sequence}`,
+      summary: `Workstream ${sequence}`,
+      issueType: "Workstream",
+      priority: "High",
+      labels: ["launch"],
+      targetStartDate: "2026-08-03",
+      targetEndDate: "2026-08-07",
+      dueDate: "2026-08-07",
+      description: sourceDescription(
+        `What should Workstream ${sequence} establish?`,
+        `Workstream ${sequence} should establish a decision-ready answer.`,
+      ),
+    };
+  });
+  const sourceWorkstreams = workstreams.map((workstream, index) => ({
+    ref: workstream.ref.replace("-and-", "-"),
+    summary: `${index + 1}. ${workstream.summary}`,
+  }));
+  const taskGroups: {
+    workstreamRef: string;
+    issues: {
+      ref: string;
+      summary: string;
+      issueType: string;
+      priority: string;
+      labels: string[];
+      dueDate: string;
+      description: ReturnType<typeof sourceDescription>;
+    }[];
+  }[] = [];
+  const taskLookup: {
+    ref: string;
+    sourceRef: string;
+    summary: string;
+    workstreamRef: string;
+    sourceWorkstreamRef: string;
+  }[] = [];
+  let taskSequence = 1;
+
+  workstreams.forEach((workstream, workstreamIndex) => {
+    const taskCount = workstreamIndex === 0 ? 27 : 17;
+    const issues = Array.from({ length: taskCount }, () => {
+      const sequence = taskSequence++;
+      const sourceWorkstreamRef = sourceWorkstreams[workstreamIndex]!.ref;
+      const ref = `${workstream.ref}--task-${sequence}`;
+      const sourceRef = `${sourceWorkstreamRef}--task-${sequence}`;
+      const summary = `Create Task ${sequence}`;
+
+      taskLookup.push({
+        ref,
+        sourceRef,
+        summary,
+        workstreamRef: workstream.ref,
+        sourceWorkstreamRef,
+      });
+
+      return {
+        ref,
+        summary,
+        issueType: "Task",
+        priority: "Medium",
+        labels: ["task"],
+        dueDate: "2026-08-08",
+        description: sourceDescription(
+          `What must Task ${sequence} prove?`,
+          `Task ${sequence} should prove the planned outcome.`,
+        ),
+      };
+    });
+
+    taskGroups.push({
+      workstreamRef: workstream.ref,
+      issues,
+    });
+  });
+
+  const subtaskGroups = taskLookup.map((task, taskIndex) => {
+    const subtaskCount = taskIndex < 120 ? 9 : 8;
+
+    return {
+      parentTaskRef: task.ref,
+      documentCategory: "standard-document",
+      subtasks: Array.from({ length: subtaskCount }, (_, subtaskIndex) => {
+        const sequence = subtaskIndex + 1;
+
+        return {
+          ref: `${task.ref}--subtask-${sequence}`,
+          sequence,
+          summary: `Subtask ${taskIndex + 1}.${sequence}`,
+          issueType: "Sub-task",
+          priority: "Low",
+          labels: ["subtask"],
+          dueDate: "2026-08-09",
+          description: sourceDescription(
+            `Which evidence is needed for subtask ${sequence}?`,
+            `Subtask ${sequence} should collect the required evidence.`,
+          ),
+        };
+      }),
+    };
+  });
+
+  return {
+    workstreams: {
+      metadata: {
+        name: "Workstream source",
+      },
+      workstreams,
+    },
+    workstreamRelationships: {
+      metadata: {
+        name: "Workstream relationships",
+      },
+      workstreams: sourceWorkstreams,
+      relationships: Array.from({ length: 41 }, (_, index) => {
+        const source = sourceWorkstreams[index % sourceWorkstreams.length]!;
+        const target = sourceWorkstreams[(index + 1) % sourceWorkstreams.length]!;
+
+        return {
+          ref: `${source.ref}--blocks--${target.ref}-${index + 1}`,
+          sequence: index + 1,
+          sourceWorkstreamRef: source.ref,
+          targetWorkstreamRef: target.ref,
+          linkType: index % 2 === 0 ? "Blocks" : "Relates",
+          relationship: index % 2 === 0 ? "blocks" : "relates",
+          reason: "Fixture relationship.",
+          category: "fixture",
+        };
+      }),
+    },
+    tasks: {
+      taskGroups,
+    },
+    taskRelationships: {
+      relationships: Array.from({ length: 501 }, (_, index) => {
+        const source = taskLookup[index % taskLookup.length]!;
+        const target = taskLookup[(index + 1) % taskLookup.length]!;
+        const linkType = ["Blocks", "Informs", "Implemented By"][index % 3]!;
+
+        return {
+          ref: `${source.sourceRef}--${index + 1}--${target.sourceRef}`,
+          sequence: index + 1,
+          sourceTaskRef: source.sourceRef,
+          targetTaskRef: target.sourceRef,
+          sourceSummary: source.summary,
+          targetSummary: target.summary,
+          sourceWorkstreamRef: source.sourceWorkstreamRef,
+          targetWorkstreamRef: target.sourceWorkstreamRef,
+          linkType,
+          relationship: linkType.toLowerCase(),
+          reason: "Fixture task relationship.",
+          category: "fixture",
+        };
+      }),
+    },
+    subtasks: subtaskGroups,
+  };
+}
+
+function sourceDescription(question: string, answer: string) {
+  return {
+    templateRef: "investor-ready-question",
+    objective: "Create a decision-ready answer.",
+    question,
+    deliverable: "A completed planning answer.",
+    acceptanceCriteria: ["The question is answered directly."],
+    dependencies: ["Relevant source records."],
+    example: {
+      status: "Illustrative example.",
+      answer,
+      evidence: [],
+      assumptions: ["Founder approval is pending."],
+      unresolvedQuestions: ["Which evidence source is authoritative?"],
+    },
+    notes: "Fixture notes.",
+  };
+}

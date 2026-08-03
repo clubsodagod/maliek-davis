@@ -9,6 +9,7 @@ export type JiraErrorCode =
   | "PAYLOAD_TOO_LARGE"
   | "VALIDATION_FAILED"
   | "RATE_LIMITED"
+  | "JIRA_CREDENTIAL_REQUIRED"
   | "UPSTREAM_AUTH_FAILED"
   | "UPSTREAM_UNAVAILABLE"
   | "UPSTREAM_TIMEOUT"
@@ -24,6 +25,7 @@ const ERROR_STATUS: Record<JiraErrorCode, number> = {
   PAYLOAD_TOO_LARGE: 413,
   VALIDATION_FAILED: 422,
   RATE_LIMITED: 429,
+  JIRA_CREDENTIAL_REQUIRED: 422,
   UPSTREAM_AUTH_FAILED: 502,
   UPSTREAM_UNAVAILABLE: 503,
   UPSTREAM_TIMEOUT: 504,
@@ -94,6 +96,7 @@ export function redactSensitiveText(value: string): string {
       /(Authorization\s*:\s*Bearer\s+)[A-Za-z0-9._~+/=-]+/gi,
       "$1[redacted]",
     )
+    .replace(/(X-Jira-Api-Token\s*:\s*)[^\s,}]+/gi, "$1[redacted]")
     .replace(/(Bearer\s+)[A-Za-z0-9._~+/=-]+/gi, "$1[redacted]")
     .replace(/(token\s*[:=]\s*)[A-Za-z0-9._~+/=-]+/gi, "$1[redacted]");
 }
