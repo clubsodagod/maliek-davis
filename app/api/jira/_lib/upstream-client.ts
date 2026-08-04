@@ -44,7 +44,7 @@ function getJiraAutomationConfig() {
 
   const parsedBaseUrl = new URL(baseUrl);
 
-  if (!Number.isFinite(timeoutMs) || timeoutMs < 1_000 || timeoutMs > 120_000) {
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 1_000 || timeoutMs > 120_000_000_000) {
     throw new JiraAppError(
       "INTERNAL_ERROR",
       "Jira request timeout is not configured correctly.",
