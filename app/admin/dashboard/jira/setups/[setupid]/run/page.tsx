@@ -40,6 +40,7 @@ export default async function JiraRunPage({
       <JiraSetupRunModule
         setup={setup}
         initialRunId={initialRunId}
+        initialRequestId={requestId}
         credentialStatus={credentialStatus}
       />
     );

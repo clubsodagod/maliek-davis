@@ -1,8 +1,9 @@
 import type { JiraAdminIdentity } from "@/app/api/jira/_lib/auth";
+import { normalizeUnknownError } from "@/app/api/jira/_lib/errors";
 import {
   createJiraSetup,
-  listJiraProjectSummaries,
-  listJiraSetups,
+  getJiraProjectSummary,
+  getJiraSetupByProjectKey,
 } from "@/app/api/jira/_lib/service";
 import {
   DEFAULT_JIRA_PROJECT_TEMPLATE_ID,
@@ -29,29 +30,6 @@ export type AutomaticSetupDraftResult =
 
 function normalizeProjectKey(value: string): string {
   return value.trim().toUpperCase();
-}
-
-function findProjectSummary(
-  projectKey: string,
-  projects: JiraProjectSummary[],
-): JiraProjectSummary | undefined {
-  const normalizedProjectKey = normalizeProjectKey(projectKey);
-
-  return projects.find(
-    (project) => normalizeProjectKey(project.key) === normalizedProjectKey,
-  );
-}
-
-function findSetupForProject(
-  projectKey: string,
-  setups: JiraSetupRecord[],
-): JiraSetupRecord | undefined {
-  const normalizedProjectKey = normalizeProjectKey(projectKey);
-
-  return setups.find(
-    (setup) =>
-      normalizeProjectKey(setup.request.project.key) === normalizedProjectKey,
-  );
 }
 
 export function buildAutomaticJiraSetupDraftRequest(
@@ -85,10 +63,7 @@ export async function ensureAutomaticJiraSetupDraft(
   requestId: string,
   actor: JiraAdminIdentity,
 ): Promise<AutomaticSetupDraftResult> {
-  const project = findProjectSummary(
-    projectKey,
-    await listJiraProjectSummaries(requestId, actor),
-  );
+  const project = await getExistingJiraProjectSummary(projectKey, requestId, actor);
 
   if (!project) {
     return {
@@ -97,9 +72,10 @@ export async function ensureAutomaticJiraSetupDraft(
     };
   }
 
-  const existingSetup = findSetupForProject(
+  const existingSetup = await getExistingSetupForProject(
     project.key,
-    await listJiraSetups(requestId, actor),
+    requestId,
+    actor,
   );
 
   if (existingSetup) {
@@ -121,4 +97,34 @@ export async function ensureAutomaticJiraSetupDraft(
     ),
     created: true,
   };
+}
+
+async function getExistingJiraProjectSummary(
+  projectKey: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<JiraProjectSummary | undefined> {
+  try {
+    return await getJiraProjectSummary(projectKey, requestId, actor);
+  } catch (error) {
+    if (normalizeUnknownError(error).code === "NOT_FOUND") {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
+async function getExistingSetupForProject(
+  projectKey: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+): Promise<JiraSetupRecord | undefined> {
+  try {
+    return await getJiraSetupByProjectKey(projectKey, requestId, actor);
+  } catch (error) {
+    if (normalizeUnknownError(error).code === "NOT_FOUND") {
+      return undefined;
+    }
+    throw error;
+  }
 }

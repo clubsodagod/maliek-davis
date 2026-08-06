@@ -2,8 +2,10 @@ import {
   jiraHealthResultSchema,
   jiraProjectSetupRequestSchema,
   jiraProjectSummaryListSchema,
+  jiraProjectSummarySchema,
   jiraReportSchema,
   jiraSetupListSchema,
+  jiraSetupSummaryListSchema,
   jiraRunRecordSchema,
   jiraSetupRecordSchema,
   jiraValidationResultSchema,
@@ -28,10 +30,12 @@ import type {
   AnswerValidationRequest,
   JiraHealthResult,
   JiraProjectSetupRequest,
+  JiraProjectSummary,
   JiraProjectSummaryList,
   JiraRunRecord,
   JiraSetupList,
   JiraSetupRecord,
+  JiraSetupSummaryList,
   JiraValidationResult,
   ProjectSummaryView,
   SubtaskQuestionView,
@@ -52,6 +56,13 @@ import { JiraAppError } from "./errors";
 import { toAutomationProjectSetupRequest } from "./setup-request-mapper";
 import { sendJiraUpstreamRequest } from "./upstream-client";
 import { getRequiredJiraCredential } from "./user-credentials";
+
+export const JIRA_DASHBOARD_READ_TIMEOUT_MS = 6_000;
+
+type JiraReadOptions = {
+  timeoutMs?: number;
+  retrySafe?: boolean;
+};
 
 function assertOwnedByCurrentUser(
   ownerUserId: string,
@@ -82,6 +93,7 @@ export async function listJiraProjectSummaries(
   requestId: string,
   actor: JiraAdminIdentity,
   signal?: AbortSignal,
+  options: JiraReadOptions = {},
 ): Promise<JiraProjectSummaryList> {
   const jiraCredential = await getRequiredJiraCredential(actor);
 
@@ -89,6 +101,27 @@ export async function listJiraProjectSummaries(
     method: "GET",
     path: "/api/projects/summary",
     responseSchema: jiraProjectSummaryListSchema,
+    requestId,
+    actor,
+    signal,
+    retrySafe: options.retrySafe ?? true,
+    jiraCredential,
+    timeoutMs: options.timeoutMs,
+  });
+}
+
+export async function getJiraProjectSummary(
+  projectKey: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+  signal?: AbortSignal,
+): Promise<JiraProjectSummary> {
+  const jiraCredential = await getRequiredJiraCredential(actor);
+
+  return sendJiraUpstreamRequest({
+    method: "GET",
+    path: `/api/projects/${encodeURIComponent(projectKey)}/summary`,
+    responseSchema: jiraProjectSummarySchema,
     requestId,
     actor,
     signal,
@@ -156,6 +189,46 @@ export async function listJiraSetups(
   });
 
   result.forEach((setup) => assertOwnedByCurrentUser(setup.ownerUserId, actor));
+  return result;
+}
+
+export async function listJiraSetupSummaries(
+  requestId: string,
+  actor: JiraAdminIdentity,
+  signal?: AbortSignal,
+): Promise<JiraSetupSummaryList> {
+  const result = await sendJiraUpstreamRequest({
+    method: "GET",
+    path: "/api/project-setups/summary",
+    responseSchema: jiraSetupSummaryListSchema,
+    requestId,
+    actor,
+    signal,
+    retrySafe: false,
+    timeoutMs: JIRA_DASHBOARD_READ_TIMEOUT_MS,
+  });
+
+  result.forEach((setup) => assertOwnedByCurrentUser(setup.ownerUserId, actor));
+  return result;
+}
+
+export async function getJiraSetupByProjectKey(
+  projectKey: string,
+  requestId: string,
+  actor: JiraAdminIdentity,
+  signal?: AbortSignal,
+): Promise<JiraSetupRecord> {
+  const result = await sendJiraUpstreamRequest({
+    method: "GET",
+    path: `/api/project-setups/by-project/${encodeURIComponent(projectKey)}`,
+    responseSchema: jiraSetupRecordSchema,
+    requestId,
+    actor,
+    signal,
+    retrySafe: true,
+  });
+
+  assertOwnedByCurrentUser(result.ownerUserId, actor);
   return result;
 }
 

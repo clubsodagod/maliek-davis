@@ -131,6 +131,21 @@ export type JiraSetupRecord = {
 
 export type JiraSetupList = JiraSetupRecord[];
 
+export type JiraSetupSummary = {
+  id: string;
+  ownerUserId: string;
+  status: JiraSetupStatus;
+  project: {
+    key: string;
+    name: string;
+  };
+  workstreamCount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type JiraSetupSummaryList = JiraSetupSummary[];
+
 export type JiraRunStatus = "queued" | "running" | "succeeded" | "failed";
 
 export type JiraProjectReference = {
@@ -151,6 +166,95 @@ export type JiraWorkflowResult = {
   workflowSchemeAssignment?: "not-applicable" | "assigned" | "failed";
 };
 
+export type JiraRunProgressPhase =
+  | "queued"
+  | "preflight"
+  | "workstreams"
+  | "tasks"
+  | "subtasks"
+  | "links"
+  | "report"
+  | "complete";
+
+export type JiraRunProgressItemKind = "workstream" | "task" | "subtask" | "link";
+
+export type JiraRunProgressItemStatus =
+  | "pending"
+  | "running"
+  | "created"
+  | "skipped"
+  | "failed"
+  | "denied";
+
+export type JiraRunProgressCounts = {
+  total: number;
+  pending: number;
+  running: number;
+  created: number;
+  skipped: number;
+  failed: number;
+  denied: number;
+};
+
+export type JiraRunProgressItem = {
+  id: string;
+  kind: JiraRunProgressItemKind;
+  ref: string;
+  summary?: string;
+  issueType?: string;
+  targetRef?: string;
+  status: JiraRunProgressItemStatus;
+  jiraKey?: string;
+  error?: string;
+  updatedAt: string;
+};
+
+export type JiraRunProgressCurrentItem = {
+  kind: JiraRunProgressItemKind;
+  ref: string;
+  summary?: string;
+  issueType?: string;
+  targetRef?: string;
+};
+
+export type JiraRunProgressEvent = {
+  id: string;
+  type:
+    | "run_started"
+    | "phase_started"
+    | "item_started"
+    | "item_created"
+    | "item_skipped"
+    | "item_failed"
+    | "phase_completed"
+    | "run_succeeded"
+    | "run_failed";
+  runId: string;
+  phase: JiraRunProgressPhase;
+  item?: JiraRunProgressItem;
+  counts: Record<JiraRunProgressItemKind, JiraRunProgressCounts>;
+  message?: string;
+  createdAt: string;
+};
+
+export type JiraRunProgress = {
+  phase: JiraRunProgressPhase;
+  counts: Record<JiraRunProgressItemKind, JiraRunProgressCounts>;
+  items: Record<string, JiraRunProgressItem>;
+  currentItem?: JiraRunProgressCurrentItem;
+  lastEvent?: JiraRunProgressEvent;
+  failure?: {
+    message: string;
+    ref?: string;
+    phase: JiraRunProgressPhase;
+    failedAt: string;
+    errorLogId?: string;
+  };
+  startedAt?: string;
+  updatedAt: string;
+  completedAt?: string;
+};
+
 export type JiraRunRecord = {
   id: string;
   setupId: string;
@@ -161,6 +265,8 @@ export type JiraRunRecord = {
   workflowResult?: JiraWorkflowResult;
   report?: string;
   error?: string;
+  errorLogId?: string;
+  progress?: JiraRunProgress;
   createdAt: string;
   updatedAt: string;
   completedAt?: string;

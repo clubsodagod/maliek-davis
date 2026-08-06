@@ -1,4 +1,5 @@
 export * from "./JiraDashboardModule";
+export * from "./JiraDashboardShell";
 export * from "./JiraConfigureSetupModule";
 export * from "./JiraCredentialDialog";
 export * from "./JiraDiscoveryModule";

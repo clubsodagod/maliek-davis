@@ -202,6 +202,21 @@ export const jiraSetupRecordSchema = z.object({
 
 export const jiraSetupListSchema = z.array(jiraSetupRecordSchema);
 
+export const jiraSetupSummarySchema = z.object({
+  id: z.uuid(),
+  ownerUserId: z.string().min(1),
+  status: z.literal("draft"),
+  project: z.object({
+    key: z.string().min(1),
+    name: z.string().min(1),
+  }),
+  workstreamCount: z.number().int().nonnegative(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+});
+
+export const jiraSetupSummaryListSchema = z.array(jiraSetupSummarySchema);
+
 export const jiraWorkflowResultSchema = z.object({
   mode: z.enum(["skip", "create", "update", "jira-default", "document-heavy"]),
   selectionId: jiraWorkflowSelectionIdSchema.optional(),
@@ -211,6 +226,96 @@ export const jiraWorkflowResultSchema = z.object({
   workflowSchemeId: z.string().optional(),
   retainedTemplateWorkflow: z.boolean().optional(),
   workflowSchemeAssignment: z.enum(["not-applicable", "assigned", "failed"]).optional(),
+});
+
+const jiraRunProgressPhaseSchema = z.enum([
+  "queued",
+  "preflight",
+  "workstreams",
+  "tasks",
+  "subtasks",
+  "links",
+  "report",
+  "complete",
+]);
+
+const jiraRunProgressItemKindSchema = z.enum([
+  "workstream",
+  "task",
+  "subtask",
+  "link",
+]);
+
+const jiraRunProgressCountsSchema = z.object({
+  total: z.number(),
+  pending: z.number(),
+  running: z.number(),
+  created: z.number(),
+  skipped: z.number(),
+  failed: z.number(),
+  denied: z.number(),
+});
+
+const jiraRunProgressItemSchema = z.object({
+  id: z.string(),
+  kind: jiraRunProgressItemKindSchema,
+  ref: z.string(),
+  summary: z.string().optional(),
+  issueType: z.string().optional(),
+  targetRef: z.string().optional(),
+  status: z.enum(["pending", "running", "created", "skipped", "failed", "denied"]),
+  jiraKey: z.string().optional(),
+  error: z.string().optional(),
+  updatedAt: z.iso.datetime(),
+});
+
+const jiraRunProgressCurrentItemSchema = z.object({
+  kind: jiraRunProgressItemKindSchema,
+  ref: z.string(),
+  summary: z.string().optional(),
+  issueType: z.string().optional(),
+  targetRef: z.string().optional(),
+});
+
+const jiraRunProgressEventSchema = z.object({
+  id: z.string(),
+  type: z.enum([
+    "run_started",
+    "phase_started",
+    "item_started",
+    "item_created",
+    "item_skipped",
+    "item_failed",
+    "phase_completed",
+    "run_succeeded",
+    "run_failed",
+  ]),
+  runId: z.uuid(),
+  phase: jiraRunProgressPhaseSchema,
+  item: jiraRunProgressItemSchema.optional(),
+  counts: z.record(jiraRunProgressItemKindSchema, jiraRunProgressCountsSchema),
+  message: z.string().optional(),
+  createdAt: z.iso.datetime(),
+});
+
+export const jiraRunProgressSchema = z.object({
+  phase: jiraRunProgressPhaseSchema,
+  counts: z.record(jiraRunProgressItemKindSchema, jiraRunProgressCountsSchema),
+  items: z.record(z.string(), jiraRunProgressItemSchema),
+  currentItem: jiraRunProgressCurrentItemSchema.optional(),
+  lastEvent: jiraRunProgressEventSchema.optional(),
+  failure: z
+    .object({
+      message: z.string(),
+      ref: z.string().optional(),
+      phase: jiraRunProgressPhaseSchema,
+      failedAt: z.iso.datetime(),
+      errorLogId: z.uuid().optional(),
+    })
+    .optional(),
+  startedAt: z.iso.datetime().optional(),
+  updatedAt: z.iso.datetime(),
+  completedAt: z.iso.datetime().optional(),
 });
 
 export const jiraRunRecordSchema = z.object({
@@ -230,6 +335,8 @@ export const jiraRunRecordSchema = z.object({
   workflowResult: jiraWorkflowResultSchema.optional(),
   report: z.string().optional(),
   error: z.string().optional(),
+  errorLogId: z.uuid().optional(),
+  progress: jiraRunProgressSchema.optional(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
   completedAt: z.iso.datetime().optional(),

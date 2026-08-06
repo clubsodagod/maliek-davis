@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createJiraSetup,
-  listJiraProjectSummaries,
-  listJiraSetups,
+  getJiraProjectSummary,
+  getJiraSetupByProjectKey,
 } from "@/app/api/jira/_lib/service";
+import { JiraAppError } from "@/app/api/jira/_lib/errors";
 import { getJiraProjectTemplateById } from "@/app/admin/dashboard/jira/_config/projectOptions";
 import {
   buildAutomaticJiraSetupDraftRequest,
@@ -16,8 +17,8 @@ import type {
 
 vi.mock("@/app/api/jira/_lib/service", () => ({
   createJiraSetup: vi.fn(),
-  listJiraProjectSummaries: vi.fn(),
-  listJiraSetups: vi.fn(),
+  getJiraProjectSummary: vi.fn(),
+  getJiraSetupByProjectKey: vi.fn(),
 }));
 
 const actor = {
@@ -63,8 +64,8 @@ function setupRecord(key = project.key): JiraSetupRecord {
 }
 
 const createJiraSetupMock = vi.mocked(createJiraSetup);
-const listJiraProjectSummariesMock = vi.mocked(listJiraProjectSummaries);
-const listJiraSetupsMock = vi.mocked(listJiraSetups);
+const getJiraProjectSummaryMock = vi.mocked(getJiraProjectSummary);
+const getJiraSetupByProjectKeyMock = vi.mocked(getJiraSetupByProjectKey);
 
 describe("automatic Jira setup draft", () => {
   afterEach(() => {
@@ -97,8 +98,10 @@ describe("automatic Jira setup draft", () => {
 
   it("creates a setup draft when Jira has the project and the registry does not", async () => {
     const createdSetup = setupRecord();
-    listJiraProjectSummariesMock.mockResolvedValue([project]);
-    listJiraSetupsMock.mockResolvedValue([]);
+    getJiraProjectSummaryMock.mockResolvedValue(project);
+    getJiraSetupByProjectKeyMock.mockRejectedValue(
+      new JiraAppError("NOT_FOUND", "Project setup not found."),
+    );
     createJiraSetupMock.mockResolvedValue(createdSetup);
 
     await expect(
@@ -115,12 +118,22 @@ describe("automatic Jira setup draft", () => {
       "request-1",
       actor,
     );
+    expect(getJiraProjectSummaryMock).toHaveBeenCalledWith(
+      "pbmlv3",
+      "request-1",
+      actor,
+    );
+    expect(getJiraSetupByProjectKeyMock).toHaveBeenCalledWith(
+      "PBMLV3",
+      "request-1",
+      actor,
+    );
   });
 
   it("does not create a duplicate when the registry already has the project key", async () => {
     const existingSetup = setupRecord("pbmlv3");
-    listJiraProjectSummariesMock.mockResolvedValue([project]);
-    listJiraSetupsMock.mockResolvedValue([existingSetup]);
+    getJiraProjectSummaryMock.mockResolvedValue(project);
+    getJiraSetupByProjectKeyMock.mockResolvedValue(existingSetup);
 
     await expect(
       ensureAutomaticJiraSetupDraft("PBMLV3", "request-1", actor),
@@ -135,7 +148,9 @@ describe("automatic Jira setup draft", () => {
   });
 
   it("returns not-found when Jira does not have the project key", async () => {
-    listJiraProjectSummariesMock.mockResolvedValue([project]);
+    getJiraProjectSummaryMock.mockRejectedValue(
+      new JiraAppError("NOT_FOUND", "Jira project not found."),
+    );
 
     await expect(
       ensureAutomaticJiraSetupDraft("MISSING", "request-1", actor),
@@ -144,7 +159,7 @@ describe("automatic Jira setup draft", () => {
       projectKey: "MISSING",
     });
 
-    expect(listJiraSetupsMock).not.toHaveBeenCalled();
+    expect(getJiraSetupByProjectKeyMock).not.toHaveBeenCalled();
     expect(createJiraSetupMock).not.toHaveBeenCalled();
   });
 });

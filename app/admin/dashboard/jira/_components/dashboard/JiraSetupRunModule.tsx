@@ -10,6 +10,7 @@ type LoadedRunProps = {
   setup: JiraSetupRecord;
   credentialStatus: JiraCredentialStatus;
   initialRunId?: string;
+  initialRequestId?: string;
   setupId?: never;
   errorMessage?: never;
 };
@@ -53,6 +54,7 @@ export function JiraSetupRunModule(props: JiraSetupRunModuleProps) {
         <JiraSetupRunClient
           setup={props.setup}
           initialRunId={props.initialRunId}
+          initialRequestId={props.initialRequestId}
           initialCredentialStatus={props.credentialStatus}
         />
       )}

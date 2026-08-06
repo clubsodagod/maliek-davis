@@ -106,6 +106,8 @@ The saved setup registry should be the source of truth for drafts, execution pro
 
 Execution status should be modeled as typed states such as `draft`, `validating`, `ready`, `queued`, `running`, `partially_completed`, `blocked`, `failed`, `completed`, and `cancelled`.
 
+The automation backend is the only process that writes Jira RCA logs. Failed run responses may include `errorLogId` and `progress.failure` details; the dashboard should display those along with the current request ID and run ID. Do not write Jira error logs into this Next app's `public/` folder because those files are web-served assets.
+
 ## Current Status
 
 - Route folders exist.
@@ -120,8 +122,11 @@ Execution status should be modeled as typed states such as `draft`, `validating`
 - Validation runs automatically after successful imports, and drafts autosave once the minimum valid setup exists and automation is ready.
 - The application-facing Jira API and server action layer exists under
   `/api/jira/**` and `_services`.
-- The dashboard registry lists saved setup drafts by project name and links them
-  to preview routes.
+- The dashboard shell server-renders after admin authorization, then hydrates
+  Jira project links and compact setup summaries through same-origin API calls
+  so slow upstream reads do not block the page render.
+- The dashboard registry lists saved setup summaries by project name and links
+  them to preview routes without loading full setup hierarchies.
 - The dashboard lists Jira project summaries from the automation server with
   Summary and Work links, independent of whether the project has a saved setup
   draft in the registry.
@@ -295,6 +300,7 @@ Protected routes:
 GET  /api/jira/health
 GET  /api/jira/projects/summary
 GET  /api/jira/setups
+GET  /api/jira/setups/summary
 POST /api/jira/setups/validate
 POST /api/jira/setups
 GET  /api/jira/setups/[setupId]
@@ -400,6 +406,18 @@ Do not prefix these with `NEXT_PUBLIC_`. Production is selected when
 development automation URL. `JIRA_AUTOMATION_SERVER_URL` remains supported only
 as a legacy fallback when the selected URL is missing. `JIRA_REQUEST_TIMEOUT_MS`
 defaults to `15000`.
+
+Dashboard list reads use a shorter six-second upstream timeout and do not retry
+server-side. The page renders its protected shell first, then shows independent
+loading, retry, and warning states for Jira projects and setup summaries.
+
+Jira credential reads use the shared Mongoose connection helper. The helper
+caches the connection promise per server instance and accepts optional
+`MONGODB_MAX_POOL_SIZE`, `MONGODB_MIN_POOL_SIZE`,
+`MONGODB_MAX_IDLE_TIME_MS`, `MONGODB_SERVER_SELECTION_TIMEOUT_MS`,
+`MONGODB_CONNECT_TIMEOUT_MS`, and `MONGODB_SOCKET_TIMEOUT_MS` values. These are
+server-only settings and should be configured alongside `MONGODB_URI` in the
+deployment environment when the Atlas cluster is tuned.
 
 The OpenAI discovery provider is configured on the automation server with `OPENAI_GENERAL_IQ_MODEL` and `OPENAI_HIGH_IQ_MODEL`, not in this Next app. The browser never receives model credentials or backend prompts.
 

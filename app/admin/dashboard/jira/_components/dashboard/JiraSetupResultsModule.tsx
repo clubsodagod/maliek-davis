@@ -51,6 +51,7 @@ type LoadedResultsProps = {
   run?: JiraRunRecord;
   report?: string;
   runErrorMessage?: string;
+  requestId?: string;
   setupId?: never;
   errorMessage?: never;
 };
@@ -343,6 +344,27 @@ function LinkRecordList({ links }: { links: JiraCompletedLink[] | undefined }) {
   );
 }
 
+function RunFailureMetadata({
+  run,
+  requestId,
+}: {
+  run: JiraRunRecord;
+  requestId?: string;
+}) {
+  const failure = run.progress?.failure;
+  const errorLogId = run.errorLogId ?? failure?.errorLogId;
+
+  return (
+    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+      <Chip label={`Run ${run.id}`} size="small" />
+      {requestId ? <Chip label={`Request ${requestId}`} size="small" /> : null}
+      {errorLogId ? <Chip label={`Error log ${errorLogId}`} size="small" /> : null}
+      {failure?.phase ? <Chip label={`Phase ${failure.phase}`} size="small" /> : null}
+      {failure?.ref ? <Chip label={`Ref ${failure.ref}`} size="small" /> : null}
+    </Stack>
+  );
+}
+
 function ResultsHero({
   setup,
   run,
@@ -448,6 +470,7 @@ function LoadedResults({
   run,
   report,
   runErrorMessage,
+  requestId,
 }: LoadedResultsProps) {
   const metrics = getJiraResultsMetrics(setup, run);
   const workflowResult = run?.workflowResult;
@@ -464,7 +487,10 @@ function LoadedResults({
 
       {run?.error ? (
         <Alert severity="error" icon={<ErrorOutline aria-hidden="true" />}>
-          {run.error}
+          <Stack spacing={0.75}>
+            <Typography variant="body2">{run.error}</Typography>
+            <RunFailureMetadata run={run} requestId={requestId} />
+          </Stack>
         </Alert>
       ) : null}
 

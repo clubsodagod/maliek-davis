@@ -7,6 +7,7 @@ import type {
   JiraRunRecord,
   JiraSetupList,
   JiraSetupRecord,
+  JiraSetupSummaryList,
   JiraValidationResult,
 } from "../_types";
 
@@ -159,6 +160,19 @@ export async function listJiraSetupRequests(
     method: "GET",
     signal: options.signal,
   });
+  return result;
+}
+
+export async function listJiraSetupSummariesRequest(
+  options: FetchOptions = {},
+): Promise<ApiResult<JiraSetupSummaryList>> {
+  const { result } = await fetchJiraApi<JiraSetupSummaryList>(
+    "/api/jira/setups/summary",
+    {
+      method: "GET",
+      signal: options.signal,
+    },
+  );
   return result;
 }
 

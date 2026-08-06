@@ -40,6 +40,7 @@ export interface JiraSetupRunClientProps {
   setup: JiraSetupRecord;
   initialCredentialStatus: JiraCredentialStatus;
   initialRunId?: string;
+  initialRequestId?: string;
 }
 
 const INITIAL_POLL_DELAY_MS = 900;
@@ -106,10 +107,32 @@ function queuedProgress(
   };
 }
 
+function RunFailureMetadata({
+  run,
+  requestId,
+}: {
+  run: JiraRunRecord;
+  requestId?: string | null;
+}) {
+  const failure = run.progress?.failure;
+  const errorLogId = run.errorLogId ?? failure?.errorLogId;
+
+  return (
+    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+      <Chip label={`Run ${run.id}`} size="small" />
+      {requestId ? <Chip label={`Request ${requestId}`} size="small" /> : null}
+      {errorLogId ? <Chip label={`Error log ${errorLogId}`} size="small" /> : null}
+      {failure?.phase ? <Chip label={`Phase ${failure.phase}`} size="small" /> : null}
+      {failure?.ref ? <Chip label={`Ref ${failure.ref}`} size="small" /> : null}
+    </Stack>
+  );
+}
+
 export function JiraSetupRunClient({
   setup,
   initialCredentialStatus,
   initialRunId,
+  initialRequestId,
 }: JiraSetupRunClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -118,6 +141,9 @@ export function JiraSetupRunClient({
   );
   const [run, setRun] = useState<JiraRunRecord | undefined>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [lastRequestId, setLastRequestId] = useState<string | null>(
+    initialRequestId ?? null,
+  );
   const [isPolling, setIsPolling] = useState(Boolean(initialRunId));
   const [isStarting, setIsStarting] = useState(false);
   const [credentialStatus, setCredentialStatus] = useState(initialCredentialStatus);
@@ -155,6 +181,7 @@ export function JiraSetupRunClient({
         });
 
         if (!controller.signal.aborted) {
+          setLastRequestId(result.requestId);
           if (result.success) {
             setRun(result.data);
           } else {
@@ -201,6 +228,7 @@ export function JiraSetupRunClient({
 
     try {
       const result = await startJiraSetupRunAction({ setupId: setup.id });
+      setLastRequestId(result.requestId);
 
       if (!result.success) {
         if (result.error.code === "JIRA_CREDENTIAL_REQUIRED") {
@@ -300,13 +328,21 @@ export function JiraSetupRunClient({
 
           {errorMessage ? (
             <Alert severity="error" icon={<ErrorOutline aria-hidden="true" />}>
-              {errorMessage}
+              <Stack spacing={0.75}>
+                <Typography variant="body2">{errorMessage}</Typography>
+                {lastRequestId ? (
+                  <Chip label={`Request ${lastRequestId}`} size="small" sx={{ alignSelf: "flex-start" }} />
+                ) : null}
+              </Stack>
             </Alert>
           ) : null}
 
           {run?.error ? (
             <Alert severity="error" icon={<ErrorOutline aria-hidden="true" />}>
-              {run.error}
+              <Stack spacing={0.75}>
+                <Typography variant="body2">{run.error}</Typography>
+                <RunFailureMetadata run={run} requestId={lastRequestId} />
+              </Stack>
             </Alert>
           ) : null}
 

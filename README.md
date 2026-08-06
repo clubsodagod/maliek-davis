@@ -60,6 +60,22 @@ AUTH_SECRET=
 MONGODB_URI=
 ```
 
+Optional MongoDB connection tuning values are shared with the Jira automation
+backend defaults:
+
+```env
+MONGODB_MAX_POOL_SIZE=20
+MONGODB_MIN_POOL_SIZE=0
+MONGODB_MAX_IDLE_TIME_MS=60000
+MONGODB_SERVER_SELECTION_TIMEOUT_MS=5000
+MONGODB_CONNECT_TIMEOUT_MS=10000
+MONGODB_SOCKET_TIMEOUT_MS=45000
+```
+
+The app caches the Mongoose connection promise per server instance so repeated
+server actions and API routes reuse the same pool instead of opening a new
+connection path for each Jira credential or content request.
+
 Public URL helpers read these values:
 
 ```env
@@ -86,6 +102,9 @@ JIRA_CREDENTIAL_ENCRYPTION_KEY=
 
 `JIRA_AUTOMATION_SERVER_URL` is a legacy fallback when the selected dev or
 production URL is blank. `JIRA_REQUEST_TIMEOUT_MS` defaults to `15000`.
+The Jira dashboard root hydrates project and setup-summary lists after the
+protected shell renders; those list reads use a six-second upstream timeout so a
+slow automation server returns an in-page warning instead of blocking the route.
 `JIRA_CREDENTIAL_ENCRYPTION_KEY` must be a base64-encoded 32-byte key for
 encrypting Jira credentials stored in MongoDB:
 

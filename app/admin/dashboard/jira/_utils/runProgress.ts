@@ -22,6 +22,14 @@ export type JiraRunProgressSummary = {
   skippedCount: number;
   percentage: number;
   isTerminal: boolean;
+  errorLogId?: string;
+  failure?: {
+    message: string;
+    phase: string;
+    ref?: string;
+    failedAt?: string;
+    errorLogId?: string;
+  };
 };
 
 function clampPercentage(value: number): number {
@@ -42,12 +50,61 @@ function countCompletedIssues(
 }
 
 function getCompletedCount(run: JiraRunRecord | undefined): number {
+  const progressCount = sumProgressCount(run, "created") + sumProgressCount(run, "skipped");
+  if (progressCount > 0) return progressCount;
+
   return (
     countCompletedIssues(run, "workstreams") +
     countCompletedIssues(run, "tasks") +
     countCompletedIssues(run, "subtasks") +
     (run?.state?.completedLinks.length ?? 0)
   );
+}
+
+function sumProgressCount(
+  run: JiraRunRecord | undefined,
+  status: "created" | "failed" | "skipped",
+): number {
+  const counts = run?.progress?.counts;
+  if (!counts) return 0;
+
+  return Object.values(counts).reduce((total, item) => total + item[status], 0);
+}
+
+function totalProgressCount(run: JiraRunRecord | undefined): number | undefined {
+  const counts = run?.progress?.counts;
+  if (!counts) return undefined;
+
+  return Object.values(counts).reduce((total, item) => total + item.total, 0);
+}
+
+function formatBackendPhase(phase: string | undefined): string {
+  if (!phase) return "setup";
+
+  return phase
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function getFailureSummary(run: JiraRunRecord): JiraRunProgressSummary["failure"] {
+  const failure = run.progress?.failure;
+  if (failure) {
+    return {
+      message: failure.message,
+      phase: failure.phase,
+      ref: failure.ref,
+      failedAt: failure.failedAt,
+      errorLogId: failure.errorLogId ?? run.errorLogId,
+    };
+  }
+
+  if (!run.error) return undefined;
+
+  return {
+    message: run.error,
+    phase: run.progress?.phase ?? "setup",
+    errorLogId: run.errorLogId,
+  };
 }
 
 function getRunningStage(
@@ -112,7 +169,7 @@ export function getJiraRunProgress(
 ): JiraRunProgressSummary {
   const stats = getJiraHierarchyStats(setup.request.workstreams);
   const totalCount =
-    stats.workstreams + stats.tasks + stats.subtasks + stats.links;
+    totalProgressCount(run) ?? stats.workstreams + stats.tasks + stats.subtasks + stats.links;
   const completedCount = getCompletedCount(run);
 
   if (!run) {
@@ -137,9 +194,10 @@ export function getJiraRunProgress(
       completedCount,
       totalCount,
       failedCount: 0,
-      skippedCount: 0,
+      skippedCount: sumProgressCount(run, "skipped"),
       percentage: calculatePercentage(completedCount, totalCount),
       isTerminal: false,
+      errorLogId: run.errorLogId,
     };
   }
 
@@ -151,23 +209,28 @@ export function getJiraRunProgress(
       completedCount: totalCount,
       totalCount,
       failedCount: 0,
-      skippedCount: 0,
+      skippedCount: sumProgressCount(run, "skipped"),
       percentage: 100,
       isTerminal: true,
+      errorLogId: run.errorLogId,
     };
   }
 
   if (run.status === "failed") {
+    const failure = getFailureSummary(run);
+    const failedCount = sumProgressCount(run, "failed");
     return {
       stage: "failed",
       statusLabel: "Failed",
-      currentOperation: "Failed",
+      currentOperation: `Failed during ${formatBackendPhase(failure?.phase)}`,
       completedCount,
       totalCount,
-      failedCount: 1,
-      skippedCount: 0,
+      failedCount: failedCount === 0 ? 1 : failedCount,
+      skippedCount: sumProgressCount(run, "skipped"),
       percentage: calculatePercentage(completedCount, totalCount),
       isTerminal: true,
+      errorLogId: run.errorLogId ?? failure?.errorLogId,
+      failure,
     };
   }
 
@@ -178,8 +241,9 @@ export function getJiraRunProgress(
     completedCount,
     totalCount,
     failedCount: 0,
-    skippedCount: 0,
+    skippedCount: sumProgressCount(run, "skipped"),
     percentage: calculatePercentage(completedCount, totalCount),
     isTerminal: false,
+    errorLogId: run.errorLogId,
   };
 }

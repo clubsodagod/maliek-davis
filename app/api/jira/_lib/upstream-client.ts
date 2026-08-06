@@ -21,6 +21,7 @@ export type JiraUpstreamRequest<T> = {
   retrySafe?: boolean;
   responseType?: "json" | "text";
   jiraCredential?: JiraUpstreamCredential;
+  timeoutMs?: number;
 };
 
 function getJiraAutomationConfig() {
@@ -44,12 +45,7 @@ function getJiraAutomationConfig() {
 
   const parsedBaseUrl = new URL(baseUrl);
 
-  if (!Number.isFinite(timeoutMs) || timeoutMs < 1_000 || timeoutMs > 120_000_000_000) {
-    throw new JiraAppError(
-      "INTERNAL_ERROR",
-      "Jira request timeout is not configured correctly.",
-    );
-  }
+  assertValidTimeoutMs(timeoutMs);
 
   return {
     baseUrl: parsedBaseUrl,
@@ -75,6 +71,15 @@ function resolveJiraAutomationServerUrl(): {
 
 function isProductionRuntime(): boolean {
   return process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+}
+
+function assertValidTimeoutMs(timeoutMs: number): void {
+  if (!Number.isFinite(timeoutMs) || timeoutMs < 1_000 || timeoutMs > 120_000_000_000) {
+    throw new JiraAppError(
+      "INTERNAL_ERROR",
+      "Jira request timeout is not configured correctly.",
+    );
+  }
 }
 
 function resolveAllowedUrl(baseUrl: URL, path: string): URL {
@@ -196,8 +201,10 @@ function logInvalidUpstreamResponse<T>(
 
 async function sendOnce<T>(request: JiraUpstreamRequest<T>): Promise<T> {
   const config = getJiraAutomationConfig();
+  const timeoutMs = request.timeoutMs ?? config.timeoutMs;
+  assertValidTimeoutMs(timeoutMs);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), config.timeoutMs);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const signal = mergeAbortSignals(controller.signal, request.signal);
 
   try {

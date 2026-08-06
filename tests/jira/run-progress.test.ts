@@ -283,6 +283,57 @@ describe("Jira run progress", () => {
         run({
           status: "failed",
           error: "Jira rejected the request.",
+          errorLogId: "c9ab506b-1524-4bf1-8487-df99fe7f151a",
+          progress: {
+            phase: "tasks",
+            counts: {
+              workstream: {
+                total: 2,
+                pending: 1,
+                running: 0,
+                created: 1,
+                skipped: 0,
+                failed: 0,
+                denied: 0,
+              },
+              task: {
+                total: 2,
+                pending: 1,
+                running: 0,
+                created: 0,
+                skipped: 0,
+                failed: 1,
+                denied: 0,
+              },
+              subtask: {
+                total: 1,
+                pending: 1,
+                running: 0,
+                created: 0,
+                skipped: 0,
+                failed: 0,
+                denied: 0,
+              },
+              link: {
+                total: 1,
+                pending: 1,
+                running: 0,
+                created: 0,
+                skipped: 0,
+                failed: 0,
+                denied: 0,
+              },
+            },
+            items: {},
+            failure: {
+              message: "Jira rejected the request.",
+              phase: "tasks",
+              ref: "company-brief",
+              failedAt: "2026-07-23T12:01:00.000Z",
+              errorLogId: "c9ab506b-1524-4bf1-8487-df99fe7f151a",
+            },
+            updatedAt: "2026-07-23T12:01:00.000Z",
+          },
           state: {
             workstreams: {
               company: { id: "10001", key: "GEN-1", summary: "Company" },
@@ -295,11 +346,17 @@ describe("Jira run progress", () => {
       ),
     ).toMatchObject({
       stage: "failed",
-      currentOperation: "Failed",
+      currentOperation: "Failed during Tasks",
       completedCount: 1,
       failedCount: 1,
       percentage: 17,
       isTerminal: true,
+      errorLogId: "c9ab506b-1524-4bf1-8487-df99fe7f151a",
+      failure: {
+        phase: "tasks",
+        ref: "company-brief",
+        errorLogId: "c9ab506b-1524-4bf1-8487-df99fe7f151a",
+      },
     });
   });
 });

@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createJiraSetup, getJiraSetup, listJiraSetups } from "@/app/api/jira/_lib/service";
+import {
+  createJiraSetup,
+  getJiraSetup,
+  getJiraSetupByProjectKey,
+  listJiraSetupSummaries,
+  listJiraSetups,
+} from "@/app/api/jira/_lib/service";
 import { getJiraProjectTemplateById } from "@/app/admin/dashboard/jira/_config/projectOptions";
 
 const setupTemplate = getJiraProjectTemplateById("business-process-control");
@@ -27,6 +33,19 @@ const setupResponse = {
   },
   createdAt: "2026-07-23T12:00:00.000Z",
   updatedAt: "2026-07-23T12:00:00.000Z",
+};
+
+const setupSummaryResponse = {
+  id: setupResponse.id,
+  ownerUserId: setupResponse.ownerUserId,
+  status: "draft",
+  project: {
+    key: setupResponse.request.project.key,
+    name: setupResponse.request.project.name,
+  },
+  workstreamCount: 0,
+  createdAt: setupResponse.createdAt,
+  updatedAt: setupResponse.updatedAt,
 };
 
 describe("Jira service ownership", () => {
@@ -200,6 +219,100 @@ describe("Jira service ownership", () => {
         role: "admin",
       }),
     ).resolves.toEqual([{ ...setupResponse, ownerUserId: "user-1" }]);
+  });
+
+  it("lists compact setup summaries owned by the current user", async () => {
+    const fetchMock = vi.fn(
+      async (url: URL | RequestInfo, init?: RequestInit) => {
+        expect(String(url)).toBe("https://jira-server.test/api/project-setups/summary");
+        expect(init?.method).toBe("GET");
+
+        return new Response(
+          JSON.stringify([{ ...setupSummaryResponse, ownerUserId: "user-1" }]),
+          {
+            status: 200,
+          },
+        );
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      listJiraSetupSummaries("request-1", {
+        userId: "user-1",
+        role: "admin",
+      }),
+    ).resolves.toEqual([{ ...setupSummaryResponse, ownerUserId: "user-1" }]);
+  });
+
+  it("hides setup summary responses containing another user's records", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify([setupSummaryResponse]), {
+            status: 200,
+          }),
+      ),
+    );
+
+    await expect(
+      listJiraSetupSummaries("request-1", {
+        userId: "user-1",
+        role: "admin",
+      }),
+    ).rejects.toMatchObject({
+      code: "NOT_FOUND",
+      status: 404,
+    });
+  });
+
+  it("rejects invalid setup summary responses", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ setups: [] }), {
+            status: 200,
+          }),
+      ),
+    );
+
+    await expect(
+      listJiraSetupSummaries("request-1", {
+        userId: "user-1",
+        role: "admin",
+      }),
+    ).rejects.toMatchObject({
+      code: "UPSTREAM_INVALID_RESPONSE",
+      status: 502,
+    });
+  });
+
+  it("reads a setup by project key through the automation server", async () => {
+    const fetchMock = vi.fn(
+      async (url: URL | RequestInfo, init?: RequestInit) => {
+        expect(String(url)).toBe(
+          "https://jira-server.test/api/project-setups/by-project/GEN",
+        );
+        expect(init?.method).toBe("GET");
+
+        return new Response(
+          JSON.stringify({ ...setupResponse, ownerUserId: "user-1" }),
+          {
+            status: 200,
+          },
+        );
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      getJiraSetupByProjectKey("GEN", "request-1", {
+        userId: "user-1",
+        role: "admin",
+      }),
+    ).resolves.toEqual({ ...setupResponse, ownerUserId: "user-1" });
   });
 
   it("hides setup registry responses containing another user's records", async () => {

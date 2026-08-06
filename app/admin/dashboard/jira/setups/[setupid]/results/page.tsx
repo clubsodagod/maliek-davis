@@ -58,7 +58,7 @@ export default async function JiraResultsPage({
       try {
         const report = await getJiraRunReport(initialRunId, requestId, actor);
 
-        return <JiraSetupResultsModule setup={setup} run={run} report={report} />;
+        return <JiraSetupResultsModule setup={setup} run={run} report={report} requestId={requestId} />;
       } catch (error) {
         logJiraFailure(error, requestId);
         const appError = normalizeUnknownError(error);
@@ -68,6 +68,7 @@ export default async function JiraResultsPage({
             setup={setup}
             run={run}
             runErrorMessage={appError.message}
+            requestId={requestId}
           />
         );
       }

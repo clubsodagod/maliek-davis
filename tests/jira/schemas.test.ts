@@ -6,6 +6,7 @@ import {
   jiraRunRecordSchema,
   jiraSetupListSchema,
   jiraSetupRecordSchema,
+  jiraSetupSummaryListSchema,
 } from "@/app/admin/dashboard/jira/_schemas";
 import { getJiraProjectTemplateById } from "@/app/admin/dashboard/jira/_config/projectOptions";
 
@@ -152,6 +153,25 @@ describe("Jira schemas", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts compact setup summary list responses", () => {
+    const result = jiraSetupSummaryListSchema.safeParse([
+      {
+        id: "a7d8f6f0-2b8f-4f3f-91cf-6b15f9f7f7b1",
+        ownerUserId: "user-1",
+        status: "draft",
+        project: {
+          key: "GEN",
+          name: "General Project",
+        },
+        workstreamCount: 3,
+        createdAt: "2026-07-23T12:00:00.000Z",
+        updatedAt: "2026-07-24T12:00:00.000Z",
+      },
+    ]);
+
+    expect(result.success).toBe(true);
+  });
+
   it("accepts the automation server app-facing setup record shape", () => {
     const result = jiraSetupRecordSchema.safeParse({
       id: "a7d8f6f0-2b8f-4f3f-91cf-6b15f9f7f7b1",
@@ -249,5 +269,83 @@ describe("Jira schemas", () => {
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it("preserves failed run progress and error log identifiers", () => {
+    const errorLogId = "c9ab506b-1524-4bf1-8487-df99fe7f151a";
+    const result = jiraRunRecordSchema.safeParse({
+      id: "4fd78e2a-5d99-48df-8b22-3f6dcf036a21",
+      setupId: "a7d8f6f0-2b8f-4f3f-91cf-6b15f9f7f7b1",
+      ownerUserId: "user-1",
+      status: "failed",
+      state: {
+        workstreams: {},
+        tasks: {},
+        subtasks: {},
+        completedLinks: [],
+      },
+      error: "Create Tasks failed.",
+      errorLogId,
+      progress: {
+        phase: "tasks",
+        counts: {
+          workstream: {
+            total: 1,
+            pending: 0,
+            running: 0,
+            created: 1,
+            skipped: 0,
+            failed: 0,
+            denied: 0,
+          },
+          task: {
+            total: 1,
+            pending: 0,
+            running: 0,
+            created: 0,
+            skipped: 0,
+            failed: 1,
+            denied: 0,
+          },
+          subtask: {
+            total: 0,
+            pending: 0,
+            running: 0,
+            created: 0,
+            skipped: 0,
+            failed: 0,
+            denied: 0,
+          },
+          link: {
+            total: 0,
+            pending: 0,
+            running: 0,
+            created: 0,
+            skipped: 0,
+            failed: 0,
+            denied: 0,
+          },
+        },
+        items: {},
+        failure: {
+          message: "Create Tasks failed.",
+          phase: "tasks",
+          ref: "company-task",
+          failedAt: "2026-07-23T12:01:00.000Z",
+          errorLogId,
+        },
+        updatedAt: "2026-07-23T12:01:00.000Z",
+      },
+      createdAt: "2026-07-23T12:00:00.000Z",
+      updatedAt: "2026-07-23T12:01:00.000Z",
+      completedAt: "2026-07-23T12:01:00.000Z",
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.data.errorLogId).toBe(errorLogId);
+    expect(result.data.progress?.failure?.phase).toBe("tasks");
+    expect(result.data.progress?.failure?.ref).toBe("company-task");
+    expect(result.data.progress?.failure?.errorLogId).toBe(errorLogId);
   });
 });
